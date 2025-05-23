@@ -164,7 +164,7 @@ class _BottomBarViewState extends State<BottomBarView>
                           focusColor: Colors.transparent,
                           onTap: widget.addClick,
                           child: Icon(
-                            Icons.add,
+                            Icons.qr_code_scanner,
                             color: FitnessAppTheme.white,
                             size: 32,
                           ),

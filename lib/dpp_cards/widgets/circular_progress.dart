@@ -6,7 +6,7 @@ import 'package:dpp/utils/hex_color.dart';
 
 class CustomCircularProgressIndicator extends StatelessWidget {
   final double animationValue;
-  final int currentValue;
+  final double currentValue;
   
   const CustomCircularProgressIndicator({
     super.key,
@@ -46,7 +46,7 @@ class CustomCircularProgressIndicator extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Kcal left',
+                  'CO2 Emission',
                   style: TextStyle(
                     fontFamily: FitnessAppTheme.fontName,
                     fontWeight: FontWeight.bold,

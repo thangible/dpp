@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  'Flutter UI',
+                  'DPP Services',
                   style: TextStyle(
                     fontSize: 22,
                     color: isLightMode ? AppTheme.darkText : AppTheme.white,
@@ -207,9 +207,16 @@ class HomeListView extends StatelessWidget {
                   alignment: AlignmentDirectional.center,
                   children: <Widget>[
                     Positioned.fill(
-                      child: Image.asset(
-                        listData!.imagePath,
-                        fit: BoxFit.cover,
+                      child: Center(
+                      child: Text(
+                        'Product Passport',
+                        style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                       ),
                     ),
                     Material(

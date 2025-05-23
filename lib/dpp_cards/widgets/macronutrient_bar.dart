@@ -30,7 +30,7 @@ class MacronutrientBar extends StatelessWidget {
             fontWeight: FontWeight.w500,
             fontSize: 16,
             letterSpacing: -0.2,
-            color: FitnessAppTheme.darkText,
+            color: FitnessAppTheme.grey.withOpacity(0.5),
           ),
         ),
         Padding(
@@ -67,7 +67,7 @@ class MacronutrientBar extends StatelessWidget {
               fontFamily: FitnessAppTheme.fontName,
               fontWeight: FontWeight.w600,
               fontSize: 12,
-              color: FitnessAppTheme.grey.withOpacity(0.5),
+              color: FitnessAppTheme.darkText ,
             ),
           ),
         ),

@@ -16,28 +16,28 @@ class MacronutrientRow extends StatelessWidget {
       children: [
         Expanded(
           child: MacronutrientBar(
-            label: 'Carbs',
-            remaining: '12g left',
-            color: HexColor('#87A0E5'),
+            label: 'Recycled from scrap',
+            remaining: '60%',
+            color: HexColor('#F56E98'),
             progress: 1.2,
             animationValue: animationValue,
           ),
         ),
         Expanded(
           child: MacronutrientBar(
-            label: 'Protein',
-            remaining: '29g left',
-            color: HexColor('#F56E98'),
+            label: 'Recycled from others',
+            remaining: '30%',
+            color: HexColor('#F1B440'),
             progress: 2.0,
             animationValue: animationValue,
           ),
         ),
         Expanded(
           child: MacronutrientBar(
-            label: 'Fat',
-            remaining: '10g left',
-            color: HexColor('#F1B440'),
-            progress: 2.5,
+            label: 'Virgin Material',
+            remaining: '10%',
+            color:  HexColor('#87A0E5'),
+            progress: 1.2,
             animationValue: animationValue,
           ),
         ),

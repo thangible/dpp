@@ -75,7 +75,7 @@ class TitleView extends StatelessWidget {
                   const SizedBox(height: 16),
                   // Replace with your dynamic data as needed
                   QrImageView(
-                    data: "https://example.com/your-product",
+                    data: "https://www.iapt.fraunhofer.de/",
                     version: QrVersions.auto,
                     size: 150.0,
                   ),

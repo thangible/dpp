@@ -5,6 +5,7 @@ import 'package:dpp/dpp_cards/widgets/macronutrient_row.dart';
 import 'package:dpp/dpp_cards/widgets/divider.dart';
 import 'package:dpp/fitness_app/fitness_app_theme.dart';
 import 'package:dpp/utils/hex_color.dart';
+import 'package:dpp/dpp_cards/widgets/piechart.dart';
 
 class ProductSummaryCard extends StatelessWidget {
   final AnimationController? animationController;
@@ -73,18 +74,18 @@ class ProductSummaryCard extends StatelessWidget {
                               child: Column(
                                 children: [
                                   CO2Counter(
-                                    label: 'Eaten',
-                                    value: '${(1127 * animation!.value).toInt()}',
-                                    unit: 'Kcal',
-                                    iconPath: "assets/fitness_app/eaten.png",
+                                    label: 'Energy used',
+                                    value: '${(3.8 * animation!.value)}',
+                                    unit: 'kWh per unit',
+                                    iconPath: "assets/fitness_app/electric.png",
                                     color: HexColor('#87A0E5'),
                                     animationValue: animation!.value,
                                   ),
                                   const SizedBox(height: 8),
                                   CO2Counter(
-                                    label: 'Burned',
-                                    value: '${(102 * animation!.value).toInt()}',
-                                    unit: 'Kcal',
+                                    label: 'CO2 Emissions',
+                                    value: '${(1.25 * animation!.value)}',
+                                    unit: 'kg',
                                     iconPath: "assets/fitness_app/burned.png",
                                     color: HexColor('#F56E98'),
                                     animationValue: animation!.value,
@@ -96,10 +97,7 @@ class ProductSummaryCard extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(right: 16),
                             child: Center(
-                              child: CustomCircularProgressIndicator(
-                                animationValue: animation!.value,
-                                currentValue: (1503 * animation!.value).toInt(),
-                              ),
+                              child: MaterialPieChartWrapped(size: 30)
                             ),
                           ),
                         ],
