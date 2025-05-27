@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:dpp/utils/app_theme.dart';
+import 'package:dpp/styles/app_theme.dart';
 import 'package:flutter/services.dart';
-import 'navigation/navigation_homescreen.dart';
+import 'navigation/screens/navigation_homescreen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {

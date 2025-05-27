@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/styles/dpp_app_theme.dart';
+import 'package:dpp/styles/app_theme.dart';
 
 const EdgeInsets cardPadding = EdgeInsets.only(
   left: 24,
@@ -9,7 +9,7 @@ const EdgeInsets cardPadding = EdgeInsets.only(
 );
 
 final BoxDecoration cardDecoration = BoxDecoration(
-  color: FitnessAppTheme.white,
+  color: AppTheme.white,
   borderRadius: BorderRadius.only(
     topLeft: Radius.circular(8.0),
     bottomLeft: Radius.circular(8.0),
@@ -18,7 +18,7 @@ final BoxDecoration cardDecoration = BoxDecoration(
   ),
   boxShadow: [
     BoxShadow(
-      color: FitnessAppTheme.grey.withOpacity(0.2),
+      color: AppTheme.grey.withOpacity(0.2),
       offset: Offset(1.1, 1.1),
       blurRadius: 10.0,
     ),

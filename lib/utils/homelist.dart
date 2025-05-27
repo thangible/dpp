@@ -1,4 +1,4 @@
-import 'package:dpp/dpp_cards/main_screens/fitness_app_home_screen.dart';
+import 'package:dpp/navigation/screens/app_home_screen.dart';
 import 'package:flutter/widgets.dart';
 
 class HomeList {
@@ -13,7 +13,7 @@ class HomeList {
   static List<HomeList> homeList = [
     HomeList(
       imagePath: 'assets/fitness_app/fitness_app.png',
-      navigateScreen: FitnessAppHomeScreen(),
+      navigateScreen: AppHomeScreen(),
     ),
   ];
 }
