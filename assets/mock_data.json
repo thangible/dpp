@@ -1,0 +1,15 @@
+{
+    "machine1": {
+      "energyUsed": 3.8,
+      "co2Emissions": 1.25
+    },
+    "machine2": {
+      "energyUsed": 4.5,
+      "co2Emissions": 1.8
+    },
+    "machine3": {
+      "energyUsed": 2.9,
+      "co2Emissions": 1.1
+    }
+  }
+  

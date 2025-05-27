@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/dpp_cards/widgets/macronutrient_bar.dart';
-import 'package:dpp/main.dart';
+import 'package:dpp/styles/dpp_app_theme.dart';
+import 'package:dpp/utils/hex_color.dart';
 
 class MacronutrientRow extends StatelessWidget {
   final double animationValue;

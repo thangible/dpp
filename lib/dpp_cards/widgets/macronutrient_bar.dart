@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/fitness_app/fitness_app_theme.dart';
+import 'package:dpp/styles/dpp_app_theme.dart';
+import 'package:dpp/utils/hex_color.dart';
 
 class MacronutrientBar extends StatelessWidget {
   final String label;

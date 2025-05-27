@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:dpp/app_theme.dart';
+import 'package:dpp/utils/app_theme.dart';
 import 'package:flutter/services.dart';
-import 'navigation_homescreen.dart';
+import 'navigation/navigation_homescreen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
@@ -39,14 +39,3 @@ class MyApp extends StatelessWidget {
 }
 
 
-class HexColor extends Color {
-  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
-
-  static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll('#', '');
-    if (hexColor.length == 6) {
-      hexColor = 'FF' + hexColor;
-    }
-    return int.parse(hexColor, radix: 16);
-  }
-}

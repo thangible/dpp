@@ -1,7 +1,6 @@
-
-import 'package:dpp/fitness_app/fitness_app_theme.dart';
-import 'package:dpp/fitness_app/models/meals_list_data.dart';
-import 'package:dpp/main.dart';
+import 'package:dpp/styles/dpp_app_theme.dart';
+import 'package:dpp/utils/hex_color.dart';
+import 'package:dpp/utils/meals_list_data.dart';
 import 'package:flutter/material.dart';
 
 // import '../../main.dart';

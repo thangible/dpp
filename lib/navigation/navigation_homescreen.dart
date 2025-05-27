@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/custom_drawer/drawer_user_controller.dart';
 import 'package:dpp/custom_drawer/home_drawer.dart';
-import 'package:dpp/app_theme.dart';
-import 'package:dpp/home_screen.dart';
-import 'package:dpp/help_screen.dart';
-import 'package:dpp/feedback_screen.dart';
-import 'package:dpp/invite_friend_screen.dart';
+import 'package:dpp/utils/app_theme.dart';
+import 'package:dpp/navigation/home_screen.dart';
+import 'package:dpp/navigation/help_screen.dart';
+import 'package:dpp/navigation/feedback_screen.dart';
+import 'package:dpp/navigation/invite_friend_screen.dart';
 
 // import 'package:dpp/custom_drawer/drawer_index.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/fitness_app/fitness_app_theme.dart';
+import 'package:dpp/styles/dpp_app_theme.dart';
 
 class CustomDivider extends StatelessWidget {
   const CustomDivider({super.key});

@@ -1,6 +1,6 @@
-import 'package:dpp/app_theme.dart';
+import 'package:dpp/utils/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:dpp/homelist.dart';
+import 'package:dpp/utils/homelist.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -209,7 +209,7 @@ class HomeListView extends StatelessWidget {
                     Positioned.fill(
                       child: Center(
                       child: Text(
-                        'Product Passport',
+                        'My Footprint',
                         style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

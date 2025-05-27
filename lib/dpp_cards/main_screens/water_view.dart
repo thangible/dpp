@@ -1,7 +1,8 @@
-import 'package:dpp/fitness_app/ui_view/wave_view.dart';
-import 'package:dpp/fitness_app/fitness_app_theme.dart';
+import 'package:dpp/dpp_cards/main_screens/wave_view.dart';
 import 'package:dpp/main.dart';
 import 'package:flutter/material.dart';
+import 'package:dpp/styles/dpp_app_theme.dart';
+import 'package:dpp/utils/hex_color.dart';
 
 class WaterView extends StatefulWidget {
   const WaterView(

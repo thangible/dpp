@@ -7,11 +7,11 @@ import 'package:dpp/styles/card_style.dart';
 import 'package:dpp/dpp_cards/widgets/macronutrient_row.dart';
 import 'package:dpp/dpp_cards/widgets/small_text.dart';
 
-class ProductIdentifierCard extends StatelessWidget {
+class ProcessIdentifierCard extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
 
-  const ProductIdentifierCard({
+  const ProcessIdentifierCard({
     super.key,
     this.animationController,
     this.animation,
@@ -50,37 +50,43 @@ class ProductIdentifierCard extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 4, bottom: 3),
-                                      child: Text(
-                                        'DPP-2025-00124',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: FitnessAppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          color: FitnessAppTheme.nearlyDarkBlue,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 4,
+                                          bottom: 3,
+                                        ),
+                                        child: Text(
+                                          '2024-08_Brackets',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily:
+                                                FitnessAppTheme.fontName,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            color:
+                                                FitnessAppTheme.nearlyDarkBlue,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
+                                    ],
+                                  ),
+                                  Row(
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(
                                         Icons.access_time,
-                                        color: FitnessAppTheme.grey
-                                            .withOpacity(0.5),
+                                        color: FitnessAppTheme.grey.withOpacity(
+                                          0.5,
+                                        ),
                                         size: 16,
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 4.0),
+                                        padding: const EdgeInsets.only(
+                                          left: 4.0,
+                                        ),
                                         child: Text(
                                           'Last updated: Today 8:27 AM',
                                           textAlign: TextAlign.center,
@@ -97,7 +103,18 @@ class ProductIdentifierCard extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  
+                                  const SizedBox(height: 8),
+                                  // SmallText(
+                                  //   value: '100 nanometers',
+                                  //   label: 'Layer height',
+                                  // ),
+                                  // const SizedBox(height: 8),
+                                  // SmallText(
+                                  //   value: '1.75 mm',
+                                  //   label: 'Filament Diameter',
+                                  // ),
+
+
                                   // const SizedBox(height: 8),
                                   // CO2Counter(
                                   //   label: 'Material',
@@ -107,11 +124,11 @@ class ProductIdentifierCard extends StatelessWidget {
                                   //   color: HexColor('#F56E98'),
                                   //   animationValue: animation!.value,
                                   // ),
-                                  
-                                // SmallText(
-                                //   value: 'Material',
-                                //   label: 'PA 12',
-                                // ),
+
+                                  // SmallText(
+                                  //   value: 'Material',
+                                  //   label: 'PA 12',
+                                  // ),
                                 ],
                               ),
                             ),
@@ -127,7 +144,7 @@ class ProductIdentifierCard extends StatelessWidget {
                                   width: 150,
                                   height: 150,
                                   child: Image.asset(
-                                    'assets/images/bauteil_image.png',
+                                    'assets/images/machine_example.png',
                                     fit:
                                         BoxFit
                                             .cover, // Ensures it fills the box
@@ -148,9 +165,13 @@ class ProductIdentifierCard extends StatelessWidget {
                       ),
                       child: CustomDivider(),
                     ),
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 16),
+                        left: 24,
+                        right: 24,
+                        top: 8,
+                        bottom: 16,
+                      ),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -178,8 +199,9 @@ class ProductIdentifierCard extends StatelessWidget {
                                       fontFamily: FitnessAppTheme.fontName,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 12,
-                                      color:
-                                          FitnessAppTheme.grey.withOpacity(0.5),
+                                      color: FitnessAppTheme.grey.withOpacity(
+                                        0.5,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -196,7 +218,7 @@ class ProductIdentifierCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      '3D Printed Part',
+                                      '100 nanometers',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: FitnessAppTheme.fontName,
@@ -209,7 +231,7 @@ class ProductIdentifierCard extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6),
                                       child: Text(
-                                        'Product Type',
+                                        'Layer height',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
@@ -225,7 +247,7 @@ class ProductIdentifierCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                           Expanded(
+                          Expanded(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -235,7 +257,7 @@ class ProductIdentifierCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      'IAPT',
+                                      '1.75 mm',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: FitnessAppTheme.fontName,
@@ -248,7 +270,7 @@ class ProductIdentifierCard extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6),
                                       child: Text(
-                                        'Manufacturer',
+                                        'Filament Diameter',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
@@ -264,9 +286,59 @@ class ProductIdentifierCard extends StatelessWidget {
                               ],
                             ),
                           ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Stack(
+                                  children: [
+                                    Container(
+                                      width: 60,
+                                      height: 60,
+                                      child: CircularProgressIndicator(
+                                        value: 0.6,
+                                        backgroundColor: FitnessAppTheme.grey.withOpacity(0.2),
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          FitnessAppTheme.nearlyDarkBlue,
+                                        ),
+                                        strokeWidth: 6,
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: Center(
+                                        child: Text(
+                                          '60%',
+                                          style: TextStyle(
+                                            fontFamily: FitnessAppTheme.fontName,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                            color: FitnessAppTheme.darkText,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 6),
+                                  child: Text(
+                                    'Progress',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: FitnessAppTheme.fontName,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                      color: FitnessAppTheme.grey.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

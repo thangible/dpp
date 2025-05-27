@@ -1,4 +1,4 @@
-import 'package:dpp/fitness_app/fitness_app_home_screen.dart';
+import 'package:dpp/dpp_cards/main_screens/fitness_app_home_screen.dart';
 import 'package:flutter/widgets.dart';
 
 class HomeList {

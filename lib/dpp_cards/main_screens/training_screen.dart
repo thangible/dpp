@@ -1,23 +1,22 @@
-import 'package:dpp/fitness_app/ui_view/body_measurement.dart';
-import 'package:dpp/fitness_app/ui_view/glass_view.dart';
-import 'package:dpp/fitness_app/ui_view/mediterranean_diet_view.dart';
-import 'package:dpp/fitness_app/ui_view/title_view.dart';
-import 'package:dpp/fitness_app/fitness_app_theme.dart';
-import 'package:dpp/fitness_app/my_diary/meals_list_view.dart';
-import 'package:dpp/fitness_app/my_diary/water_view.dart';
+import 'package:dpp/dpp_cards/Process_summary_card.dart';
+import 'package:dpp/dpp_cards/main_screens/area_list_view.dart';
+import 'package:dpp/dpp_cards/main_screens/running_view.dart';
+import 'package:dpp/dpp_cards/main_screens/title_view.dart';
+import 'package:dpp/dpp_cards/main_screens/workout_view.dart';
 import 'package:flutter/material.dart';
-import 'package:dpp/dpp_cards/product_summary_card.dart';
-import 'package:dpp/dpp_cards/product_identifier_card.dart';
+import 'package:dpp/dpp_cards/process_identifier_card.dart';
+import '../../styles/dpp_app_theme.dart';
+import 'package:dpp/dpp_cards/process_summary_card.dart';
 
-class MyDiaryScreen extends StatefulWidget {
-  const MyDiaryScreen({super.key, this.animationController});
+class TrainingScreen extends StatefulWidget {
+  const TrainingScreen({super.key, this.animationController});
 
   final AnimationController? animationController;
   @override
-  _MyDiaryScreenState createState() => _MyDiaryScreenState();
+  _TrainingScreenState createState() => _TrainingScreenState();
 }
 
-class _MyDiaryScreenState extends State<MyDiaryScreen>
+class _TrainingScreenState extends State<TrainingScreen>
     with TickerProviderStateMixin {
   Animation<double>? topBarAnimation;
 
@@ -59,7 +58,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   }
 
   void addAllListData() {
-    const int count = 9;
+    const int count = 5;
 
     listViews.add(
       TitleView(
@@ -74,15 +73,14 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     );
 
     listViews.add(
-      ProductIdentifierCard(
+      ProcessIdentifierCard(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
-                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
+                Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController!,
       ),
     );
-
 
     listViews.add(
       TitleView(
@@ -97,91 +95,47 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     );
 
 
-    listViews.add(
-      ProductSummaryCard(
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
-
     // listViews.add(
-    //   TitleView(
-    //     titleTxt: 'Meals today',
-    //     subTxt: 'Customize',
+    //   ProductSummaryCard(
     //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
     //         parent: widget.animationController!,
     //         curve:
-    //             Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
+    //             Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
     //     animationController: widget.animationController!,
     //   ),
     // );
+  //   listViimationController: widget.animationController!,
+  //     ),ews.add(
+  //     RunningView(
+  //       animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+  //           parent: widget.animationController!,
+  //           curve:
+  //               Interval((1 / count) * 3, 1.0, curve: Curves.fastOutSlowIn))),
+  //       an
+  //   );
 
-    // listViews.add(
-    //   MealsListView(
-    //     mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-    //         CurvedAnimation(
-    //             parent: widget.animationController!,
-    //             curve: Interval((1 / count) * 3, 1.0,
-    //                 curve: Curves.fastOutSlowIn))),
-    //     mainScreenAnimationController: widget.animationController,
-    //   ),
-    // );
+  //   listViews.add(
+  //     TitleView(
+  //       titleTxt: 'Area of focus',
+  //       subTxt: 'more',
+  //       animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+  //           parent: widget.animationController!,
+  //           curve:
+  //               Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
+  //       animationController: widget.animationController!,
+  //     ),
+  //   );
 
-    // listViews.add(
-    //   TitleView(
-    //     titleTxt: 'Body measurement',
-    //     subTxt: 'Today',
-    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-    //         parent: widget.animationController!,
-    //         curve:
-    //             Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-
-    // listViews.add(
-    //   BodyMeasurementView(
-    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-    //         parent: widget.animationController!,
-    //         curve:
-    //             Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-    // listViews.add(
-    //   TitleView(
-    //     titleTxt: 'Water',
-    //     subTxt: 'Aqua SmartBottle',
-    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-    //         parent: widget.animationController!,
-    //         curve:
-    //             Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-
-    // listViews.add(
-    //   WaterView(
-    //     mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-    //         CurvedAnimation(
-    //             parent: widget.animationController!,
-    //             curve: Interval((1 / count) * 7, 1.0,
-    //                 curve: Curves.fastOutSlowIn))),
-    //     mainScreenAnimationController: widget.animationController!,
-    //   ),
-    // );
-    listViews.add(
-      GlassView(
-          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: widget.animationController!,
-                  curve: Interval((1 / count) * 8, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-          animationController: widget.animationController!),
-    );
+  //   listViews.add(
+  //     AreaListView(
+  //       mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
+  //           CurvedAnimation(
+  //               parent: widget.animationController!,
+  //               curve: Interval((1 / count) * 5, 1.0,
+  //                   curve: Curves.fastOutSlowIn))),
+  //       mainScreenAnimationController: widget.animationController!,
+  //     ),
+  //   );
   }
 
   Future<bool> getData() async {
@@ -278,7 +232,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Products',
+                                  'Process',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: FitnessAppTheme.fontName,
@@ -322,7 +276,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                     ),
                                   ),
                                   Text(
-                                    'Search',
+                                    'Search Machine',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       fontFamily: FitnessAppTheme.fontName,
@@ -334,23 +288,23 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                   ),
                                 ],
                               ),
-                            )
-                            // SizedBox(
-                            //   height: 38,
-                            //   width: 38,
-                            //   child: InkWell(
-                            //     highlightColor: Colors.transparent,
-                            //     borderRadius: const BorderRadius.all(
-                            //         Radius.circular(32.0)),
-                            //     onTap: () {},
-                            //     child: Center(
-                            //       child: Icon(
-                            //         Icons.keyboard_arrow_right,
-                            //         color: FitnessAppTheme.grey,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
+                            ),
+                            SizedBox(
+                              height: 38,
+                              width: 38,
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(32.0)),
+                                onTap: () {},
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: FitnessAppTheme.grey,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       )

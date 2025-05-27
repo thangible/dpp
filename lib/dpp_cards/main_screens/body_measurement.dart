@@ -1,4 +1,4 @@
-import 'package:dpp/fitness_app/fitness_app_theme.dart';
+import 'package:dpp/styles/dpp_app_theme.dart';
 import 'package:flutter/material.dart';
 
 class BodyMeasurementView extends StatelessWidget {
