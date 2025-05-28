@@ -1,15 +1,36 @@
 {
     "machine1": {
       "energyUsed": 3.8,
-      "co2Emissions": 1.25
+      "co2Emissions": 1.25,
+      "id": 123123123,
+      "lastUpdated": "2023-10-01T12:00:00Z",
+      "type": "CNC",
+      "matetrial": "Aluminum",
+      "manufacturer": "MachineCorp",
+      "virginMaterial": 0.3,
+      "recycledMaterial": 0.7
     },
     "machine2": {
       "energyUsed": 4.5,
-      "co2Emissions": 1.8
+      "co2Emissions": 1.8,
+      "id": 456456456,
+      "lastUpdated": "2023-10-01T12:00:00Z",
+      "type": "3D Printer",
+      "matetrial": "Plastic",
+      "manufacturer": "PrintTech",
+      "virginMaterial": 0.5,
+      "recycledMaterial": 0.5
     },
     "machine3": {
       "energyUsed": 2.9,
-      "co2Emissions": 1.1
+      "co2Emissions": 1.1,
+      "id": 789789789,
+      "lastUpdated": "2023-10-01T12:00:00Z",
+      "type": "Laser Cutter",
+      "matetrial": "Steel",
+      "manufacturer": "LaserWorks",
+      "virginMaterial": 0.4,
+      "recycledMaterial": 0.6
     }
   }
   

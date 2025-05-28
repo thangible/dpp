@@ -1,4 +1,4 @@
-import 'package:dpp/widgets/main_screens/wave_view.dart';
+import 'package:dpp/widgets/cards/wave_view.dart';
 import 'package:dpp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:dpp/styles/app_theme.dart';

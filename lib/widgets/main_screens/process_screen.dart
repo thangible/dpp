@@ -1,25 +1,22 @@
-import 'package:dpp/widgets/main_screens/body_measurement.dart';
-import 'package:dpp/widgets/main_screens/glass_view.dart';
-import 'package:dpp/widgets/main_screens/mediterranean_diet_view.dart';
-import 'package:dpp/widgets/main_screens/title_view.dart';
-import 'package:dpp/styles/app_theme.dart';
-import 'package:dpp/widgets/main_screens/meals_list_view.dart';
-import 'package:dpp/widgets/main_screens/water_view.dart';
-import 'package:flutter/material.dart';
-import 'package:dpp/widgets/cards/product_summary_card.dart';
-import 'package:dpp/widgets/cards/product_identifier_card.dart';
 
-class MyDiaryScreen extends StatefulWidget {
-  const MyDiaryScreen({super.key, this.animationController});
+import 'package:dpp/widgets/main_screens/title_view.dart';
+import 'package:flutter/material.dart';
+import 'package:dpp/widgets/cards/process_identifier_card.dart';
+import 'package:dpp/styles/app_theme.dart';
+// import 'package:dpp/widgets/'
+class ProcessScreen extends StatefulWidget {
+  const ProcessScreen({super.key, this.animationController});
 
   final AnimationController? animationController;
   @override
-  _MyDiaryScreenState createState() => _MyDiaryScreenState();
+  _ProcessScreenState createState() => _ProcessScreenState();
 }
 
-class _MyDiaryScreenState extends State<MyDiaryScreen>
+class _ProcessScreenState extends State<ProcessScreen>
     with TickerProviderStateMixin {
   Animation<double>? topBarAnimation;
+  Animation<double>? cardAnimation;
+  int count = 5; // Total number of items in the list
 
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
@@ -31,6 +28,11 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         CurvedAnimation(
             parent: widget.animationController!,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
+
+    cardAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn)));
+
     addAllListData();
 
     scrollController.addListener(() {
@@ -59,130 +61,33 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   }
 
   void addAllListData() {
-    const int count = 9;
+
 
     listViews.add(
       TitleView(
         titleTxt: 'Identifier',
         subTxt: 'Get QR Code',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+        animation: cardAnimation,
         animationController: widget.animationController!,
       ),
     );
 
     listViews.add(
-      ProductIdentifierCard(
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
+      ProcessIdentifierCard(
+        animation: cardAnimation,
         animationController: widget.animationController!,
       ),
     );
-
 
     listViews.add(
       TitleView(
         titleTxt: 'Summary',
         subTxt: 'Details',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+        animation: cardAnimation,
         animationController: widget.animationController!,
       ),
     );
 
-
-    listViews.add(
-      ProductSummaryCard(
-        machineId: "machine1",
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
-
-    // listViews.add(
-    //   TitleView(
-    //     titleTxt: 'Meals today',
-    //     subTxt: 'Customize',
-    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-    //         parent: widget.animationController!,
-    //         curve:
-    //             Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-
-    // listViews.add(
-    //   MealsListView(
-    //     mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-    //         CurvedAnimation(
-    //             parent: widget.animationController!,
-    //             curve: Interval((1 / count) * 3, 1.0,
-    //                 curve: Curves.fastOutSlowIn))),
-    //     mainScreenAnimationController: widget.animationController,
-    //   ),
-    // );
-
-    // listViews.add(
-    //   TitleView(
-    //     titleTxt: 'Body measurement',
-    //     subTxt: 'Today',
-    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-    //         parent: widget.animationController!,
-    //         curve:
-    //             Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-
-    // listViews.add(
-    //   BodyMeasurementView(
-    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-    //         parent: widget.animationController!,
-    //         curve:
-    //             Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-    // listViews.add(
-    //   TitleView(
-    //     titleTxt: 'Water',
-    //     subTxt: 'Aqua SmartBottle',
-    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-    //         parent: widget.animationController!,
-    //         curve:
-    //             Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-
-    // listViews.add(
-    //   WaterView(
-    //     mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-    //         CurvedAnimation(
-    //             parent: widget.animationController!,
-    //             curve: Interval((1 / count) * 7, 1.0,
-    //                 curve: Curves.fastOutSlowIn))),
-    //     mainScreenAnimationController: widget.animationController!,
-    //   ),
-    // );
-    listViews.add(
-      GlassView(
-          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: widget.animationController!,
-                  curve: Interval((1 / count) * 8, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-          animationController: widget.animationController!),
-    );
   }
 
   Future<bool> getData() async {
@@ -279,7 +184,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Products',
+                                  'Process',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,
@@ -323,7 +228,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                     ),
                                   ),
                                   Text(
-                                    'Search',
+                                    'Search Machine',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       fontFamily: AppTheme.fontName,
@@ -335,23 +240,23 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                   ),
                                 ],
                               ),
-                            )
-                            // SizedBox(
-                            //   height: 38,
-                            //   width: 38,
-                            //   child: InkWell(
-                            //     highlightColor: Colors.transparent,
-                            //     borderRadius: const BorderRadius.all(
-                            //         Radius.circular(32.0)),
-                            //     onTap: () {},
-                            //     child: Center(
-                            //       child: Icon(
-                            //         Icons.keyboard_arrow_right,
-                            //         color: FitnessAppTheme.grey,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
+                            ),
+                            SizedBox(
+                              height: 38,
+                              width: 38,
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(32.0)),
+                                onTap: () {},
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: AppTheme.grey,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       )

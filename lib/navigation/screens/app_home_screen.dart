@@ -3,8 +3,8 @@ import 'package:dpp/utils/tabIcon_data.dart';
 import 'package:flutter/material.dart';
 import 'bottom_bar_view.dart';
 import 'package:dpp/styles/app_theme.dart';
-import 'package:dpp/widgets/main_screens/my_diary_screen.dart';
-import 'package:dpp/widgets/main_screens/training_screen.dart';
+import 'package:dpp/widgets/main_screens/product_screen.dart';
+import 'package:dpp/widgets/main_screens/process_screen.dart';
 
 class AppHomeScreen extends StatefulWidget {
   const AppHomeScreen({super.key});
@@ -32,7 +32,7 @@ class _AppHomeScreenState extends State<AppHomeScreen>
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
-    tabBody = MyDiaryScreen(animationController: animationController);
+    tabBody = ProductScreen(animationController: animationController);
     super.initState();
   }
 
@@ -89,7 +89,7 @@ class _AppHomeScreenState extends State<AppHomeScreen>
                 }
                 setState(() {
                   tabBody =
-                      MyDiaryScreen(animationController: animationController);
+                      ProductScreen(animationController: animationController);
                 });
               });
             } else if (index == 1 || index == 3) {
@@ -99,7 +99,7 @@ class _AppHomeScreenState extends State<AppHomeScreen>
                 }
                 setState(() {
                   tabBody =
-                      TrainingScreen(animationController: animationController);
+                      ProcessScreen(animationController: animationController);
                 });
               });
             }

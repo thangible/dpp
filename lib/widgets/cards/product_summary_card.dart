@@ -23,7 +23,7 @@ class ProductSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: ProductSummaryService.fetchProductSummaryData(machineId),
+      future: ProductService.fetchProductSummaryData(machineId),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
