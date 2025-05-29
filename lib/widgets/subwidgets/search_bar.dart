@@ -1,117 +1,141 @@
 import 'package:flutter/material.dart';
-
-enum ColorLabel {
-  red('red', Colors.red),
-  orange('orange', Colors.orange),
-  yellow('yellow', Colors.yellow),
-  green('green', Colors.green),
-  blue('blue', Colors.blue),
-  indigo('indigo', Colors.indigo),
-  violet('violet', Color(0xFF8F00FF)),
-  purple('purple', Colors.purple),
-  pink('pink', Colors.pink),
-  silver('silver', Color(0xFF808080)),
-  gold('gold', Color(0xFFFFD700)),
-  beige('beige', Color(0xFFF5F5DC)),
-  brown('brown', Colors.brown),
-  grey('grey', Colors.grey),
-  black('black', Colors.black),
-  white('white', Colors.white);
-
-  const ColorLabel(this.label, this.color);
-  final String label;
-  final Color color;
-}
+import 'package:dpp/styles/app_theme.dart';
+import 'dart:async';
+import 'package:dpp/services/product_service.dart';
 
 class SearchBarWidget extends StatefulWidget {
-  const SearchBarWidget({Key? key}) : super(key: key);
+  final ValueChanged<String> onMachineSelected;
+
+  const SearchBarWidget({Key? key, required this.onMachineSelected}) : super(key: key);
 
   @override
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-  Color? selectedColorSeed;
-  List<ColorLabel> searchHistory = <ColorLabel>[];
+  final TextEditingController _controller = TextEditingController();
+  List<String> machineIds = [];
+  List<String> searchHistory = [];
+  List<String> filteredSuggestions = [];
+  bool showSuggestions = false;
+  String? selectedMachineId;
 
-  Iterable<Widget> getHistoryList(SearchController controller) {
-    return searchHistory.map(
-      (ColorLabel color) => ListTile(
-        leading: const Icon(Icons.history),
-        title: Text(color.label),
-        trailing: IconButton(
-          icon: const Icon(Icons.call_missed),
-          onPressed: () {
-            controller.text = color.label;
-            controller.selection =
-                TextSelection.collapsed(offset: controller.text.length);
-          },
-        ),
-      ),
-    );
+  @override
+  void initState() {
+    super.initState();
+    _loadMachineIds();
   }
 
-  Iterable<Widget> getSuggestions(SearchController controller) {
-    final String input = controller.value.text;
-    return ColorLabel.values
-        .where((ColorLabel color) => color.label.contains(input))
-        .map(
-          (ColorLabel filteredColor) => ListTile(
-            leading: CircleAvatar(backgroundColor: filteredColor.color),
-            title: Text(filteredColor.label),
-            trailing: IconButton(
-              icon: const Icon(Icons.call_missed),
-              onPressed: () {
-                controller.text = filteredColor.label;
-                controller.selection = TextSelection.collapsed(
-                    offset: controller.text.length);
-              },
-            ),
-            onTap: () {
-              controller.closeView(filteredColor.label);
-              handleSelection(filteredColor);
-            },
-          ),
-        );
-  }
-
-  void handleSelection(ColorLabel selectedColor) {
+  Future<void> _loadMachineIds() async {
+    final ids = await ProductService.fetchMachineIds();
     setState(() {
-      selectedColorSeed = selectedColor.color;
+      machineIds = ids;
+    });
+  }
+
+  void _onTextChanged(String input) {
+    setState(() {
+      showSuggestions = true;
+      filteredSuggestions = machineIds
+          .where((id) => id.toLowerCase().contains(input.toLowerCase()))
+          .toList();
+    });
+  }
+
+  void handleSelection(String machineId) {
+    setState(() {
+      selectedMachineId = machineId;
+      _controller.text = machineId;
+      showSuggestions = false;
+
+      if (searchHistory.contains(machineId)) {
+        searchHistory.remove(machineId);
+      }
       if (searchHistory.length >= 5) {
         searchHistory.removeLast();
       }
-      searchHistory.insert(0, selectedColor);
+      searchHistory.insert(0, machineId);
     });
+
+    widget.onMachineSelected(machineId);
+  }
+
+  Widget _buildSuggestionList() {
+    final suggestions = _controller.text.isEmpty ? searchHistory : filteredSuggestions;
+
+    if (suggestions.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'No suggestions available.',
+            style: AppTheme.body1.copyWith(color: Theme.of(context).colorScheme.outline),
+          ),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final id = suggestions[index];
+        return ListTile(
+          leading: Icon(
+            _controller.text.isEmpty ? Icons.history : Icons.memory,
+            color: _controller.text.isEmpty ? AppTheme.grey : AppTheme.nearlyBlue,
+          ),
+          title: Text(id, style: AppTheme.body1),
+          onTap: () => handleSelection(id),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = ThemeData(colorSchemeSeed: selectedColorSeed);
-    final ColorScheme colors = themeData.colorScheme;
-
     return Column(
-      children: <Widget>[
-        SearchAnchor.bar(
-          barHintText: 'Search colors',
-          suggestionsBuilder:
-              (BuildContext context, SearchController controller) {
-            if (controller.text.isEmpty) {
-              if (searchHistory.isNotEmpty) {
-                return getHistoryList(controller).toList();
-              }
-              return <Widget>[
-                Center(
-                  child: Text(
-                    'No search history.',
-                    style: TextStyle(color: colors.outline),
-                  ),
-                ),
-              ];
-            }
-            return getSuggestions(controller).toList();
-          },
+      children: [
+        TextField(
+          controller: _controller,
+          onChanged: _onTextChanged,
+          onTap: () => setState(() => showSuggestions = true),
+          decoration: InputDecoration(
+            hintText: 'Search machine ID',
+            prefixIcon: const Icon(Icons.search),
+            filled: true,
+            fillColor: AppTheme.nearlyWhite,
+            contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide.none,
+            ),
+          ),
+          style: const TextStyle(
+            fontFamily: AppTheme.fontName,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            letterSpacing: -0.1,
+            color: AppTheme.grey,
+          ),
         ),
+        if (showSuggestions)
+          Container(
+            constraints: const BoxConstraints(maxHeight: 250),
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: AppTheme.nearlyWhite,
+              borderRadius: BorderRadius.circular(12.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: _buildSuggestionList(),
+          ),
       ],
     );
   }

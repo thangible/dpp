@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/widgets/subwidgets/co2_counter.dart';
+import 'package:dpp/widgets/subwidgets/highlighted_text.dart';
 import 'package:dpp/widgets/subwidgets/circular_progress.dart';
-import 'package:dpp/widgets/subwidgets/macronutrient_row.dart';
+import 'package:dpp/widgets/subwidgets/info_row.dart';
 import 'package:dpp/widgets/subwidgets/divider.dart';
 import 'package:dpp/styles/app_theme.dart';
 import 'package:dpp/utils/hex_color.dart';
@@ -73,7 +73,7 @@ class ProcessSummaryCard extends StatelessWidget {
                               ),
                               child: Column(
                                 children: [
-                                  CO2Counter(
+                                  HighlightedTextWithIConWidget(
                                     label: 'Energy used',
                                     value: '${(3.8 * animation!.value)}',
                                     unit: 'kWh per unit',
@@ -82,7 +82,7 @@ class ProcessSummaryCard extends StatelessWidget {
                                     animationValue: animation!.value,
                                   ),
                                   const SizedBox(height: 8),
-                                  CO2Counter(
+                                  HighlightedTextWithIConWidget(
                                     label: 'CO2 Emissions',
                                     value: '${(1.25 * animation!.value)}',
                                     unit: 'kg',
@@ -110,7 +110,7 @@ class ProcessSummaryCard extends StatelessWidget {
                         top: 8,
                         bottom: 8,
                       ),
-                      child: CustomDivider(),
+                      child: CustomDividerWidget(),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -119,7 +119,7 @@ class ProcessSummaryCard extends StatelessWidget {
                         top: 8,
                         bottom: 16,
                       ),
-                      child: MacronutrientRow(
+                      child: InfoRowWidget(
                         animationValue: animation!.value,
                       ),
                     ),

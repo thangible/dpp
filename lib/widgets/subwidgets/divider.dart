@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/styles/app_theme.dart';
 
-class CustomDivider extends StatelessWidget {
-  const CustomDivider({super.key});
+class CustomDividerWidget extends StatelessWidget {
+  const CustomDividerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

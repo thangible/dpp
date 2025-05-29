@@ -2,19 +2,27 @@ import 'package:dpp/utils/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:dpp/styles/app_theme.dart';
 import 'package:dpp/widgets/subwidgets/divider.dart';
-import 'package:dpp/widgets/subwidgets/co2_counter.dart';
-import 'package:dpp/styles/card_style.dart';
-import 'package:dpp/widgets/subwidgets/macronutrient_row.dart';
-import 'package:dpp/widgets/subwidgets/small_text.dart';
 
 class ProductIdentifierCard extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
+  final String id;
+  final DateTime lastUpdated;
+  final String imagePath;
+  final String material;
+  final String productType;
+  final String manufacturer;
 
   const ProductIdentifierCard({
     super.key,
     this.animationController,
     this.animation,
+    required this.id,
+    required this.lastUpdated,
+    required this.imagePath,
+    required this.material,
+    required this.productType,
+    required this.manufacturer,
   });
 
   @override
@@ -27,246 +35,49 @@ class ProductIdentifierCard extends StatelessWidget {
           child: Transform(
             transform: buildCardTranslation(animation!.value),
             child: Padding(
-              padding: cardPadding,
+              padding: const EdgeInsets.all(16.0),
               child: Container(
-                decoration: cardDecoration,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 16,
-                        left: 16,
-                        right: 16,
-                      ),
+                      padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                       child: Row(
                         children: [
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 8,
-                                right: 8,
-                                top: 4,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 4, bottom: 3),
-                                      child: Text(
-                                        'DPP-2025-00124',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: AppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          color: AppTheme.nearlyDarkBlue,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.access_time,
-                                        color: AppTheme.grey
-                                            .withOpacity(0.5),
-                                        size: 16,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 4.0),
-                                        child: Text(
-                                          'Last updated: Today 8:27 AM',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily:
-                                                AppTheme.fontName,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            letterSpacing: 0.0,
-                                            color: AppTheme.grey
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  
-                                  // const SizedBox(height: 8),
-                                  // CO2Counter(
-                                  //   label: 'Material',
-                                  //   value: '${'PA 12'}',
-                                  //   unit: 'kg',
-                                  //   iconPath: "assets/fitness_app/burned.png",
-                                  //   color: HexColor('#F56E98'),
-                                  //   animationValue: animation!.value,
-                                  // ),
-                                  
-                                // SmallText(
-                                //   value: 'Material',
-                                //   label: 'PA 12',
-                                // ),
-                                ],
-                              ),
+                            child: HeaderRow(
+                              identifier: id,
+                              lastUpdated: lastUpdated,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: Center(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  8,
-                                ), // Optional: for rounded corners
-                                child: SizedBox(
-                                  width: 150,
-                                  height: 150,
-                                  child: Image.asset(
-                                    'assets/images/bauteil_image.png',
-                                    fit:
-                                        BoxFit
-                                            .cover, // Ensures it fills the box
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          const SizedBox(width: 16),
+                          ImageSection(imagePath: imagePath),
                         ],
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(
-                        left: 24,
-                        right: 24,
-                        top: 8,
-                        bottom: 8,
-                      ),
-                      child: CustomDivider(),
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      child: CustomDividerWidget(),
                     ),
-                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 16),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'PA 12',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: AppTheme.fontName,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    letterSpacing: -0.2,
-                                    color: AppTheme.darkText,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    'Material',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: AppTheme.fontName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                      color:
-                                          AppTheme.grey.withOpacity(0.5),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      '3D Printed Part',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: AppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        letterSpacing: -0.2,
-                                        color: AppTheme.darkText,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 6),
-                                      child: Text(
-                                        'Product Type',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: AppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: AppTheme.grey
-                                              .withOpacity(0.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                           Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      'IAPT',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: AppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        letterSpacing: -0.2,
-                                        color: AppTheme.darkText,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 6),
-                                      child: Text(
-                                        'Manufacturer',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: AppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: AppTheme.grey
-                                              .withOpacity(0.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      child: ProductInfoRow(
+                        material: material,
+                        productType: productType,
+                        manufacturer: manufacturer,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -274,6 +85,166 @@ class ProductIdentifierCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Matrix4 buildCardTranslation(double value) {
+    final double translateY = 50 * (1.0 - value);
+    return Matrix4.translationValues(0, translateY, 0);
+  }
+}
+
+class HeaderRow extends StatelessWidget {
+  final String identifier;
+  final DateTime lastUpdated;
+
+  const HeaderRow({
+    super.key,
+    required this.identifier,
+    required this.lastUpdated,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            identifier,
+            style: TextStyle(
+              fontFamily: AppTheme.fontName,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: AppTheme.nearlyDarkBlue,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Icon(
+                Icons.access_time,
+                color: AppTheme.grey.withOpacity(0.5),
+                size: 16,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'Last updated: ${_formatTime(context, lastUpdated)}',
+                style: TextStyle(
+                  fontFamily: AppTheme.fontName,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: AppTheme.grey.withOpacity(0.5),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatTime(BuildContext context, DateTime dateTime) {
+    final time = TimeOfDay.fromDateTime(dateTime);
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${time.format(context)}';
+  }
+}
+
+
+class ImageSection extends StatelessWidget {
+  final String imagePath;
+
+  const ImageSection({super.key, required this.imagePath});
+
+  void _showFullImage(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.black,
+        insetPadding: const EdgeInsets.all(5),
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: InteractiveViewer(
+            child: Image.asset(
+              imagePath,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showFullImage(context),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox(
+          width: 150,
+          height: 150,
+          child: Image.asset(
+            imagePath,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class ProductInfoRow extends StatelessWidget {
+  final String material;
+  final String productType;
+  final String manufacturer;
+
+  const ProductInfoRow({
+    super.key,
+    required this.material,
+    required this.productType,
+    required this.manufacturer,
+  });
+
+  Widget buildColumn(String value, String label) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontFamily: AppTheme.fontName,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            letterSpacing: -0.2,
+            color: AppTheme.darkText,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: AppTheme.fontName,
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+            color: AppTheme.grey.withOpacity(0.5),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: buildColumn(material, 'Material')),
+        Expanded(child: buildColumn(productType, 'Product Type')),
+        Expanded(child: buildColumn(manufacturer, 'Manufacturer')),
+      ],
     );
   }
 }

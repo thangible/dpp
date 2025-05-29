@@ -5,10 +5,11 @@
       "id": 123123123,
       "lastUpdated": "2023-10-01T12:00:00Z",
       "type": "CNC",
-      "matetrial": "Aluminum",
+      "material": "Aluminum",
       "manufacturer": "MachineCorp",
       "virginMaterial": 0.3,
-      "recycledMaterial": 0.7
+      "recycledMaterial": 0.7,
+      "imagePath": "assets/images/bauteil_image.png"
     },
     "machine2": {
       "energyUsed": 4.5,
@@ -16,10 +17,11 @@
       "id": 456456456,
       "lastUpdated": "2023-10-01T12:00:00Z",
       "type": "3D Printer",
-      "matetrial": "Plastic",
+      "material": "Plastic",
       "manufacturer": "PrintTech",
       "virginMaterial": 0.5,
-      "recycledMaterial": 0.5
+      "recycledMaterial": 0.5,
+      "imagePath": "assets/images/bauteil_image2.png"
     },
     "machine3": {
       "energyUsed": 2.9,
@@ -27,10 +29,11 @@
       "id": 789789789,
       "lastUpdated": "2023-10-01T12:00:00Z",
       "type": "Laser Cutter",
-      "matetrial": "Steel",
+      "material": "Steel",
       "manufacturer": "LaserWorks",
       "virginMaterial": 0.4,
-      "recycledMaterial": 0.6
+      "recycledMaterial": 0.6,
+      "imagePath": "assets/images/bauteil_image3.png"
     }
   }
   

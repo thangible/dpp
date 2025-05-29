@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/styles/app_theme.dart';
 
-class CO2Counter extends StatelessWidget {
+class HighlightedTextWithIConWidget extends StatelessWidget {
   final String label;
   final String value;
   final String unit;
@@ -9,7 +9,7 @@ class CO2Counter extends StatelessWidget {
   final Color color;
   final double animationValue;
 
-  const CO2Counter({
+  const HighlightedTextWithIConWidget({
     super.key,
     required this.label,
     required this.value,

@@ -3,10 +3,10 @@ import 'package:dpp/widgets/subwidgets/macronutrient_bar.dart';
 import 'package:dpp/styles/app_theme.dart';
 import 'package:dpp/utils/hex_color.dart';
 
-class MacronutrientRow extends StatelessWidget {
+class InfoRowWidget extends StatelessWidget {
   final double animationValue;
   
-  const MacronutrientRow({
+  const InfoRowWidget({
     super.key,
     required this.animationValue,
   });
@@ -16,7 +16,7 @@ class MacronutrientRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: MacronutrientBar(
+          child: TextWithBarWidget(
             label: 'Recycled from scrap',
             remaining: '60%',
             color: HexColor('#F56E98'),
@@ -25,7 +25,7 @@ class MacronutrientRow extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: MacronutrientBar(
+          child: TextWithBarWidget(
             label: 'Recycled from others',
             remaining: '30%',
             color: HexColor('#F1B440'),
@@ -34,7 +34,7 @@ class MacronutrientRow extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: MacronutrientBar(
+          child: TextWithBarWidget(
             label: 'Virgin Material',
             remaining: '10%',
             color:  HexColor('#87A0E5'),

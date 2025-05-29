@@ -3,14 +3,14 @@ import 'package:dpp/styles/app_theme.dart';
 import 'package:dpp/utils/hex_color.dart';
 
 
-class MacronutrientBar extends StatelessWidget {
+class TextWithBarWidget extends StatelessWidget {
   final String label;
   final String remaining;
   final Color color;
   final double progress;
   final double animationValue;
 
-  const MacronutrientBar({
+  const TextWithBarWidget({
     super.key,
     required this.label,
     required this.remaining,

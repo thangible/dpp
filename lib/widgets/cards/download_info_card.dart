@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:dpp/styles/app_theme.dart';
 import 'package:dpp/utils/hex_color.dart';
 
-class GlassView extends StatelessWidget {
+class DownloadInfoCard extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
 
-  const GlassView({super.key, this.animationController, this.animation});
+  const DownloadInfoCard({super.key, this.animationController, this.animation});
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(

@@ -76,6 +76,7 @@ class _ProcessScreenState extends State<ProcessScreen>
       ProcessIdentifierCard(
         animation: cardAnimation,
         animationController: widget.animationController!,
+        machineData: <String, dynamic>{}, // Provide appropriate data here
       ),
     );
 
