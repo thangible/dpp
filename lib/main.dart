@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:dpp/styles/app_theme.dart';
+import 'package:get/get.dart';
+import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/services.dart';
-import 'navigation/screens/navigation_homescreen.dart';
+import 'app/modules/navigation_home/views/navigation_homescreen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'app/routes/app_pages.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
+    DeviceOrientation.portraitDown,
   ]).then((_) => runApp(MyApp()));
 }
 
@@ -25,7 +28,7 @@ class MyApp extends StatelessWidget {
       systemNavigationBarDividerColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'DPP Mockup App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -33,7 +36,8 @@ class MyApp extends StatelessWidget {
         textTheme: AppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: NavigationHomeScreen(),
+      initialRoute: AppPages.INITIAL,
+      getPages: AppPages.pages,
     );
   }
 }
