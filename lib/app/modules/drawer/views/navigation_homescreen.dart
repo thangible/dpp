@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 // Controllers
-import 'package:dpp/app/modules/navigation_home/controllers/drawer_user_controller.dart';
+import 'package:dpp/app/modules/navigation/controllers/drawer_user_controller.dart';
 // DRAWER
-import 'package:dpp/app/modules/home/views/widgets/home_drawer.dart';
+import 'package:dpp/app/modules/navigation/views/widgets/home_drawer.dart';
 
 import 'package:get/get.dart';
-import 'package:dpp/app/modules/navigation_home/controllers/navigation_home_controller.dart';
+import 'package:dpp/app/modules/navigation/controllers/navigation_home_controller.dart';
 
 
 class NavigationHomeScreen extends GetView<NavigationHomeController> {

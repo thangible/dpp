@@ -1,11 +1,11 @@
 // filepath: lib/app/modules/navigation_home/controllers/navigation_home_controller.dart
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:dpp/app/modules/home/views/widgets/home_drawer.dart';
+import 'package:dpp/app/modules/navigation/views/widgets/home_drawer.dart';
 import 'package:dpp/app/modules/home/views/app_home_screen.dart';
-import 'package:dpp/app/modules/navigation_home/views/help_screen.dart';
-import 'package:dpp/app/modules/navigation_home/views/feedback_screen.dart';
-import 'package:dpp/app/modules/navigation_home/views/invite_friend_screen.dart';
+import 'package:dpp/app/modules/navigation/views/screens/help_screen.dart';
+import 'package:dpp/app/modules/navigation/views/screens/feedback_screen.dart';
+import 'package:dpp/app/modules/navigation/views/screens/invite_friend_screen.dart';
 import 'package:dpp/app/services/base_client.dart';
 
 // Define API status enum to manage network call states.

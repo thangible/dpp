@@ -1,5 +1,5 @@
 import 'package:dpp/config/theme/app_theme.dart';
-import 'package:dpp/app/modules/home/views/widgets/home_drawer.dart';
+import 'package:dpp/app/modules/navigation/views/widgets/home_drawer.dart';
 import 'package:flutter/material.dart';
 
 class DrawerUserController extends StatefulWidget {

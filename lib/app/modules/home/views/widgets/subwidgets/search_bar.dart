@@ -1,111 +1,30 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchController;
+import 'package:get/get.dart';
 import 'package:dpp/config/theme/app_theme.dart';
-import 'dart:async';
-import 'package:dpp/app/services/product_service.dart';
+import 'package:dpp/app/modules/home/controllers/search_controller.dart';
 
-class SearchBarWidget extends StatefulWidget {
+class SearchBarWidget extends StatelessWidget {
   final ValueChanged<String> onMachineSelected;
 
-  const SearchBarWidget({Key? key, required this.onMachineSelected}) : super(key: key);
-
-  @override
-  State<SearchBarWidget> createState() => _SearchBarWidgetState();
-}
-
-class _SearchBarWidgetState extends State<SearchBarWidget> {
-  final TextEditingController _controller = TextEditingController();
-  List<String> machineIds = [];
-  List<String> searchHistory = [];
-  List<String> filteredSuggestions = [];
-  bool showSuggestions = false;
-  String? selectedMachineId;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadMachineIds();
-  }
-
-  Future<void> _loadMachineIds() async {
-    final ids = await ProductService.fetchMachineIds();
-    setState(() {
-      machineIds = ids;
-    });
-  }
-
-  void _onTextChanged(String input) {
-    setState(() {
-      showSuggestions = true;
-      filteredSuggestions = machineIds
-          .where((id) => id.toLowerCase().contains(input.toLowerCase()))
-          .toList();
-    });
-  }
-
-  void handleSelection(String machineId) {
-    setState(() {
-      selectedMachineId = machineId;
-      _controller.text = machineId;
-      showSuggestions = false;
-
-      if (searchHistory.contains(machineId)) {
-        searchHistory.remove(machineId);
-      }
-      if (searchHistory.length >= 5) {
-        searchHistory.removeLast();
-      }
-      searchHistory.insert(0, machineId);
-    });
-
-    widget.onMachineSelected(machineId);
-  }
-
-  Widget _buildSuggestionList() {
-    final suggestions = _controller.text.isEmpty ? searchHistory : filteredSuggestions;
-
-    if (suggestions.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'No suggestions available.',
-            style: AppTheme.body1.copyWith(color: Theme.of(context).colorScheme.outline),
-          ),
-        ),
-      );
-    }
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final id = suggestions[index];
-        return ListTile(
-          leading: Icon(
-            _controller.text.isEmpty ? Icons.history : Icons.memory,
-            color: _controller.text.isEmpty ? AppTheme.grey : AppTheme.nearlyBlue,
-          ),
-          title: Text(id, style: AppTheme.body1),
-          onTap: () => handleSelection(id),
-        );
-      },
-    );
-  }
+  const SearchBarWidget({Key? key, required this.onMachineSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Create/get the SearchController instance.
+    final searchController = Get.put(SearchController());
     return Column(
       children: [
         TextField(
-          controller: _controller,
-          onChanged: _onTextChanged,
-          onTap: () => setState(() => showSuggestions = true),
+          controller: searchController.textController,
+          onTap: () => searchController.showSuggestions.value = true,
           decoration: InputDecoration(
             hintText: 'Search machine ID',
             prefixIcon: const Icon(Icons.search),
             filled: true,
             fillColor: AppTheme.nearlyWhite,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide: BorderSide.none,
@@ -119,8 +38,24 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             color: AppTheme.grey,
           ),
         ),
-        if (showSuggestions)
-          Container(
+        Obx(() {
+          if (!searchController.showSuggestions.value) return Container();
+          final suggestions = searchController.query.value.isEmpty
+              ? searchController.searchHistory
+              : searchController.filteredSuggestions;
+          if (suggestions.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'No suggestions available.',
+                  style: AppTheme.body1.copyWith(
+                      color: Theme.of(context).colorScheme.outline),
+                ),
+              ),
+            );
+          }
+          return Container(
             constraints: const BoxConstraints(maxHeight: 250),
             margin: const EdgeInsets.only(top: 8),
             decoration: BoxDecoration(
@@ -134,8 +69,30 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 ),
               ],
             ),
-            child: _buildSuggestionList(),
-          ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: suggestions.length,
+              itemBuilder: (context, index) {
+                final id = suggestions[index];
+                return ListTile(
+                  leading: Icon(
+                    searchController.query.value.isEmpty
+                        ? Icons.history
+                        : Icons.memory,
+                    color: searchController.query.value.isEmpty
+                        ? AppTheme.grey
+                        : AppTheme.nearlyBlue,
+                  ),
+                  title: Text(id, style: AppTheme.body1),
+                  onTap: () {
+                    searchController.handleSelection(id);
+                    onMachineSelected(id);
+                  },
+                );
+              },
+            ),
+          );
+        }),
       ],
     );
   }
