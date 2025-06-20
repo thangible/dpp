@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/services.dart';
-import 'app/modules/navigation/views/navigation_homescreen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'app/routes/app_pages.dart';
 

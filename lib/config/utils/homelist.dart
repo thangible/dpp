@@ -1,4 +1,4 @@
-import 'package:dpp/app/modules/home/views/app_home_screen.dart';
+import 'package:dpp/app/modules/footprint/views/footprint_home_view.dart';
 import 'package:flutter/widgets.dart';
 
 class HomeList {
