@@ -8,6 +8,7 @@ import 'package:dpp/app/modules/footprint/views/widgets/cards/product_identifier
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.dart';
 //service
 import 'package:dpp/app/services/product_service.dart';
+import 'package:dpp/app/data/product.dart'; 
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key, this.animationController});
@@ -26,21 +27,12 @@ class _ProductScreenState extends State<ProductScreen>
   int count = 5;
 
   // State variables
-  Future<List<String>> machineIds = ProductService.fetchMachineIds();
+  Future<List<String>> productIds = ProductService.fetchProductIds();
   String _selectedMachineId = "";
   List<Widget> listViews = <Widget>[];
 
   // Product Information
-  double? energyUsed;
-  double? co2Emissions;
-  int? id;
-  DateTime? lastUpdated;
-  String? type;
-  String? material;
-  String? manufacturer;
-  double? virginMaterial;
-  double? recycledMaterial;
-  String? imagePath;
+  Product? product;
 
   // ScrollController and top bar opacity
   final ScrollController scrollController = ScrollController();
@@ -50,6 +42,8 @@ class _ProductScreenState extends State<ProductScreen>
   @override
   void initState() {
     super.initState();
+    topBarOpacity = 1.0;
+    widget.animationController?.forward();
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
@@ -86,40 +80,23 @@ class _ProductScreenState extends State<ProductScreen>
 
   // METHODS
   Future<void> loadDataAfterSearch(String machineId) async {
-    final data = await ProductService.fetchProductSummaryData(machineId);
+    final data = await ProductService.fetchProductData(machineId);
     setState(() {
-      energyUsed = data['energyUsed'];
-      co2Emissions = data['co2Emissions'];
-      id = data['id'];
-      lastUpdated = DateTime.tryParse(data['lastUpdated'] ?? '');
-      type = data['type'];
-      material = data['material'];
-      manufacturer = data['manufacturer'];
-      virginMaterial = data['virginMaterial'];
-      recycledMaterial = data['recycledMaterial'];
-      imagePath = data['imagePath'];
-      // print('Energy Used: $energyUsed');
-      // print('CO2 Emissions: $co2Emissions');
-      // print('ID: $id');
-      // print('Last Updated: $lastUpdated');
-      // print('Type: $type');
-      // print('Material: $material');
-      // print('Manufacturer: $manufacturer');
-      // print('Virgin Material: $virginMaterial');
-      // print('Recycled Material: $recycledMaterial');
-      // print('Image Link: $imagePath');
+      product = data;
     });
+    
   }
 
   // Add cards
   void addCards() {
     listViews.clear();
 
+    if (product != null) {
     listViews.add(
       TitleView(
         titleTxt: 'Identifier',
         subTxt: 'Get QR Code',
-        productID: id?.toString() ?? '',
+        productID: product!.id?.toString() ?? '',
         animation: cardAnimation,
         animationController: widget.animationController!,
       ),
@@ -127,12 +104,12 @@ class _ProductScreenState extends State<ProductScreen>
 
     listViews.add(
       ProductIdentifierCard(
-        id: id?.toString() ?? 'N/A',
-        lastUpdated: lastUpdated ?? DateTime.now(),
-        productType: type ?? 'Unknown',
-        material: material ?? 'Unknown',
-        manufacturer: manufacturer ?? 'Unknown',
-        imagePath: imagePath ?? '',
+        id: product!.id.toString(),
+        lastUpdated: product!.lastUpdated,
+        productType: product!.type,
+        material: product!.material,
+        manufacturer: product!.manufacturer,
+        imagePath: product!.imagePath,
         animation: cardAnimation,
         animationController: widget.animationController!,
       ),
@@ -147,17 +124,16 @@ class _ProductScreenState extends State<ProductScreen>
       ),
     );
 
-     // 🔶 Only show summary card if data is loaded
-  if (energyUsed != null && co2Emissions != null) {
+
     listViews.add(
       ProductSummaryCard(
-        energyUsed: energyUsed!,
-        co2Emissions: co2Emissions!,
+        energyUsed: product!.energyUsed,
+        co2Emissions: product!.co2Emissions,
         animation: cardAnimation,
         animationController: widget.animationController!,
       ),
     );
-  }
+  
 
     listViews.add(
       DownloadInfoCard(
@@ -165,6 +141,7 @@ class _ProductScreenState extends State<ProductScreen>
         animationController: widget.animationController!,
       ),
     );
+    }
   }
 
   Future<bool> getData() async {
@@ -211,7 +188,7 @@ class _ProductScreenState extends State<ProductScreen>
               );
             },
             child: ListView.builder(
-              key: ValueKey<String>(_selectedMachineId), // 🔥 Key changes here
+              key: ValueKey<String>(_selectedMachineId),
               controller: scrollController,
               padding: EdgeInsets.only(
                 top:
@@ -272,8 +249,10 @@ class _ProductScreenState extends State<ProductScreen>
                           bottom: 12 - 8.0 * topBarOpacity,
                         ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
+
                               padding: const EdgeInsets.only(left: 50),
                               child: Text(
                                 'Products',

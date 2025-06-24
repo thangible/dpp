@@ -23,7 +23,7 @@ class SearchController extends GetxController {
   }
 
   Future<void> _loadMachineIds() async {
-    final ids = await ProductService.fetchMachineIds();
+    final ids = await ProductService.fetchProductIds();
     machineIds.assignAll(ids);
   }
 

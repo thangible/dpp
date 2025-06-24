@@ -157,6 +157,7 @@ class ProcessIdentifierCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _buildDetailColumn(material, 'Material', Alignment.centerLeft),
           _buildDetailColumn(manufacturer, 'Manufacturer', Alignment.center),
@@ -173,16 +174,16 @@ class ProcessIdentifierCard extends StatelessWidget {
       child: Align(
         alignment: alignment,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               value,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 fontFamily: AppTheme.fontName,
                 fontWeight: FontWeight.w500,
-                fontSize: 16,
+                fontSize: 10,
                 letterSpacing: -0.2,
                 color: AppTheme.darkText,
               ),

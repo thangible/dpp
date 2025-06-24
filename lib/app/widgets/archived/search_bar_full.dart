@@ -24,7 +24,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   }
 
   Future<void> _loadMachineIds() async {
-    final ids = await ProductService.fetchMachineIds();
+    final ids = await ProductService.fetchProductIds();
     setState(() {
       machineIds = ids;
     });

@@ -1,6 +1,6 @@
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:dpp/app/modules/navigation/model/drawer_model.dart';
+import 'package:dpp/app/modules/navigation/models/drawer_model.dart';
 
 class AppNavigationDrawer extends StatefulWidget {
   const AppNavigationDrawer(
