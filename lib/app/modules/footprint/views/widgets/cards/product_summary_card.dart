@@ -5,7 +5,7 @@ import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/divider.dart'
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/config/utils/hex_color.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/piechart.dart';
-import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/speedometer.dart';
+// import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/speedometer.dart';
 class ProductSummaryCard extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;

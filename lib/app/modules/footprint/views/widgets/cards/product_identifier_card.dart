@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
+import 'package:dpp/config/theme/theme.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/divider.dart';
 
 class ProductIdentifierCard extends StatelessWidget {
@@ -130,11 +130,11 @@ class HeaderRow extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                'Last updated: ${_formatTime(context, lastUpdated)}',
+                'Last updated: \n${_formatTime(context, lastUpdated)}',
                 style: TextStyle(
                   fontFamily: AppTheme.fontName,
                   fontWeight: FontWeight.w500,
-                  fontSize: 14,
+                  fontSize: 7,
                   color: AppTheme.grey.withOpacity(0.5),
                 ),
               ),

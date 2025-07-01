@@ -5,10 +5,12 @@ import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'app/routes/app_pages.dart';
+import 'package:flutter/rendering.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  debugPaintSizeEnabled = true;
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textTheme: AppTheme.textTheme,
-        platform: TargetPlatform.iOS,
+        platform: TargetPlatform.android,
       ),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.pages,

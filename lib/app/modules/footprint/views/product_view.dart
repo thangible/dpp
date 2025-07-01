@@ -24,6 +24,7 @@ class _ProductScreenState extends State<ProductScreen>
   // Animation
   Animation<double>? topBarAnimation;
   Animation<double>? cardAnimation;
+  Animation<double>? fadeAnimation;
   int count = 5;
 
   // State variables
@@ -54,9 +55,11 @@ class _ProductScreenState extends State<ProductScreen>
     cardAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
+        curve: Curves.easeIn
       ),
     );
+
+    
 
     addCards();
 
@@ -143,6 +146,7 @@ class _ProductScreenState extends State<ProductScreen>
     );
     }
   }
+
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 50));

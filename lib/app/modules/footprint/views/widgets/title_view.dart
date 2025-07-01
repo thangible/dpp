@@ -14,7 +14,7 @@ class TitleView extends StatelessWidget {
     this.titleTxt = "",
     this.subTxt = "",
     this.productID = "",
-    this.animationController,
+    required this.animationController,
     this.animation,
   });
 

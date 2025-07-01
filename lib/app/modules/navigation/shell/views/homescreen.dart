@@ -165,7 +165,7 @@ class AppNavigationScaffold extends StatelessWidget {
                                 child: menuView ??
                                     AnimatedIcon(
                                       color: isLightMode
-                                          ? AppTheme.dark_grey
+                                          ? AppTheme.darkGrey
                                           : AppTheme.white,
                                       icon: AnimatedIcons.arrow_menu,
                                       progress: controller.iconAnimationController,

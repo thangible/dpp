@@ -16,4 +16,4 @@ class AppPages {
     ),
     // Future pages can be added here in a similar way
   ];
-}
+} 
