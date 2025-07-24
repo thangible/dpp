@@ -5,7 +5,7 @@ import 'package:dpp/app/modules/footprint/views/footprint_home_view.dart';
 import 'package:dpp/app/modules/navigation/drawer_links/help/help_screen.dart';
 import 'package:dpp/app/modules/navigation/drawer_links/feedback/feedback_screen.dart';
 import 'package:dpp/app/modules/navigation/drawer_links/invite_friend/invite_friend_screen.dart';
-import 'package:dpp/app/services/base_client.dart';
+import 'package:dpp/app/services/test/base_client.dart';
 import 'package:dpp/app/modules/navigation/models/drawer_model.dart';
 
 // Define API status enum to manage network call states.

@@ -3,37 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/cards/download_info_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/title_view.dart';
 import 'package:dpp/config/theme/app_theme.dart';
-import 'package:dpp/app/modules/footprint/views/widgets/cards/product_summary_card.dart';
-import 'package:dpp/app/modules/footprint/views/widgets/cards/product_identifier_card.dart';
+// import 'package:dpp/app/modules/footprint/views/widgets/cards/process_summary_card.dart';
+import 'package:dpp/app/modules/footprint/views/widgets/cards/process_identifier_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.dart';
 //service
-import 'package:dpp/app/services/product_service.dart';
-import 'package:dpp/app/data/product.dart'; 
+import 'package:dpp/app/services/test/product_service.dart';
+// import 'package:dpp/app/modules/footprint/controllers/product_search_controller.dart';
+// import 'package:dpp/app/modules/footprint/controllers/process_search_controller.dart';
+import 'package:dpp/app/data/product.dart'; // Assuming you have a Product model
+import 'package:dpp/app/data/machine.dart'; // Assuming you have a Machine model
 
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key, this.animationController});
+class ProcessScreen extends StatefulWidget {
+  const ProcessScreen({super.key, this.animationController});
 
   final AnimationController? animationController;
 
   @override
-  _ProductScreenState createState() => _ProductScreenState();
+  _ProcessScreenState createState() => _ProcessScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen>
+class _ProcessScreenState extends State<ProcessScreen>
     with TickerProviderStateMixin {
   // Animation
   Animation<double>? topBarAnimation;
   Animation<double>? cardAnimation;
-  Animation<double>? fadeAnimation;
   int count = 5;
 
   // State variables
-  Future<List<String>> productIds = ProductService.fetchProductIds();
+  Future<List<String>> machineIds = ProductService.fetchMachineIds();
   String _selectedMachineId = "";
   List<Widget> listViews = <Widget>[];
 
   // Product Information
   Product? product;
+  Machine? machine;
 
   // ScrollController and top bar opacity
   final ScrollController scrollController = ScrollController();
@@ -55,11 +58,9 @@ class _ProductScreenState extends State<ProductScreen>
     cardAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Curves.easeIn
+        curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
       ),
     );
-
-    
 
     addCards();
 
@@ -83,70 +84,63 @@ class _ProductScreenState extends State<ProductScreen>
 
   // METHODS
   Future<void> loadDataAfterSearch(String machineId) async {
-    final data = await ProductService.fetchProductData(machineId);
+    final machineReponse = await ProductService.fetchMachineData(machineId);
     setState(() {
-      product = data;
+      machine = machineReponse;
     });
-    
   }
 
   // Add cards
   void addCards() {
     listViews.clear();
 
-    if (product != null) {
-    listViews.add(
-      TitleView(
-        titleTxt: 'Identifier',
-        subTxt: 'Get QR Code',
-        productID: product!.id?.toString() ?? '',
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+    if (machine != null) {
+      listViews.add(
+        TitleView(
+          titleTxt: 'Identifier',
+          subTxt: 'Get QR Code',
+          productID: product!.id.toString(),
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
 
-    listViews.add(
-      ProductIdentifierCard(
-        id: product!.id.toString(),
-        lastUpdated: product!.lastUpdated,
-        productType: product!.type,
-        material: product!.material,
-        manufacturer: product!.manufacturer,
-        imagePath: product!.imagePath,
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+      listViews.add(
+        ProcessIdentifierCard(
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+          machineData: <String, dynamic>{}, // Provide appropriate data here
+        ),
+      );
 
-    listViews.add(
-      TitleView(
-        titleTxt: 'Summary',
-        subTxt: 'Details',
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+      listViews.add(
+        TitleView(
+          titleTxt: 'Summary',
+          subTxt: 'Details',
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
 
+      // 🔶 Only show summary card if data is loaded
+      if (true) {
+        listViews.add(
+          ProcessIdentifierCard(
+            animation: cardAnimation,
+            animationController: widget.animationController!,
+            machineData: <String, dynamic>{}, // Provide appropriate data here
+          ),
+        );
+      }
 
-    listViews.add(
-      ProductSummaryCard(
-        energyUsed: product!.energyUsed,
-        co2Emissions: product!.co2Emissions,
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
-  
-
-    listViews.add(
-      DownloadInfoCard(
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+      listViews.add(
+        DownloadInfoCard(
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
     }
   }
-
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 50));
@@ -192,7 +186,7 @@ class _ProductScreenState extends State<ProductScreen>
               );
             },
             child: ListView.builder(
-              key: ValueKey<String>(_selectedMachineId),
+              key: ValueKey<String>(_selectedMachineId), // 🔥 Key changes here
               controller: scrollController,
               padding: EdgeInsets.only(
                 top:
@@ -256,10 +250,9 @@ class _ProductScreenState extends State<ProductScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
-
                               padding: const EdgeInsets.only(left: 50),
                               child: Text(
-                                'Products',
+                                'Process',
                                 style: TextStyle(
                                   fontFamily: AppTheme.fontName,
                                   fontWeight: FontWeight.w700,
@@ -273,7 +266,9 @@ class _ProductScreenState extends State<ProductScreen>
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.5,
                               child: SearchBarWidget(
-                                onMachineSelected: (String selectedMachineId) async {
+                                onMachineSelected: (
+                                  String selectedMachineId,
+                                ) async {
                                   print("Machine selected: $selectedMachineId");
                                   _selectedMachineId = selectedMachineId;
                                   await loadDataAfterSearch(selectedMachineId);

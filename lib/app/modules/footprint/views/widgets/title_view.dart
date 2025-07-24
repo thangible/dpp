@@ -1,6 +1,7 @@
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:dpp/app/modules/footprint/views/product/product_detail.dart';
 
 class TitleView extends StatelessWidget {
   final String titleTxt;
@@ -32,7 +33,11 @@ class TitleView extends StatelessWidget {
     return FadeTransition(
       opacity: animation!,
       child: Transform(
-        transform: Matrix4.translationValues(0.0, 30 * (1.0 - animation!.value), 0.0),
+        transform: Matrix4.translationValues(
+          0.0,
+          30 * (1.0 - animation!.value),
+          0.0,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: _buildTitleRow(context),
@@ -63,6 +68,17 @@ class TitleView extends StatelessWidget {
           onTap: () {
             if (subTxt == "Get QR Code") {
               _showQRCodeDialog(context);
+            } else if (subTxt == "Details") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ProductDetailScreen(
+                        productId: productID ?? '',
+                        animationController: animationController,
+                      ),
+                ),
+              );
             }
           },
           child: Padding(
@@ -92,7 +108,7 @@ class TitleView extends StatelessWidget {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -115,14 +131,16 @@ class TitleView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    productID != null && productID!.isNotEmpty ? "Scan QR Code" : "No Product ID",
+                    productID != null && productID!.isNotEmpty
+                        ? "Scan QR Code"
+                        : "No Product ID",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
                   const SizedBox(height: 16),
-                    if (productID != null && productID!.isNotEmpty) 
+                  if (productID != null && productID!.isNotEmpty)
                     QrImageView(
                       data: productID!,
                       version: QrVersions.auto,

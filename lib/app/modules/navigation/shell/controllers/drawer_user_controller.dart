@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dpp/app/modules/navigation/models/drawer_model.dart';
 
-
-
-class DrawerUserController extends GetxController with GetTickerProviderStateMixin {
+class DrawerUserController extends GetxController
+    with GetTickerProviderStateMixin {
   final double drawerWidth;
   final Function(DrawerIndex)? onDrawerCall;
   final Function(bool)? drawerIsOpen;
@@ -39,9 +38,7 @@ class DrawerUserController extends GetxController with GetTickerProviderStateMix
       curve: Curves.fastOutSlowIn,
     );
 
-    scrollController = ScrollController(
-      initialScrollOffset: drawerWidth,
-    );
+    scrollController = ScrollController(initialScrollOffset: drawerWidth);
     scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) => getInitState());
   }
@@ -79,11 +76,20 @@ class DrawerUserController extends GetxController with GetTickerProviderStateMix
   }
 
   Future<bool> getInitState() async {
-    scrollController.jumpTo(drawerWidth);
+    // Wait for the next frame to ensure the ScrollController is attached
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    // Check if the controller is attached before using it
+    if (scrollController.hasClients) {
+      scrollController.jumpTo(drawerWidth);
+    }
     return true;
   }
 
   void onDrawerClick() {
+    // Check if the controller is attached before using it
+    if (!scrollController.hasClients) return;
+
     if (scrollController.offset != 0.0) {
       scrollController.animateTo(
         0.0,

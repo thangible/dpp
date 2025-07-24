@@ -3,8 +3,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/config/utils/tabIcon_data.dart';
-import 'package:dpp/app/modules/footprint/views/product_view.dart';
-import 'package:dpp/app/modules/footprint/views/process_view.dart';
+import 'package:dpp/app/modules/footprint/views/product/product_view.dart';
+import 'package:dpp/app/modules/footprint/views/process/process_view.dart';
 
 class AppHomeController extends GetxController implements TickerProvider {
   late AnimationController animationController;

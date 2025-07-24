@@ -1,13 +1,11 @@
 import 'package:get/get.dart';
-import '../controllers/drawer_controller.dart';
+import '../controllers/drawer_user_controller.dart';
 
 class DrawerUserBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<DrawerUserController>(
-      () => DrawerUserController(
-        drawerWidth: 250,
-      ),
+      () => DrawerUserController(drawerWidth: 250),
     );
   }
 }

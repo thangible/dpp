@@ -2,39 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:get/get.dart';
 // Controllers
-import 'package:dpp/app/modules/navigation/shell/controllers/drawer_controller.dart';
 import 'package:dpp/app/modules/navigation/shell/controllers/navigation_controller.dart';
+import 'package:dpp/app/modules/navigation/shell/controllers/drawer_user_controller.dart';
 // DRAWER
 import 'package:dpp/app/modules/navigation/shell/views/widgets/app_navigation_drawer.dart';
 // Models
 import 'package:dpp/app/modules/navigation/models/drawer_model.dart';
 
-
+// ...existing code...
 class HomeScreen extends GetView<NavigationController> {
   @override
   Widget build(BuildContext context) {
-    // Ensure DrawerUserController is injected.
-    Get.put<DrawerUserController>(
-      DrawerUserController(
-        drawerWidth: MediaQuery.of(context).size.width * 0.75,
-        onDrawerCall: (DrawerIndex drawerIndexData) {
-          controller.changeIndex(drawerIndexData);
-        },
-      ),
-    );
-
     return Container(
       color: AppTheme.white,
       child: SafeArea(
-        top: false, 
+        top: false,
         bottom: false,
         child: Scaffold(
           backgroundColor: AppTheme.nearlyWhite,
           body: Obx(() {
             if (controller.apiStatus.value == ApiCallStatus.loading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             } else if (controller.apiStatus.value == ApiCallStatus.error) {
               return Center(
                 child: Column(
@@ -65,7 +53,6 @@ class HomeScreen extends GetView<NavigationController> {
     );
   }
 }
-
 
 class AppNavigationScaffold extends StatelessWidget {
   final Widget? screenView;
@@ -111,7 +98,8 @@ class AppNavigationScaffold extends StatelessWidget {
                       ),
                       child: AppNavigationDrawer(
                         screenIndex: screenIndex ?? DrawerIndex.HOME,
-                        iconAnimationController: controller.iconAnimationController,
+                        iconAnimationController:
+                            controller.iconAnimationController,
                         callBackIndex: (DrawerIndex indexType) {
                           controller.onDrawerClick();
                           controller.onDrawerCall?.call(indexType);
@@ -136,17 +124,22 @@ class AppNavigationScaffold extends StatelessWidget {
                   ),
                   child: Stack(
                     children: <Widget>[
-                      Obx(() => IgnorePointer(
-                        ignoring: controller.scrollOffset.value == 1.0,
-                        child: screenView,
-                      )),
-                      Obx(() => controller.scrollOffset.value == 1.0
-                          ? InkWell(
-                              onTap: () {
-                                controller.onDrawerClick();
-                              },
-                            )
-                          : Container()),
+                      Obx(
+                        () => IgnorePointer(
+                          ignoring: controller.scrollOffset.value == 1.0,
+                          child: screenView,
+                        ),
+                      ),
+                      Obx(
+                        () =>
+                            controller.scrollOffset.value == 1.0
+                                ? InkWell(
+                                  onTap: () {
+                                    controller.onDrawerClick();
+                                  },
+                                )
+                                : Container(),
+                      ),
                       Padding(
                         padding: EdgeInsets.only(
                           top: MediaQuery.of(context).padding.top + 8,
@@ -162,18 +155,22 @@ class AppNavigationScaffold extends StatelessWidget {
                                 AppBar().preferredSize.height,
                               ),
                               child: Center(
-                                child: menuView ??
+                                child:
+                                    menuView ??
                                     AnimatedIcon(
-                                      color: isLightMode
-                                          ? AppTheme.darkGrey
-                                          : AppTheme.white,
+                                      color:
+                                          isLightMode
+                                              ? AppTheme.darkGrey
+                                              : AppTheme.white,
                                       icon: AnimatedIcons.arrow_menu,
-                                      progress: controller.iconAnimationController,
+                                      progress:
+                                          controller.iconAnimationController,
                                     ),
                               ),
                               onTap: () {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
+                                FocusScope.of(
+                                  context,
+                                ).requestFocus(FocusNode());
                                 controller.onDrawerClick();
                               },
                             ),

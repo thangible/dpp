@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 import 'dart:async';
-import 'package:dpp/app/services/product_service.dart';
+import 'package:dpp/app/services/test/product_service.dart';
 
 class SearchBarWidget extends StatefulWidget {
   final ValueChanged<String> onMachineSelected;

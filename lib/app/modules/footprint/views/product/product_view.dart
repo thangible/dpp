@@ -3,40 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/cards/download_info_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/title_view.dart';
 import 'package:dpp/config/theme/app_theme.dart';
-// import 'package:dpp/app/modules/footprint/views/widgets/cards/process_summary_card.dart';
-import 'package:dpp/app/modules/footprint/views/widgets/cards/process_identifier_card.dart';
+import 'package:dpp/app/modules/footprint/views/widgets/cards/product_summary_card.dart';
+import 'package:dpp/app/modules/footprint/views/widgets/cards/product_identifier_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.dart';
 //service
-import 'package:dpp/app/services/product_service.dart';
-// import 'package:dpp/app/modules/footprint/controllers/product_search_controller.dart';
-// import 'package:dpp/app/modules/footprint/controllers/process_search_controller.dart';
-import 'package:dpp/app/data/product.dart'; // Assuming you have a Product model
-import 'package:dpp/app/data/machine.dart'; // Assuming you have a Machine model
+import 'package:dpp/app/services/test/product_service.dart';
+import 'package:dpp/app/data/product.dart'; 
 
-class ProcessScreen extends StatefulWidget {
-  const ProcessScreen({super.key, this.animationController});
+class ProductScreen extends StatefulWidget {
+  const ProductScreen({super.key, this.animationController});
 
   final AnimationController? animationController;
 
   @override
-  _ProcessScreenState createState() => _ProcessScreenState();
+  _ProductScreenState createState() => _ProductScreenState();
 }
 
-class _ProcessScreenState extends State<ProcessScreen>
+class _ProductScreenState extends State<ProductScreen>
     with TickerProviderStateMixin {
   // Animation
   Animation<double>? topBarAnimation;
   Animation<double>? cardAnimation;
+  Animation<double>? fadeAnimation;
   int count = 5;
 
   // State variables
-  Future<List<String>> machineIds = ProductService.fetchMachineIds();
+  Future<List<String>> productIds = ProductService.fetchProductIds();
   String _selectedMachineId = "";
   List<Widget> listViews = <Widget>[];
 
   // Product Information
   Product? product;
-  Machine? machine;
 
   // ScrollController and top bar opacity
   final ScrollController scrollController = ScrollController();
@@ -58,9 +55,11 @@ class _ProcessScreenState extends State<ProcessScreen>
     cardAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
+        curve: Curves.easeIn
       ),
     );
+
+    
 
     addCards();
 
@@ -84,63 +83,70 @@ class _ProcessScreenState extends State<ProcessScreen>
 
   // METHODS
   Future<void> loadDataAfterSearch(String machineId) async {
-    final machineReponse = await ProductService.fetchMachineData(machineId);
+    final data = await ProductService.fetchProductData(machineId);
     setState(() {
-      machine = machineReponse;
+      product = data;
     });
+    
   }
 
   // Add cards
   void addCards() {
     listViews.clear();
 
-    if (machine != null) {
-      listViews.add(
-        TitleView(
-          titleTxt: 'Identifier',
-          subTxt: 'Get QR Code',
-          productID: product!.id.toString(),
-          animation: cardAnimation,
-          animationController: widget.animationController!,
-        ),
-      );
+    if (product != null) {
+    listViews.add(
+      TitleView(
+        titleTxt: 'Identifier',
+        subTxt: 'Get QR Code',
+        productID: product!.id?.toString() ?? '',
+        animation: cardAnimation,
+        animationController: widget.animationController!,
+      ),
+    );
 
-      listViews.add(
-        ProcessIdentifierCard(
-          animation: cardAnimation,
-          animationController: widget.animationController!,
-          machineData: <String, dynamic>{}, // Provide appropriate data here
-        ),
-      );
+    listViews.add(
+      ProductIdentifierCard(
+        id: product!.id.toString(),
+        lastUpdated: product!.lastUpdated,
+        productType: product!.type,
+        material: product!.material,
+        manufacturer: product!.manufacturer,
+        imagePath: product!.imagePath,
+        animation: cardAnimation,
+        animationController: widget.animationController!,
+      ),
+    );
 
-      listViews.add(
-        TitleView(
-          titleTxt: 'Summary',
-          subTxt: 'Details',
-          animation: cardAnimation,
-          animationController: widget.animationController!,
-        ),
-      );
+    listViews.add(
+      TitleView(
+        titleTxt: 'Summary',
+        subTxt: 'Details',
+        animation: cardAnimation,
+        animationController: widget.animationController!,
+      ),
+    );
 
-      // 🔶 Only show summary card if data is loaded
-      if (true) {
-        listViews.add(
-          ProcessIdentifierCard(
-            animation: cardAnimation,
-            animationController: widget.animationController!,
-            machineData: <String, dynamic>{}, // Provide appropriate data here
-          ),
-        );
-      }
 
-      listViews.add(
-        DownloadInfoCard(
-          animation: cardAnimation,
-          animationController: widget.animationController!,
-        ),
-      );
+    listViews.add(
+      ProductSummaryCard(
+        energyUsed: product!.energyUsed,
+        co2Emissions: product!.co2Emissions,
+        animation: cardAnimation,
+        animationController: widget.animationController!,
+      ),
+    );
+  
+
+    listViews.add(
+      DownloadInfoCard(
+        animation: cardAnimation,
+        animationController: widget.animationController!,
+      ),
+    );
     }
   }
+
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 50));
@@ -186,7 +192,7 @@ class _ProcessScreenState extends State<ProcessScreen>
               );
             },
             child: ListView.builder(
-              key: ValueKey<String>(_selectedMachineId), // 🔥 Key changes here
+              key: ValueKey<String>(_selectedMachineId),
               controller: scrollController,
               padding: EdgeInsets.only(
                 top:
@@ -250,9 +256,10 @@ class _ProcessScreenState extends State<ProcessScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
+
                               padding: const EdgeInsets.only(left: 50),
                               child: Text(
-                                'Process',
+                                'Products',
                                 style: TextStyle(
                                   fontFamily: AppTheme.fontName,
                                   fontWeight: FontWeight.w700,
@@ -266,9 +273,7 @@ class _ProcessScreenState extends State<ProcessScreen>
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.5,
                               child: SearchBarWidget(
-                                onMachineSelected: (
-                                  String selectedMachineId,
-                                ) async {
+                                onMachineSelected: (String selectedMachineId) async {
                                   print("Machine selected: $selectedMachineId");
                                   _selectedMachineId = selectedMachineId;
                                   await loadDataAfterSearch(selectedMachineId);
