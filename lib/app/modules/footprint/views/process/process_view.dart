@@ -10,8 +10,8 @@ import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.da
 import 'package:dpp/app/services/test/product_service.dart';
 // import 'package:dpp/app/modules/footprint/controllers/product_search_controller.dart';
 // import 'package:dpp/app/modules/footprint/controllers/process_search_controller.dart';
-import 'package:dpp/app/data/product.dart'; // Assuming you have a Product model
-import 'package:dpp/app/data/machine.dart'; // Assuming you have a Machine model
+import 'package:dpp/app/data/test/product.dart'; // Assuming you have a Product model
+import 'package:dpp/app/data/test/machine.dart'; // Assuming you have a Machine model
 
 class ProcessScreen extends StatefulWidget {
   const ProcessScreen({super.key, this.animationController});

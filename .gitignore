@@ -55,3 +55,6 @@ pubspec.lock
 dpp/.gitignore
 pubspec.lock
 
+.metadata
+pubspec.lock
+macos/Flutter/GeneratedPluginRegistrant.swift

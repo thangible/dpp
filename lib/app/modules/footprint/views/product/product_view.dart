@@ -8,7 +8,7 @@ import 'package:dpp/app/modules/footprint/views/widgets/cards/product_identifier
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.dart';
 //service
 import 'package:dpp/app/services/test/product_service.dart';
-import 'package:dpp/app/data/product.dart'; 
+import 'package:dpp/app/data/test/product.dart'; 
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key, this.animationController});

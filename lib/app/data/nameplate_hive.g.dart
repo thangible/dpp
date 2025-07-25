@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'hive_models.dart';
+part of 'nameplate_hive.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -198,3 +198,97 @@ class MarkingsAdapter extends TypeAdapter<Markings> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Nameplate _$NameplateFromJson(Map<String, dynamic> json) => Nameplate(
+      product: json['product'] == null
+          ? null
+          : Product.fromJson(json['product'] as Map<String, dynamic>),
+      manufacturer: json['manufacturer'] == null
+          ? null
+          : Manufacturer.fromJson(json['manufacturer'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$NameplateToJson(Nameplate instance) => <String, dynamic>{
+      'product': instance.product?.toJson(),
+      'manufacturer': instance.manufacturer?.toJson(),
+    };
+
+Product _$ProductFromJson(Map<String, dynamic> json) => Product(
+      uriOfTheProduct: json['uriOfTheProduct'] as String?,
+      manufacturerProductType: json['manufacturerProductType'] as String?,
+      orderCodeOfManufacturer: json['orderCodeOfManufacturer'] as String?,
+      productArticleNumberOfManufacturer:
+          json['productArticleNumberOfManufacturer'] as String?,
+      serialNumber: json['serialNumber'] as String?,
+      yearOfConstruction: (json['yearOfConstruction'] as num?)?.toInt(),
+      dateOfManufacture: json['dateOfManufacture'] == null
+          ? null
+          : DateTime.parse(json['dateOfManufacture'] as String),
+      countryOfOrigin: json['countryOfOrigin'] as String?,
+      manufacturerProductDesignation:
+          json['manufacturerProductDesignation'] as String?,
+      manufacturerProductRoot: json['manufacturerProductRoot'] as String?,
+      manufacturerProductFamily: json['manufacturerProductFamily'] as String?,
+      manufacturer: json['manufacturer'] == null
+          ? null
+          : Manufacturer.fromJson(json['manufacturer'] as Map<String, dynamic>),
+      markings: json['markings'] == null
+          ? null
+          : Markings.fromJson(json['markings'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
+      'uriOfTheProduct': instance.uriOfTheProduct,
+      'manufacturerProductType': instance.manufacturerProductType,
+      'orderCodeOfManufacturer': instance.orderCodeOfManufacturer,
+      'productArticleNumberOfManufacturer':
+          instance.productArticleNumberOfManufacturer,
+      'serialNumber': instance.serialNumber,
+      'yearOfConstruction': instance.yearOfConstruction,
+      'dateOfManufacture': instance.dateOfManufacture?.toIso8601String(),
+      'countryOfOrigin': instance.countryOfOrigin,
+      'manufacturerProductDesignation': instance.manufacturerProductDesignation,
+      'manufacturerProductRoot': instance.manufacturerProductRoot,
+      'manufacturerProductFamily': instance.manufacturerProductFamily,
+      'manufacturer': instance.manufacturer?.toJson(),
+      'markings': instance.markings?.toJson(),
+    };
+
+Manufacturer _$ManufacturerFromJson(Map<String, dynamic> json) => Manufacturer(
+      uniqueFacilityIdentifier: json['uniqueFacilityIdentifier'] as String?,
+      manufacturerName: json['manufacturerName'] as String?,
+    );
+
+Map<String, dynamic> _$ManufacturerToJson(Manufacturer instance) =>
+    <String, dynamic>{
+      'uniqueFacilityIdentifier': instance.uniqueFacilityIdentifier,
+      'manufacturerName': instance.manufacturerName,
+    };
+
+Markings _$MarkingsFromJson(Map<String, dynamic> json) => Markings(
+      markingName: json['markingName'] as String?,
+      designationOfCertificateOrApproval:
+          json['designationOfCertificateOrApproval'] as String?,
+      issueDate: json['issueDate'] == null
+          ? null
+          : DateTime.parse(json['issueDate'] as String),
+      expiryDate: json['expiryDate'] == null
+          ? null
+          : DateTime.parse(json['expiryDate'] as String),
+      markingAdditionalText: json['markingAdditionalText'] as String?,
+      markingFile: json['markingFile'] as String?,
+    );
+
+Map<String, dynamic> _$MarkingsToJson(Markings instance) => <String, dynamic>{
+      'markingName': instance.markingName,
+      'designationOfCertificateOrApproval':
+          instance.designationOfCertificateOrApproval,
+      'issueDate': instance.issueDate?.toIso8601String(),
+      'expiryDate': instance.expiryDate?.toIso8601String(),
+      'markingAdditionalText': instance.markingAdditionalText,
+      'markingFile': instance.markingFile,
+    };
