@@ -6,7 +6,7 @@ part 'base_aas_model.g.dart'; // Generated file for JSON serialization
 @JsonSerializable(genericArgumentFactories: true, explicitToJson: true)
 class PagingResponse<T> {
   @JsonKey(name: 'paging_metadata')
-  final Map<String, dynamic>? pagingMetadata; // Can be more specific if structure is known
+  final Map<String, dynamic>? pagingMetadata; //TODO: change dynamic type to a specific type
   final List<T> result;
 
   PagingResponse({this.pagingMetadata, required this.result});
@@ -23,10 +23,10 @@ class PagingResponse<T> {
 
 @JsonSerializable(explicitToJson: true)
 class Reference {
-  final String type;
-  final List<Key> keys;
+  final String? type;
+  final List<Key>? keys;
 
-  Reference({required this.type, required this.keys});
+  Reference({this.type, this.keys});
 
   factory Reference.fromJson(Map<String, dynamic> json) =>
       _$ReferenceFromJson(json);
@@ -35,10 +35,10 @@ class Reference {
 
 @JsonSerializable()
 class Key {
-  final String type;
-  final String value;
+  final String? type;
+  final String? value;
 
-  Key({required this.type, required this.value});
+  Key({this.type, this.value});
 
   factory Key.fromJson(Map<String, dynamic> json) => _$KeyFromJson(json);
   Map<String, dynamic> toJson() => _$KeyToJson(this);
@@ -46,10 +46,10 @@ class Key {
 
 @JsonSerializable()
 class LangString {
-  final String language;
-  final String text;
+  final String? language;
+  final String? text;
 
-  LangString({required this.language, required this.text});
+  LangString({this.language, this.text});
 
   factory LangString.fromJson(Map<String, dynamic> json) =>
       _$LangStringFromJson(json);
@@ -95,16 +95,16 @@ class Qualifier {
 // Ensure all specific SubmodelElement types are defined here or imported.
 @JsonSerializable(explicitToJson: true)
 class SubmodelElement {
-  final String modelType;
-  final String idShort;
+  final String? modelType;
+  final String? idShort;
   final Reference? semanticId;
   final List<Reference>? supplementalSemanticIds;
   final List<LangString>? description;
   final List<Qualifier>? qualifiers;
 
   SubmodelElement({
-    required this.modelType,
-    required this.idShort,
+    this.modelType,
+    this.idShort,
     this.semanticId,
     this.supplementalSemanticIds,
     this.description,
@@ -113,7 +113,12 @@ class SubmodelElement {
 
   // This factory is crucial for polymorphic deserialization.
   factory SubmodelElement.fromJson(Map<String, dynamic> json) {
-    switch (json['modelType']) {
+    final modelType = json['modelType'] as String?;
+    if (modelType == null) {
+      return _$SubmodelElementFromJson(json);
+    }
+
+    switch (modelType) {
       case 'Property':
         return Property.fromJson(json);
       case 'File':
@@ -125,7 +130,6 @@ class SubmodelElement {
       case 'SubmodelElementList':
         return SubmodelElementList.fromJson(json);
       default:
-        // Fallback for unknown or generic submodel elements
         return _$SubmodelElementFromJson(json);
     }
   }
@@ -135,11 +139,11 @@ class SubmodelElement {
 @JsonSerializable(explicitToJson: true)
 class Property extends SubmodelElement {
   final dynamic value; // Can be String, int, double, bool, etc.
-  final String valueType;
+  final String? valueType;
 
   Property({
-    required super.modelType,
-    required super.idShort,
+    super.modelType,
+    super.idShort,
     super.semanticId,
     super.supplementalSemanticIds,
     super.description,
@@ -156,18 +160,18 @@ class Property extends SubmodelElement {
 
 @JsonSerializable(explicitToJson: true)
 class FileSubmodelElement extends SubmodelElement {
-  final String contentType;
-  final String value; // The path/URL to the file
+  final String? contentType;
+  final String? value; // The path/URL to the file
 
   FileSubmodelElement({
-    required super.modelType,
-    required super.idShort,
+    super.modelType,
+    super.idShort,
     super.semanticId,
     super.supplementalSemanticIds,
     super.description,
     super.qualifiers,
-    required this.contentType,
-    required this.value,
+    this.contentType,
+    this.value,
   });
 
   factory FileSubmodelElement.fromJson(Map<String, dynamic> json) =>
@@ -203,8 +207,8 @@ class SubmodelElementCollection extends SubmodelElement {
   final List<SubmodelElement>? value; // Nested submodel elements
 
   SubmodelElementCollection({
-    required super.modelType,
-    required super.idShort,
+    super.modelType,
+    super.idShort,
     super.semanticId,
     super.supplementalSemanticIds,
     super.description,
@@ -225,8 +229,8 @@ class SubmodelElementList extends SubmodelElement {
   final List<SubmodelElement>? value; // Nested submodel elements
 
   SubmodelElementList({
-    required super.modelType,
-    required super.idShort,
+    super.modelType, // Remove 'required'
+    super.idShort, // Remove 'required'
     super.semanticId,
     super.supplementalSemanticIds,
     super.description,

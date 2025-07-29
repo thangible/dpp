@@ -47,4 +47,5 @@ class AppHomeController extends GetxController implements TickerProvider {
     animationController.dispose();
     super.onClose();
   }
-}
+} 
+

@@ -25,20 +25,20 @@ Map<String, dynamic> _$PagingResponseToJson<T>(
     };
 
 Reference _$ReferenceFromJson(Map<String, dynamic> json) => Reference(
-      type: json['type'] as String,
-      keys: (json['keys'] as List<dynamic>)
-          .map((e) => Key.fromJson(e as Map<String, dynamic>))
+      type: json['type'] as String?,
+      keys: (json['keys'] as List<dynamic>?)
+          ?.map((e) => Key.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$ReferenceToJson(Reference instance) => <String, dynamic>{
       'type': instance.type,
-      'keys': instance.keys.map((e) => e.toJson()).toList(),
+      'keys': instance.keys?.map((e) => e.toJson()).toList(),
     };
 
 Key _$KeyFromJson(Map<String, dynamic> json) => Key(
-      type: json['type'] as String,
-      value: json['value'] as String,
+      type: json['type'] as String?,
+      value: json['value'] as String?,
     );
 
 Map<String, dynamic> _$KeyToJson(Key instance) => <String, dynamic>{
@@ -47,8 +47,8 @@ Map<String, dynamic> _$KeyToJson(Key instance) => <String, dynamic>{
     };
 
 LangString _$LangStringFromJson(Map<String, dynamic> json) => LangString(
-      language: json['language'] as String,
-      text: json['text'] as String,
+      language: json['language'] as String?,
+      text: json['text'] as String?,
     );
 
 Map<String, dynamic> _$LangStringToJson(LangString instance) =>
@@ -92,8 +92,8 @@ Map<String, dynamic> _$QualifierToJson(Qualifier instance) => <String, dynamic>{
 
 SubmodelElement _$SubmodelElementFromJson(Map<String, dynamic> json) =>
     SubmodelElement(
-      modelType: json['modelType'] as String,
-      idShort: json['idShort'] as String,
+      modelType: json['modelType'] as String?,
+      idShort: json['idShort'] as String?,
       semanticId: json['semanticId'] == null
           ? null
           : Reference.fromJson(json['semanticId'] as Map<String, dynamic>),
@@ -121,8 +121,8 @@ Map<String, dynamic> _$SubmodelElementToJson(SubmodelElement instance) =>
     };
 
 Property _$PropertyFromJson(Map<String, dynamic> json) => Property(
-      modelType: json['modelType'] as String,
-      idShort: json['idShort'] as String,
+      modelType: json['modelType'] as String?,
+      idShort: json['idShort'] as String?,
       semanticId: json['semanticId'] == null
           ? null
           : Reference.fromJson(json['semanticId'] as Map<String, dynamic>),
@@ -137,7 +137,7 @@ Property _$PropertyFromJson(Map<String, dynamic> json) => Property(
           ?.map((e) => Qualifier.fromJson(e as Map<String, dynamic>))
           .toList(),
       value: json['value'],
-      valueType: json['valueType'] as String,
+      valueType: json['valueType'] as String?,
     );
 
 Map<String, dynamic> _$PropertyToJson(Property instance) => <String, dynamic>{
@@ -154,8 +154,8 @@ Map<String, dynamic> _$PropertyToJson(Property instance) => <String, dynamic>{
 
 FileSubmodelElement _$FileSubmodelElementFromJson(Map<String, dynamic> json) =>
     FileSubmodelElement(
-      modelType: json['modelType'] as String,
-      idShort: json['idShort'] as String,
+      modelType: json['modelType'] as String?,
+      idShort: json['idShort'] as String?,
       semanticId: json['semanticId'] == null
           ? null
           : Reference.fromJson(json['semanticId'] as Map<String, dynamic>),
@@ -169,8 +169,8 @@ FileSubmodelElement _$FileSubmodelElementFromJson(Map<String, dynamic> json) =>
       qualifiers: (json['qualifiers'] as List<dynamic>?)
           ?.map((e) => Qualifier.fromJson(e as Map<String, dynamic>))
           .toList(),
-      contentType: json['contentType'] as String,
-      value: json['value'] as String,
+      contentType: json['contentType'] as String?,
+      value: json['value'] as String?,
     );
 
 Map<String, dynamic> _$FileSubmodelElementToJson(
@@ -190,8 +190,8 @@ Map<String, dynamic> _$FileSubmodelElementToJson(
 MultiLanguageProperty _$MultiLanguagePropertyFromJson(
         Map<String, dynamic> json) =>
     MultiLanguageProperty(
-      modelType: json['modelType'] as String,
-      idShort: json['idShort'] as String,
+      modelType: json['modelType'] as String?,
+      idShort: json['idShort'] as String?,
       semanticId: json['semanticId'] == null
           ? null
           : Reference.fromJson(json['semanticId'] as Map<String, dynamic>),
@@ -230,8 +230,8 @@ Map<String, dynamic> _$MultiLanguagePropertyToJson(
 SubmodelElementCollection _$SubmodelElementCollectionFromJson(
         Map<String, dynamic> json) =>
     SubmodelElementCollection(
-      modelType: json['modelType'] as String,
-      idShort: json['idShort'] as String,
+      modelType: json['modelType'] as String?,
+      idShort: json['idShort'] as String?,
       semanticId: json['semanticId'] == null
           ? null
           : Reference.fromJson(json['semanticId'] as Map<String, dynamic>),
@@ -265,8 +265,8 @@ Map<String, dynamic> _$SubmodelElementCollectionToJson(
 
 SubmodelElementList _$SubmodelElementListFromJson(Map<String, dynamic> json) =>
     SubmodelElementList(
-      modelType: json['modelType'] as String,
-      idShort: json['idShort'] as String,
+      modelType: json['modelType'] as String?,
+      idShort: json['idShort'] as String?,
       semanticId: json['semanticId'] == null
           ? null
           : Reference.fromJson(json['semanticId'] as Map<String, dynamic>),

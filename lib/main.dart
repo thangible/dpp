@@ -1,3 +1,4 @@
+import 'package:dpp/app/data/generic_submodel.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
@@ -6,16 +7,29 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'app/routes/app_pages.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
+import 'package:dpp/app/services/dio_aux.dart';
+import 'package:dpp/app/services/submodel_service.dart';
 
 void main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
-  debugPaintSizeEnabled = true;
+
   await Hive.initFlutter();
   await Hive.openBox('product_search');
+
+  final dio = getDio();
+
+  try {
+    final client = SubmodelService(dio);
+    final List<Submodel> submodels = await client.getAllSubmodels();
+    debugPrint('Loaded ${submodels.length} submodels');
+    debugPrint(submodels.map((sm) => sm.toString()).toList());
+  } catch (e) {
+    debugPrint('Error loading submodels: $e');
+  }
+
+  debugPaintSizeEnabled = true;
+
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

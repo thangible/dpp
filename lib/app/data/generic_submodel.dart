@@ -28,6 +28,11 @@ class Submodel {
     this.submodelElements,
   });
 
+  @override
+  String toString() {
+    return 'Submodel(modelType: $modelType, kind: $kind, semanticId: $semanticId, administration: $administration, id: $id, description: $description, idShort: $idShort, submodelElements: $submodelElements)';
+  }
+
   factory Submodel.fromJson(Map<String, dynamic> json) =>
       _$SubmodelFromJson(json);
   Map<String, dynamic> toJson() => _$SubmodelToJson(this);

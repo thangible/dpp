@@ -8,6 +8,7 @@ part 'basyx_api_client.g.dart';
 @RestApi(
   baseUrl: "http://localhost:8081",
 ) // Base URL for AAS Service (can be configured via Dio)
+
 abstract class BaSyxApiClient {
   factory BaSyxApiClient(Dio dio, {String baseUrl}) = _BaSyxApiClient;
 

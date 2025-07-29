@@ -3,11 +3,8 @@ import 'dart:convert'; // For utf8.encode for file uploads and base64UrlEncode
 import 'package:dio/dio.dart';
 import 'package:dpp/app/services/basyx_api_client.dart'; // Adjust import path as needed
 import 'package:dpp/app/data/generic_submodel.dart'; // Updated import
-import 'package:dpp/app/services/basyx_file_service.dart'; // For file upload/download operations
-// import 'package:dpp/app/data/response_wrapper.dart'; // Updated import
 
-// A simple utility for encoding IDs if necessary, assuming it's still needed
-// (e.g., if IDs contain characters that need base64url encoding before being used in paths)
+
 String utf8Base64UrlEncode(String input) {
   final bytes = utf8.encode(input);
   return base64UrlEncode(bytes);
