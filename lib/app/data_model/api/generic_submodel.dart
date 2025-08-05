@@ -1,6 +1,6 @@
 // lib/models/specific_aas_models.dart
 import 'package:json_annotation/json_annotation.dart';
-import 'package:dpp/app/data/base_aas_model.dart'; // Import Hive-specific models for Submodel content
+import 'package:dpp/app/data_model/api/base_aas_model.dart'; // Import Hive-specific models for Submodel content
 
 part 'generic_submodel.g.dart'; // Generated file for JSON serialization
 

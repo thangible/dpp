@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:dpp/app/data/test/product.dart';
-import 'package:dpp/app/data/test/machine.dart';
+import 'package:dpp/app/data_model/test/product.dart';
+import 'package:dpp/app/data_model/test/machine.dart';
 
 class ProductService {
   static Future<Product> fetchProductData(String productId) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/config/theme/app_theme.dart';
-import 'package:dpp/app/data/test/product.dart';
+import 'package:dpp/app/data_model/test/product.dart';
 import 'package:dpp/app/services/test/product_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {

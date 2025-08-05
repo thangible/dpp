@@ -1,4 +1,4 @@
-import 'package:dpp/app/data/generic_submodel.dart';
+import 'package:dpp/app/data_model/api/generic_submodel.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
@@ -8,24 +8,32 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'app/routes/app_pages.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dpp/app/services/dio_aux.dart';
-import 'package:dpp/app/services/submodel_service.dart';
+import 'package:dpp/app/services/api/dio_aux.dart';
+import 'package:dpp/app/services/api/nameplate_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
-  await Hive.openBox('product_search');
+  await Hive.openBox('nameplate');
 
   final dio = getDio();
 
-  try {
-    final client = SubmodelService(dio);
-    final List<Submodel> submodels = await client.getAllSubmodels();
-    debugPrint('Loaded ${submodels.length} submodels');
-    debugPrint(submodels.map((sm) => sm.toString()).toList());
+  try { 
+    final client = NameplateService(dio);
+    final Submodel submodel = await client.getNameplateSubmodel();
+
+    print(submodel.toString());
+    await Hive.box('nameplate').put('submodel', submodel.toJson());
+    final submodelJson = Hive.box('nameplate').get('submodel');
+    if (submodelJson != null) {
+      final retrievedSubmodel = Submodel.fromJson(
+        Map<String, dynamic>.from(submodelJson),
+      );
+      print('Retrieved Submodel: ${retrievedSubmodel.toString()}');
+    }
   } catch (e) {
-    debugPrint('Error loading submodels: $e');
+    print('Error loading submodels: $e');
   }
 
   debugPaintSizeEnabled = true;

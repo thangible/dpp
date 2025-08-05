@@ -1,13 +1,12 @@
 // lib/services/submodel_service.dart
 import 'dart:convert'; // For utf8.encode for file uploads and base64UrlEncode
 import 'package:dio/dio.dart';
-import 'package:dpp/app/services/basyx_api_client.dart'; // Adjust import path as needed
-import 'package:dpp/app/data/generic_submodel.dart'; // Updated import
-
+import 'package:dpp/app/services/api/basyx_api_client.dart'; // Adjust import path as needed
+import 'package:dpp/app/data_model/api/generic_submodel.dart'; // Updated import
 
 String utf8Base64UrlEncode(String input) {
   final bytes = utf8.encode(input);
-  return base64UrlEncode(bytes);
+  return base64.encode(bytes).replaceAll('=', '');
 }
 
 class SubmodelService {
@@ -38,6 +37,7 @@ class SubmodelService {
   }) async {
     // Apply encoding if the identifier itself needs it before being passed to Retrofit
     final encodedSubmodelIdentifier = utf8Base64UrlEncode(submodelIdentifier);
+    print('Encoded Submodel Identifier: $encodedSubmodelIdentifier');
     return await _apiClient.getSubmodel(
       encodedSubmodelIdentifier,
       level,

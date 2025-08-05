@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:dpp/app/services/basyx_api_client.dart';
+import 'package:dpp/app/services/api/basyx_api_client.dart';
 
 class BaSyxFileService {
   final BaSyxApiClient _apiClient;

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:dpp/app/data/base_aas_model.dart';
-import 'package:dpp/app/data/generic_submodel.dart';
+import 'package:dpp/app/data_model/api/base_aas_model.dart';
+import 'package:dpp/app/data_model/api/generic_submodel.dart';
 part 'basyx_api_client.g.dart';
 
 // --- BaSyxApiClient (Retrofit Interface) ---
