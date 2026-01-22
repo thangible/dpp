@@ -14,6 +14,7 @@ class Submodel {
   final AdministrativeInformation? administration;
   final String id;
   final List<LangString>? description;
+  final List<LangString>? displayName; // Added for display names
   final String idShort;
   final List<SubmodelElement>? submodelElements;
 
@@ -24,13 +25,14 @@ class Submodel {
     this.administration,
     required this.id,
     this.description,
+    this.displayName,
     required this.idShort,
     this.submodelElements,
   });
 
   @override
   String toString() {
-    return 'Submodel(modelType: $modelType, kind: $kind, semanticId: $semanticId, administration: $administration, id: $id, description: $description, idShort: $idShort, submodelElements: $submodelElements)';
+    return 'Submodel(modelType: $modelType, kind: $kind, semanticId: $semanticId, administration: $administration, id: $id, description: $description, displayName: $displayName, idShort: $idShort, submodelElements: $submodelElements)';
   }
 
   factory Submodel.fromJson(Map<String, dynamic> json) =>
@@ -41,9 +43,19 @@ class Submodel {
 @JsonSerializable(explicitToJson: true)
 class AssetAdministrationShell {
   final String id;
-  final Map<String, dynamic> content; // Placeholder for AAS content
+  final String idShort;
+  final String? modelType;
+  final AssetInformation? assetInformation;
+  final List<Reference>?
+  submodels; // Changed from generic content to specific submodel references
 
-  AssetAdministrationShell({required this.id, required this.content});
+  AssetAdministrationShell({
+    required this.id,
+    required this.idShort,
+    this.modelType,
+    this.assetInformation,
+    this.submodels,
+  });
 
   factory AssetAdministrationShell.fromJson(Map<String, dynamic> json) =>
       _$AssetAdministrationShellFromJson(json);
@@ -77,29 +89,33 @@ class ConceptDescription {
 class AssetInformation {
   final String globalAssetId;
   final String assetKind;
-  AssetInformation({required this.globalAssetId, required this.assetKind});
+  final String? assetType; // Added assetType field
+
+  AssetInformation({
+    required this.globalAssetId,
+    required this.assetKind,
+    this.assetType,
+  });
 
   factory AssetInformation.fromJson(Map<String, dynamic> json) =>
       _$AssetInformationFromJson(json);
   Map<String, dynamic> toJson() => _$AssetInformationToJson(this);
 }
 
+// Add a wrapper class for the complete AAS response
 @JsonSerializable(explicitToJson: true)
-class OperationRequest {
-  final Map<String, dynamic> inputArguments;
-  OperationRequest({required this.inputArguments});
+class AasResponse {
+  final List<AssetAdministrationShell>? assetAdministrationShells;
+  final List<Submodel>? submodels;
+  final List<ConceptDescription>? conceptDescriptions;
 
-  factory OperationRequest.fromJson(Map<String, dynamic> json) =>
-      _$OperationRequestFromJson(json);
-  Map<String, dynamic> toJson() => _$OperationRequestToJson(this);
-}
+  AasResponse({
+    this.assetAdministrationShells,
+    this.submodels,
+    this.conceptDescriptions,
+  });
 
-@JsonSerializable(explicitToJson: true)
-class OperationResponse {
-  final Map<String, dynamic> outputArguments;
-  OperationResponse({required this.outputArguments});
-
-  factory OperationResponse.fromJson(Map<String, dynamic> json) =>
-      _$OperationResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$OperationResponseToJson(this);
+  factory AasResponse.fromJson(Map<String, dynamic> json) =>
+      _$AasResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$AasResponseToJson(this);
 }

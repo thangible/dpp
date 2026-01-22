@@ -74,8 +74,9 @@ Map<String, dynamic> _$AdministrativeInformationToJson(
     };
 
 Qualifier _$QualifierFromJson(Map<String, dynamic> json) => Qualifier(
-      semanticId:
-          Reference.fromJson(json['semanticId'] as Map<String, dynamic>),
+      semanticId: json['semanticId'] == null
+          ? null
+          : Reference.fromJson(json['semanticId'] as Map<String, dynamic>),
       kind: json['kind'] as String,
       type: json['type'] as String,
       value: json['value'] as String,
@@ -83,7 +84,7 @@ Qualifier _$QualifierFromJson(Map<String, dynamic> json) => Qualifier(
     );
 
 Map<String, dynamic> _$QualifierToJson(Qualifier instance) => <String, dynamic>{
-      'semanticId': instance.semanticId.toJson(),
+      'semanticId': instance.semanticId?.toJson(),
       'kind': instance.kind,
       'type': instance.type,
       'value': instance.value,
@@ -104,6 +105,10 @@ SubmodelElement _$SubmodelElementFromJson(Map<String, dynamic> json) =>
       description: (json['description'] as List<dynamic>?)
           ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
           .toList(),
+      displayName: (json['displayName'] as List<dynamic>?)
+          ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      category: json['category'] as String?,
       qualifiers: (json['qualifiers'] as List<dynamic>?)
           ?.map((e) => Qualifier.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -117,6 +122,8 @@ Map<String, dynamic> _$SubmodelElementToJson(SubmodelElement instance) =>
       'supplementalSemanticIds':
           instance.supplementalSemanticIds?.map((e) => e.toJson()).toList(),
       'description': instance.description?.map((e) => e.toJson()).toList(),
+      'displayName': instance.displayName?.map((e) => e.toJson()).toList(),
+      'category': instance.category,
       'qualifiers': instance.qualifiers?.map((e) => e.toJson()).toList(),
     };
 
@@ -133,6 +140,10 @@ Property _$PropertyFromJson(Map<String, dynamic> json) => Property(
       description: (json['description'] as List<dynamic>?)
           ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
           .toList(),
+      displayName: (json['displayName'] as List<dynamic>?)
+          ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      category: json['category'] as String?,
       qualifiers: (json['qualifiers'] as List<dynamic>?)
           ?.map((e) => Qualifier.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -147,6 +158,8 @@ Map<String, dynamic> _$PropertyToJson(Property instance) => <String, dynamic>{
       'supplementalSemanticIds':
           instance.supplementalSemanticIds?.map((e) => e.toJson()).toList(),
       'description': instance.description?.map((e) => e.toJson()).toList(),
+      'displayName': instance.displayName?.map((e) => e.toJson()).toList(),
+      'category': instance.category,
       'qualifiers': instance.qualifiers?.map((e) => e.toJson()).toList(),
       'value': instance.value,
       'valueType': instance.valueType,
@@ -202,6 +215,10 @@ MultiLanguageProperty _$MultiLanguagePropertyFromJson(
       description: (json['description'] as List<dynamic>?)
           ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
           .toList(),
+      displayName: (json['displayName'] as List<dynamic>?)
+          ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      category: json['category'] as String?,
       qualifiers: (json['qualifiers'] as List<dynamic>?)
           ?.map((e) => Qualifier.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -222,6 +239,8 @@ Map<String, dynamic> _$MultiLanguagePropertyToJson(
       'supplementalSemanticIds':
           instance.supplementalSemanticIds?.map((e) => e.toJson()).toList(),
       'description': instance.description?.map((e) => e.toJson()).toList(),
+      'displayName': instance.displayName?.map((e) => e.toJson()).toList(),
+      'category': instance.category,
       'qualifiers': instance.qualifiers?.map((e) => e.toJson()).toList(),
       'value': instance.value.map((e) => e.toJson()).toList(),
       'valueId': instance.valueId?.toJson(),
@@ -277,11 +296,20 @@ SubmodelElementList _$SubmodelElementListFromJson(Map<String, dynamic> json) =>
       description: (json['description'] as List<dynamic>?)
           ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
           .toList(),
+      displayName: (json['displayName'] as List<dynamic>?)
+          ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      category: json['category'] as String?,
       qualifiers: (json['qualifiers'] as List<dynamic>?)
           ?.map((e) => Qualifier.fromJson(e as Map<String, dynamic>))
           .toList(),
       orderRelevant: json['orderRelevant'] as bool?,
       typeValueListElement: json['typeValueListElement'] as String?,
+      semanticIdListElement: json['semanticIdListElement'] == null
+          ? null
+          : Reference.fromJson(
+              json['semanticIdListElement'] as Map<String, dynamic>),
+      valueTypeListElement: json['valueTypeListElement'] as String?,
       value: (json['value'] as List<dynamic>?)
           ?.map((e) => SubmodelElement.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -296,9 +324,13 @@ Map<String, dynamic> _$SubmodelElementListToJson(
       'supplementalSemanticIds':
           instance.supplementalSemanticIds?.map((e) => e.toJson()).toList(),
       'description': instance.description?.map((e) => e.toJson()).toList(),
+      'displayName': instance.displayName?.map((e) => e.toJson()).toList(),
+      'category': instance.category,
       'qualifiers': instance.qualifiers?.map((e) => e.toJson()).toList(),
       'orderRelevant': instance.orderRelevant,
       'typeValueListElement': instance.typeValueListElement,
+      'semanticIdListElement': instance.semanticIdListElement?.toJson(),
+      'valueTypeListElement': instance.valueTypeListElement,
       'value': instance.value?.map((e) => e.toJson()).toList(),
     };
 

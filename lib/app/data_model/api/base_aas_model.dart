@@ -71,14 +71,15 @@ class AdministrativeInformation {
 
 @JsonSerializable(explicitToJson: true)
 class Qualifier {
-  final Reference semanticId;
+  final Reference?
+  semanticId; // Made optional to handle cases without semanticId
   final String kind;
   final String type;
   final String value;
   final String valueType;
 
   Qualifier({
-    required this.semanticId,
+    this.semanticId, // Made optional
     required this.kind,
     required this.type,
     required this.value,
@@ -90,9 +91,6 @@ class Qualifier {
   Map<String, dynamic> toJson() => _$QualifierToJson(this);
 }
 
-// --- 3. Submodel Element Base Class and Specific Types (Polymorphic) ---
-// Note: The fromJson factory in SubmodelElement handles polymorphic deserialization.
-// Ensure all specific SubmodelElement types are defined here or imported.
 @JsonSerializable(explicitToJson: true)
 class SubmodelElement {
   final String? modelType;
@@ -100,6 +98,8 @@ class SubmodelElement {
   final Reference? semanticId;
   final List<Reference>? supplementalSemanticIds;
   final List<LangString>? description;
+  final List<LangString>? displayName; // Added for display names
+  final String? category; // Added for category field
   final List<Qualifier>? qualifiers;
 
   SubmodelElement({
@@ -108,6 +108,8 @@ class SubmodelElement {
     this.semanticId,
     this.supplementalSemanticIds,
     this.description,
+    this.displayName,
+    this.category,
     this.qualifiers,
   });
 
@@ -147,9 +149,11 @@ class Property extends SubmodelElement {
     super.semanticId,
     super.supplementalSemanticIds,
     super.description,
+    super.displayName,
+    super.category,
     super.qualifiers,
     this.value,
-    required this.valueType,
+    this.valueType, // Made optional to handle cases without valueType
   });
 
   factory Property.fromJson(Map<String, dynamic> json) =>
@@ -186,11 +190,13 @@ class MultiLanguageProperty extends SubmodelElement {
   final Reference? valueId;
 
   MultiLanguageProperty({
-    required super.modelType,
-    required super.idShort,
+    super.modelType, // Made optional
+    super.idShort, // Made optional
     super.semanticId,
     super.supplementalSemanticIds,
     super.description,
+    super.displayName,
+    super.category,
     super.qualifiers,
     required this.value,
     this.valueId,
@@ -226,17 +232,24 @@ class SubmodelElementCollection extends SubmodelElement {
 class SubmodelElementList extends SubmodelElement {
   final bool? orderRelevant;
   final String? typeValueListElement;
+  final Reference?
+  semanticIdListElement; // Added for semantic ID of list elements
+  final String? valueTypeListElement; // Added for value type of list elements
   final List<SubmodelElement>? value; // Nested submodel elements
 
   SubmodelElementList({
-    super.modelType, // Remove 'required'
-    super.idShort, // Remove 'required'
+    super.modelType,
+    super.idShort,
     super.semanticId,
     super.supplementalSemanticIds,
     super.description,
+    super.displayName,
+    super.category,
     super.qualifiers,
     this.orderRelevant,
     this.typeValueListElement,
+    this.semanticIdListElement,
+    this.valueTypeListElement,
     this.value,
   });
 

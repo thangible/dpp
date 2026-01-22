@@ -39,8 +39,7 @@ class Product extends HiveObject {
   @HiveField(3)
   String? productArticleNumberOfManufacturer;
 
-  @HiveField(4)
-  String? serialNumber;
+  @HiveField(4)  String? serialNumber;
 
   @HiveField(5)
   int? yearOfConstruction;

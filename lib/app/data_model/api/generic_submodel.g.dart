@@ -20,6 +20,9 @@ Submodel _$SubmodelFromJson(Map<String, dynamic> json) => Submodel(
       description: (json['description'] as List<dynamic>?)
           ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
           .toList(),
+      displayName: (json['displayName'] as List<dynamic>?)
+          ?.map((e) => LangString.fromJson(e as Map<String, dynamic>))
+          .toList(),
       idShort: json['idShort'] as String,
       submodelElements: (json['submodelElements'] as List<dynamic>?)
           ?.map((e) => SubmodelElement.fromJson(e as Map<String, dynamic>))
@@ -33,6 +36,7 @@ Map<String, dynamic> _$SubmodelToJson(Submodel instance) => <String, dynamic>{
       'administration': instance.administration?.toJson(),
       'id': instance.id,
       'description': instance.description?.map((e) => e.toJson()).toList(),
+      'displayName': instance.displayName?.map((e) => e.toJson()).toList(),
       'idShort': instance.idShort,
       'submodelElements':
           instance.submodelElements?.map((e) => e.toJson()).toList(),
@@ -42,14 +46,25 @@ AssetAdministrationShell _$AssetAdministrationShellFromJson(
         Map<String, dynamic> json) =>
     AssetAdministrationShell(
       id: json['id'] as String,
-      content: json['content'] as Map<String, dynamic>,
+      idShort: json['idShort'] as String,
+      modelType: json['modelType'] as String?,
+      assetInformation: json['assetInformation'] == null
+          ? null
+          : AssetInformation.fromJson(
+              json['assetInformation'] as Map<String, dynamic>),
+      submodels: (json['submodels'] as List<dynamic>?)
+          ?.map((e) => Reference.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$AssetAdministrationShellToJson(
         AssetAdministrationShell instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'content': instance.content,
+      'idShort': instance.idShort,
+      'modelType': instance.modelType,
+      'assetInformation': instance.assetInformation?.toJson(),
+      'submodels': instance.submodels?.map((e) => e.toJson()).toList(),
     };
 
 ConceptDescription _$ConceptDescriptionFromJson(Map<String, dynamic> json) =>
@@ -85,30 +100,35 @@ AssetInformation _$AssetInformationFromJson(Map<String, dynamic> json) =>
     AssetInformation(
       globalAssetId: json['globalAssetId'] as String,
       assetKind: json['assetKind'] as String,
+      assetType: json['assetType'] as String?,
     );
 
 Map<String, dynamic> _$AssetInformationToJson(AssetInformation instance) =>
     <String, dynamic>{
       'globalAssetId': instance.globalAssetId,
       'assetKind': instance.assetKind,
+      'assetType': instance.assetType,
     };
 
-OperationRequest _$OperationRequestFromJson(Map<String, dynamic> json) =>
-    OperationRequest(
-      inputArguments: json['inputArguments'] as Map<String, dynamic>,
+AasResponse _$AasResponseFromJson(Map<String, dynamic> json) => AasResponse(
+      assetAdministrationShells:
+          (json['assetAdministrationShells'] as List<dynamic>?)
+              ?.map((e) =>
+                  AssetAdministrationShell.fromJson(e as Map<String, dynamic>))
+              .toList(),
+      submodels: (json['submodels'] as List<dynamic>?)
+          ?.map((e) => Submodel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      conceptDescriptions: (json['conceptDescriptions'] as List<dynamic>?)
+          ?.map((e) => ConceptDescription.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
-Map<String, dynamic> _$OperationRequestToJson(OperationRequest instance) =>
+Map<String, dynamic> _$AasResponseToJson(AasResponse instance) =>
     <String, dynamic>{
-      'inputArguments': instance.inputArguments,
-    };
-
-OperationResponse _$OperationResponseFromJson(Map<String, dynamic> json) =>
-    OperationResponse(
-      outputArguments: json['outputArguments'] as Map<String, dynamic>,
-    );
-
-Map<String, dynamic> _$OperationResponseToJson(OperationResponse instance) =>
-    <String, dynamic>{
-      'outputArguments': instance.outputArguments,
+      'assetAdministrationShells':
+          instance.assetAdministrationShells?.map((e) => e.toJson()).toList(),
+      'submodels': instance.submodels?.map((e) => e.toJson()).toList(),
+      'conceptDescriptions':
+          instance.conceptDescriptions?.map((e) => e.toJson()).toList(),
     };

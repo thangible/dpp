@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dpp/app/services/test/product_service.dart';
 
 class SearchController extends GetxController {
   final textController = TextEditingController();
@@ -23,8 +22,8 @@ class SearchController extends GetxController {
   }
 
   Future<void> _loadMachineIds() async {
-    final ids = await ProductService.fetchProductIds();
-    machineIds.assignAll(ids);
+    // In a real app, replace this with a service call.
+    // machineIds.assignAll(await MockProductService.fetchMachineIds());
   }
 
   void _filterSuggestions() {
