@@ -30,7 +30,7 @@ class _ProcessScreenState extends State<ProcessScreen>
   int count = 5;
 
   // State variables
-  Future<List<String>> machineIds = ProductService.fetchMachineIds();
+  List<String> machineIds = ProductService.productIds;
   String _selectedMachineId = "";
   List<Widget> listViews = <Widget>[];
 
@@ -84,9 +84,9 @@ class _ProcessScreenState extends State<ProcessScreen>
 
   // METHODS
   Future<void> loadDataAfterSearch(String machineId) async {
-    final machineReponse = await ProductService.fetchMachineData(machineId);
+    final data = await ProductService.getProductById(machineId);
     setState(() {
-      machine = machineReponse;
+      product = data;
     });
   }
 

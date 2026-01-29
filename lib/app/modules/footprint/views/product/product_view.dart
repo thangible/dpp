@@ -8,7 +8,7 @@ import 'package:dpp/app/modules/footprint/views/widgets/cards/product_identifier
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.dart';
 //service
 import 'package:dpp/app/services/test/product_service.dart';
-import 'package:dpp/app/data_model/test/product.dart'; 
+import 'package:dpp/app/data_model/test/product.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key, this.animationController});
@@ -28,7 +28,7 @@ class _ProductScreenState extends State<ProductScreen>
   int count = 5;
 
   // State variables
-  Future<List<String>> productIds = ProductService.fetchProductIds();
+  List<String> productIds = ProductService.productIds;
   String _selectedMachineId = "";
   List<Widget> listViews = <Widget>[];
 
@@ -55,11 +55,9 @@ class _ProductScreenState extends State<ProductScreen>
     cardAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Curves.easeIn
+        curve: Curves.easeIn,
       ),
     );
-
-    
 
     addCards();
 
@@ -83,11 +81,10 @@ class _ProductScreenState extends State<ProductScreen>
 
   // METHODS
   Future<void> loadDataAfterSearch(String machineId) async {
-    final data = await ProductService.fetchProductData(machineId);
+    final data = await ProductService.getProductById(machineId);
     setState(() {
       product = data;
     });
-    
   }
 
   // Add cards
@@ -95,58 +92,55 @@ class _ProductScreenState extends State<ProductScreen>
     listViews.clear();
 
     if (product != null) {
-    listViews.add(
-      TitleView(
-        titleTxt: 'Identifier',
-        subTxt: 'Get QR Code',
-        productID: product!.id?.toString() ?? '',
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+      listViews.add(
+        TitleView(
+          titleTxt: 'Identifier',
+          subTxt: 'Get QR Code',
+          productID: product!.id.toString(),
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
 
-    listViews.add(
-      ProductIdentifierCard(
-        id: product!.id.toString(),
-        lastUpdated: product!.lastUpdated,
-        productType: product!.type,
-        material: product!.material,
-        manufacturer: product!.manufacturer,
-        imagePath: product!.imagePath,
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+      listViews.add(
+        ProductIdentifierCard(
+          id: product!.id.toString(),
+          lastUpdated: product!.lastUpdated,
+          productType: product!.type,
+          material: product!.material,
+          manufacturer: product!.manufacturer,
+          imagePath: product!.imagePath,
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
 
-    listViews.add(
-      TitleView(
-        titleTxt: 'Summary',
-        subTxt: 'Details',
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+      listViews.add(
+        TitleView(
+          titleTxt: 'Summary',
+          subTxt: 'Details',
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
 
+      listViews.add(
+        ProductSummaryCard(
+          energyUsed: product!.energyUsed ,
+          co2Emissions: product!.co2Emissions,
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
 
-    listViews.add(
-      ProductSummaryCard(
-        energyUsed: product!.energyUsed,
-        co2Emissions: product!.co2Emissions,
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
-  
-
-    listViews.add(
-      DownloadInfoCard(
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+      listViews.add(
+        DownloadInfoCard(
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
     }
   }
-
 
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 50));
@@ -256,7 +250,6 @@ class _ProductScreenState extends State<ProductScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
-
                               padding: const EdgeInsets.only(left: 50),
                               child: Text(
                                 'Products',
@@ -273,7 +266,9 @@ class _ProductScreenState extends State<ProductScreen>
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.5,
                               child: SearchBarWidget(
-                                onMachineSelected: (String selectedMachineId) async {
+                                onMachineSelected: (
+                                  String selectedMachineId,
+                                ) async {
                                   print("Machine selected: $selectedMachineId");
                                   _selectedMachineId = selectedMachineId;
                                   await loadDataAfterSearch(selectedMachineId);

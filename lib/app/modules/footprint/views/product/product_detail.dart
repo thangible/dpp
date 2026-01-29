@@ -58,7 +58,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         error = null;
       });
 
-      final productData = await ProductService.fetchProductData(
+      final productData = await ProductService.getProductById(
         widget.productId,
       );
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:dpp/app/services/test/machineServiceJson.dart';
 
 class SearchController extends GetxController {
   final textController = TextEditingController();
@@ -8,6 +9,7 @@ class SearchController extends GetxController {
   var filteredSuggestions = <String>[].obs;
   var query = ''.obs;
   var showSuggestions = false.obs;
+  final MachineDiscoveryService _machineService = MachineDiscoveryService();
 
   @override
   void onInit() {
@@ -24,6 +26,9 @@ class SearchController extends GetxController {
   Future<void> _loadMachineIds() async {
     // In a real app, replace this with a service call.
     // machineIds.assignAll(await MockProductService.fetchMachineIds());
+    final responses = await _machineService.fetchFullMachineData();
+    List<String> allIds = _machineService.allRootIds;
+    machineIds.assignAll(allIds);
   }
 
   void _filterSuggestions() {

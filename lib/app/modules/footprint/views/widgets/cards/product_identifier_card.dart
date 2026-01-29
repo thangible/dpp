@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:dpp/config/theme/theme.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/divider.dart';
@@ -7,22 +6,22 @@ class ProductIdentifierCard extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
   final String id;
-  final DateTime lastUpdated;
-  final String imagePath;
-  final String material;
-  final String productType;
-  final String manufacturer;
+  final DateTime? lastUpdated;
+  final String? imagePath;
+  final String? material;
+  final String? productType;
+  final String? manufacturer;
 
   const ProductIdentifierCard({
     super.key,
     this.animationController,
     this.animation,
     required this.id,
-    required this.lastUpdated,
-    required this.imagePath,
-    required this.material,
-    required this.productType,
-    required this.manufacturer,
+    this.lastUpdated,
+    this.imagePath,
+    this.material,
+    this.productType,
+    this.manufacturer,
   });
 
   @override
@@ -52,7 +51,11 @@ class ProductIdentifierCard extends StatelessWidget {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                      padding: const EdgeInsets.only(
+                        top: 16,
+                        left: 16,
+                        right: 16,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
@@ -67,15 +70,21 @@ class ProductIdentifierCard extends StatelessWidget {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       child: CustomDividerWidget(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       child: ProductInfoRow(
-                        material: material,
-                        productType: productType,
-                        manufacturer: manufacturer,
+                        material: material ?? 'Unknown',
+                        productType: productType ?? 'Unknown',
+                        manufacturer: manufacturer ?? 'Unknown',
                       ),
                     ),
                   ],
@@ -96,7 +105,7 @@ class ProductIdentifierCard extends StatelessWidget {
 
 class HeaderRow extends StatelessWidget {
   final String identifier;
-  final DateTime lastUpdated;
+  final DateTime? lastUpdated;
 
   const HeaderRow({
     super.key,
@@ -130,7 +139,9 @@ class HeaderRow extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                'Last updated: \n${_formatTime(context, lastUpdated)}',
+                lastUpdated != null
+                    ? 'Last updated: \n${_formatTime(context, lastUpdated!)}'
+                    : 'Unknown last update',
                 style: TextStyle(
                   fontFamily: AppTheme.fontName,
                   fontWeight: FontWeight.w500,
@@ -151,28 +162,25 @@ class HeaderRow extends StatelessWidget {
   }
 }
 
-
 class ImageSection extends StatelessWidget {
-  final String imagePath;
+  final String? imagePath;
 
   const ImageSection({super.key, required this.imagePath});
 
   void _showFullImage(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.black,
-        insetPadding: const EdgeInsets.all(5),
-        child: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
-          child: InteractiveViewer(
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.contain,
+      builder:
+          (_) => Dialog(
+            backgroundColor: Colors.black,
+            insetPadding: const EdgeInsets.all(5),
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: InteractiveViewer(
+                child: Image.asset(imagePath!, fit: BoxFit.contain),
+              ),
             ),
           ),
-        ),
-      ),
     );
   }
 
@@ -185,16 +193,12 @@ class ImageSection extends StatelessWidget {
         child: SizedBox(
           width: 150,
           height: 150,
-          child: Image.asset(
-            imagePath,
-            fit: BoxFit.cover,
-          ),
+          child: Image.asset(imagePath!, fit: BoxFit.cover),
         ),
       ),
     );
   }
 }
-
 
 class ProductInfoRow extends StatelessWidget {
   final String material;

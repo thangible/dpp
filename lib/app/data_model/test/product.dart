@@ -1,55 +1,127 @@
+import 'package:dpp/app/data_model/api/generic_submodel.dart';
+import 'package:dpp/app/data_model/api/base_aas_model.dart';
+
 class Product {
-  final int id;
-  final double energyUsed;
-  final double co2Emissions;
-  final DateTime lastUpdated;
-  final String type;
-  final String material;
-  final String manufacturer;
-  final double virginMaterial;
-  final double recycledMaterial;
-  final String imagePath;
+  final String id;
+  final double? energyUsed;
+  final double? co2Emissions;
+  final DateTime? lastUpdated;
+  final String? type;
+  final String? material;
+  final String? manufacturer;
+  final double? virginMaterial;
+  final double? recycledMaterial;
+  final String? imagePath;
 
   Product({
     required this.id,
-    required this.energyUsed,
-    required this.co2Emissions,
-    required this.lastUpdated,
-    required this.type,
-    required this.material,
-    required this.manufacturer,
-    required this.virginMaterial,
-    required this.recycledMaterial,
-    required this.imagePath,
+    this.energyUsed,
+    this.co2Emissions,
+    this.lastUpdated,
+    this.type,
+    this.material,
+    this.manufacturer,
+    this.virginMaterial,
+    this.recycledMaterial,
+    this.imagePath,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['id'] as int,
-      energyUsed: (json['energyUsed'] as num).toDouble(),
-      co2Emissions: (json['co2Emissions'] as num).toDouble(),
-      lastUpdated: DateTime.parse(json['lastUpdated'] as String),
-      type: json['type'] as String,
-      material: json['material'] as String,
-      manufacturer: json['manufacturer'] as String,
-      virginMaterial: (json['virginMaterial'] as num).toDouble(),
-      recycledMaterial: (json['recycledMaterial'] as num).toDouble(),
-      imagePath: json['imagePath'] as String,
-    );
-  }
+  factory Product.fromJson(AasResponse jsonResponse) {
+    String product_id = '';
+    String? manufacturerName;
+    String? productType;
+    String? yearOfConstruction;
+    double? co2Value;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'energyUsed': energyUsed,
-      'co2Emissions': co2Emissions,
-      'lastUpdated': lastUpdated.toIso8601String(),
-      'type': type,
-      'material': material,
-      'manufacturer': manufacturer,
-      'virginMaterial': virginMaterial,
-      'recycledMaterial': recycledMaterial,
-      'imagePath': imagePath,
-    };
+    // Extract basic product ID
+    if (jsonResponse.assetAdministrationShells?.isNotEmpty == true) {
+      final aas = jsonResponse.assetAdministrationShells!.first;
+      product_id = aas.idShort;
+
+      // Extract asset type from asset information
+      if (aas.assetInformation != null) {
+        productType = aas.assetInformation!.assetType;
+      }
+    }
+
+    // Extract detailed information from submodels
+    if (jsonResponse.submodels?.isNotEmpty == true) {
+      final submodels = jsonResponse.submodels!;
+
+      for (var submodel in submodels) {
+        final idShort = submodel.idShort;
+
+        // Extract nameplate information
+        if (idShort == 'Nameplate' && submodel.submodelElements != null) {
+          final elements = submodel.submodelElements!;
+
+          for (var element in elements) {
+            final elementIdShort = element.idShort;
+
+            switch (elementIdShort) {
+              case 'ManufacturerName':
+                if (element is MultiLanguageProperty &&
+                    element.value.isNotEmpty) {
+                  manufacturerName = element.value.first.text;
+                }
+                break;
+              case 'YearOfConstruction':
+                if (element is Property && element.value != null) {
+                  yearOfConstruction = element.value.toString();
+                }
+                break;
+            }
+          }
+        }
+        // Extract carbon footprint information
+        else if (idShort == 'CarbonFootprint' &&
+            submodel.submodelElements != null) {
+          final elements = submodel.submodelElements!;
+
+          for (var element in elements) {
+            if (element.idShort == 'ProductCarbonFootprints' &&
+                element is SubmodelElementList &&
+                element.value != null) {
+              final footprintList = element.value!;
+
+              // Extract CO2 value from the first footprint entry
+              if (footprintList.isNotEmpty) {
+                final footprint = footprintList.first;
+                if (footprint is SubmodelElementCollection &&
+                    footprint.value != null) {
+                  final footprintElements = footprint.value!;
+
+                  for (var fpElement in footprintElements) {
+                    if (fpElement.idShort == 'ProductCarbonFootprintValue' &&
+                        fpElement is Property &&
+                        fpElement.value != null) {
+                      co2Value = double.tryParse(fpElement.value.toString());
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return Product(
+      id: product_id,
+      manufacturer: manufacturerName,
+      type: productType,
+      co2Emissions: co2Value,
+      lastUpdated:
+          yearOfConstruction != null
+              ? DateTime.tryParse('$yearOfConstruction-01-01')
+              : null,
+      // These fields would need to be extracted from other submodels or elements
+      energyUsed: null, // Not found in current structure
+      material: null, // Not found in current structure
+      virginMaterial: null, // Not found in current structure
+      recycledMaterial: null, // Not found in current structure
+      imagePath: null, // Not found in current structure
+    );
   }
 }

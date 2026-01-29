@@ -6,7 +6,8 @@ import 'package:dpp/app/services/test/product_service.dart';
 class SearchBarWidget extends StatefulWidget {
   final ValueChanged<String> onMachineSelected;
 
-  const SearchBarWidget({Key? key, required this.onMachineSelected}) : super(key: key);
+  const SearchBarWidget({Key? key, required this.onMachineSelected})
+    : super(key: key);
 
   @override
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
@@ -24,7 +25,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   }
 
   Future<void> _loadMachineIds() async {
-    final ids = await ProductService.fetchProductIds();
+    final ids = await ProductService.productIds;
     setState(() {
       machineIds = ids;
     });
@@ -50,7 +51,9 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   Iterable<Widget> getSuggestions(SearchController controller) {
     final String input = controller.value.text.toLowerCase();
-    final filteredIds = machineIds.where((id) => id.toLowerCase().contains(input));
+    final filteredIds = machineIds.where(
+      (id) => id.toLowerCase().contains(input),
+    );
     return filteredIds.map(
       (String id) => ListTile(
         leading: const Icon(Icons.memory, color: AppTheme.nearlyBlue),
@@ -91,7 +94,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = ThemeData(
-      colorSchemeSeed: selectedMachineId != null ? AppTheme.nearlyDarkBlue : AppTheme.nearlyDarkBlue,
+      colorSchemeSeed:
+          selectedMachineId != null
+              ? AppTheme.nearlyDarkBlue
+              : AppTheme.nearlyDarkBlue,
       scaffoldBackgroundColor: AppTheme.background,
     );
     final ColorScheme colors = themeData.colorScheme;
@@ -126,7 +132,10 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 },
               );
             },
-            suggestionsBuilder: (BuildContext context, SearchController controller) {
+            suggestionsBuilder: (
+              BuildContext context,
+              SearchController controller,
+            ) {
               if (controller.text.isEmpty) {
                 if (searchHistory.isNotEmpty) {
                   return getHistoryList(controller).toList();

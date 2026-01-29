@@ -9,13 +9,13 @@ import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/piechart.dart
 class ProductSummaryCard extends StatelessWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
-  final double energyUsed;
-  final double co2Emissions;
+  final double? energyUsed;
+  final double? co2Emissions;
 
   const ProductSummaryCard({
     super.key,
-    required this.energyUsed,
-    required this.co2Emissions,
+    this.energyUsed,
+    this.co2Emissions,
     this.animationController,
     this.animation,
   });
@@ -26,6 +26,7 @@ class ProductSummaryCard extends StatelessWidget {
       animationController: animationController!,
       animation: animation!,
       child: ProductCardContent(
+        
         data: {'energyUsed': energyUsed, 'co2Emissions': co2Emissions},
         animation: animation!,
       ),
@@ -114,8 +115,8 @@ class ProductCardContent extends StatelessWidget {
             children: [
               Expanded(
                 child: EnergyAndEmissionInfo(
-                  energyUsed: data['energyUsed'] ?? 0,
-                  co2Emissions: data['co2Emissions'] ?? 0,
+                  energyUsed: data['energyUsed'],
+                  co2Emissions: data['co2Emissions'] ,
                   animation: animation,
                 ),
               ),
@@ -138,14 +139,14 @@ class ProductCardContent extends StatelessWidget {
 
 /// Widget showing energy used and CO2 emissions info
 class EnergyAndEmissionInfo extends StatelessWidget {
-  final double energyUsed;
-  final double co2Emissions;
+  final double? energyUsed;
+  final double? co2Emissions;
   final Animation<double> animation;
 
   const EnergyAndEmissionInfo({
     super.key,
-    required this.energyUsed,
-    required this.co2Emissions,
+    this.energyUsed,
+    this.co2Emissions,
     required this.animation,
   });
 
@@ -157,7 +158,7 @@ class EnergyAndEmissionInfo extends StatelessWidget {
         children: [
           HighlightedTextWithIConWidget(
             label: 'Energy used',
-            value: '${(energyUsed * animation.value)}',
+            value: '${(energyUsed! * animation.value)}',
             unit: 'kWh per unit',
             iconPath: "assets/fitness_app/electric.png",
             color: HexColor('#87A0E5'),
@@ -166,7 +167,7 @@ class EnergyAndEmissionInfo extends StatelessWidget {
           const SizedBox(height: 8),
           HighlightedTextWithIConWidget(
             label: 'CO2 Emissions',
-            value: '${(co2Emissions * animation.value)}',
+            value: '${(co2Emissions! * animation.value)}',
             unit: 'kg',
             iconPath: "assets/fitness_app/burned.png",
             color: HexColor('#F56E98'),

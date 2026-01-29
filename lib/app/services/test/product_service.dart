@@ -1,35 +1,64 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:dpp/app/data_model/test/product.dart';
-import 'package:dpp/app/data_model/test/machine.dart';
+import 'package:dpp/app/data_model/api/generic_submodel.dart';
+import 'package:dpp/app/data_model/api/base_aas_model.dart';
+
+// import 'package:dpp/app/data_model/test/machine.dart';
 
 class ProductService {
-  static Future<Product> fetchProductData(String productId) async {
-    // await Future.delayed(const Duration(seconds: 1)); // Simulate DB/network delay
-    final String response = await rootBundle.loadString('assets/mock_data.json');
-    final Map<String, dynamic> allProducts = json.decode(response);
-    return Product.fromJson(allProducts[productId] as Map<String, dynamic>);
+  static late final List<AasResponse>? responses;
+  static late final Map<String, dynamic> manifestMap;
+  static late final List<Product> products;
+  static late final Map<String, Product> productMap;
+
+  static Future<void> init() async {
+    List<AasResponse> tempResponses = [];
+    final String manifestContent = await rootBundle.loadString(
+      'AssetManifest.json',
+    );
+    manifestMap = json.decode(manifestContent) as Map<String, dynamic>;
+
+    final jsonPaths =
+        manifestMap.keys
+            .where(
+              (String key) =>
+                  key.startsWith('assets/data/') && key.endsWith('.json'),
+            )
+            .toList();
+
+    for (String path in jsonPaths) {
+      print('Loading JSON from $path');
+      try {
+        final String jsonString = await rootBundle.loadString(path);
+        final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+        tempResponses.add(AasResponse.fromJson(jsonMap));
+      } catch (e) {
+        print('Error parsing $path: $e');
+      }
+    }
+
+    responses = tempResponses;
+
+    // Map product IDs to their corresponding Product objects
+    products =
+        responses?.map((response) {
+          return Product.fromJson(response);
+        }).toList() ??
+        [];
+
+    productMap = {for (var product in products) product.id: product};
   }
 
-  static Future<List<String>> fetchProductIds() async {
-    final String response = await rootBundle.loadString('assets/mock_data.json');
-    final Map<String, dynamic> allProducts = json.decode(response);
-    return allProducts.keys.toList();
+  static Product? getProductById(String id) {
+    return productMap[id];
   }
 
-  static Future<Machine> fetchMachineData(String productId) async {
-    // await Future.delayed(const Duration(seconds: 1)); // Simulate DB/network delay
-    final String response = await rootBundle.loadString('assets/mock_data.json');
-    final Map<String, dynamic> allProducts = json.decode(response);
-    return Machine.fromJson(allProducts[productId] as Map<String, dynamic>);
+  static List<Product> getAllProducts() {
+    return productMap.values.toList();
   }
 
-  static Future<List<String>> fetchMachineIds() async {
-    final String response = await rootBundle.loadString('assets/mock_data.json');
-    final Map<String, dynamic> allProducts = json.decode(response);
-    return allProducts.keys.toList();
+  static List<String> get productIds {
+    return productMap.keys.toList();
   }
-
-  
-
 }
