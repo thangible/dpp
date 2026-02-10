@@ -17,18 +17,24 @@ class BaseClient {
         throw Exception("Failed to load mock data: $e");
       }
     }
-    
+
     // Otherwise, perform a normal HTTP GET call (for production endpoints).
-    final url = Uri.parse("$_baseUrl/$endpoint");
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to load data from API');
+    if (endpoint.isNotEmpty) {
+      final url = Uri.parse("$_baseUrl/$endpoint");
+      try {
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          return jsonDecode(response.body);
+        } else {
+          throw Exception('Failed to load data from API');
+        }
+      } catch (e) {
+        rethrow;
       }
-    } catch (e) {
-      rethrow;
+    }
+
+    if (endpoint.isEmpty) {
+      return {}; // Return empty map for empty endpoint
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/divider.dart'
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/config/utils/hex_color.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/piechart.dart';
+
 // import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/speedometer.dart';
 class ProductSummaryCard extends StatelessWidget {
   final AnimationController? animationController;
@@ -26,7 +27,6 @@ class ProductSummaryCard extends StatelessWidget {
       animationController: animationController!,
       animation: animation!,
       child: ProductCardContent(
-        
         data: {'energyUsed': energyUsed, 'co2Emissions': co2Emissions},
         animation: animation!,
       ),
@@ -110,13 +110,13 @@ class ProductCardContent extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+          padding: const EdgeInsets.only(top: 0, left: 0, right: 0),
           child: Row(
             children: [
               Expanded(
                 child: EnergyAndEmissionInfo(
                   energyUsed: data['energyUsed'],
-                  co2Emissions: data['co2Emissions'] ,
+                  co2Emissions: data['co2Emissions'],
                   animation: animation,
                 ),
               ),
@@ -158,7 +158,10 @@ class EnergyAndEmissionInfo extends StatelessWidget {
         children: [
           HighlightedTextWithIConWidget(
             label: 'Energy used',
-            value: '${(energyUsed! * animation.value)}',
+            value:
+                energyUsed != null
+                    ? '${(energyUsed! * animation.value).toStringAsFixed(2)}'
+                    : 'N/A',
             unit: 'kWh per unit',
             iconPath: "assets/fitness_app/electric.png",
             color: HexColor('#87A0E5'),
@@ -167,7 +170,10 @@ class EnergyAndEmissionInfo extends StatelessWidget {
           const SizedBox(height: 8),
           HighlightedTextWithIConWidget(
             label: 'CO2 Emissions',
-            value: '${(co2Emissions! * animation.value)}',
+            value:
+                co2Emissions != null
+                    ? '${(co2Emissions! * animation.value).toStringAsFixed(2)}'
+                    : 'N/A',
             unit: 'kg',
             iconPath: "assets/fitness_app/burned.png",
             color: HexColor('#F56E98'),
@@ -188,9 +194,8 @@ class PieChartSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: Center(
-        child:
-        MaterialPieChartWrapped(
-          size: 150,
+        child: MaterialPieChartWrapped(
+          size: 80,
           titles: ['Virgin', 'Recycled\nfrom Scrap', 'Recycled\nfrom Others'],
           values: [10, 60, 30],
           colors: [Color(0xFF87A0E5), Color(0xFFF56E98), Color(0xFFF1B440)],

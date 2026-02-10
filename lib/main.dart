@@ -11,10 +11,11 @@ import 'package:dpp/app/services/hive/hive_service.dart';
 import 'package:dpp/app/services/api/dio_aux.dart';
 import 'package:dpp/app/services/api/nameplate_service.dart';
 import 'package:dpp/app/services/hive/nameplate_repository.dart';
+import 'package:dpp/app/services/test/product_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await ProductService.init();
   // Initialize Hive
   await HiveService.init();
 

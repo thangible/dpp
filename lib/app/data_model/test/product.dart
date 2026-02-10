@@ -121,7 +121,7 @@ class Product {
       material: null, // Not found in current structure
       virginMaterial: null, // Not found in current structure
       recycledMaterial: null, // Not found in current structure
-      imagePath: null, // Not found in current structure
+      imagePath: "No Image", // Not found in current structure
     );
   }
 }

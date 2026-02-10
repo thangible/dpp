@@ -5,6 +5,7 @@ import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/config/utils/tabIcon_data.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_view.dart';
 import 'package:dpp/app/modules/footprint/views/process/process_view.dart';
+import 'package:dpp/app/services/test/product_service.dart';
 
 class AppHomeController extends GetxController implements TickerProvider {
   late AnimationController animationController;
@@ -16,6 +17,7 @@ class AppHomeController extends GetxController implements TickerProvider {
 
   @override
   void onInit() {
+    ProductService.init();
     // initialize tab icons
     for (var tab in tabIconsList) {
       tab.isSelected = false;
@@ -47,5 +49,4 @@ class AppHomeController extends GetxController implements TickerProvider {
     animationController.dispose();
     super.onClose();
   }
-} 
-
+}

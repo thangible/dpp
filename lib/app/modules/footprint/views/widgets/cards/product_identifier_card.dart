@@ -168,6 +168,7 @@ class ImageSection extends StatelessWidget {
   const ImageSection({super.key, required this.imagePath});
 
   void _showFullImage(BuildContext context) {
+    if (imagePath == null || imagePath == "No Image") return;
     showDialog(
       context: context,
       builder:
@@ -186,17 +187,33 @@ class ImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _showFullImage(context),
-      child: ClipRRect(
+    if (imagePath == null || imagePath == "No Image") {
+      return ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: SizedBox(
+        child: Container(
           width: 150,
           height: 150,
-          child: Image.asset(imagePath!, fit: BoxFit.cover),
+          color: AppTheme.grey.withOpacity(0.2),
+          child: Icon(
+            Icons.image_not_supported,
+            color: AppTheme.grey.withOpacity(0.5),
+            size: 50,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return GestureDetector(
+        onTap: () => _showFullImage(context),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            width: 150,
+            height: 150,
+            child: Image.asset(imagePath!, fit: BoxFit.cover),
+          ),
+        ),
+      );
+    }
   }
 }
 

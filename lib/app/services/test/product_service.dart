@@ -46,8 +46,10 @@ class ProductService {
           return Product.fromJson(response);
         }).toList() ??
         [];
-
+    List<Product> mocks = mockProducts();
+    products.addAll(mocks);
     productMap = {for (var product in products) product.id: product};
+    print('ProductMap initialized with ${productMap.length} entries');
   }
 
   static Product? getProductById(String id) {
@@ -60,5 +62,34 @@ class ProductService {
 
   static List<String> get productIds {
     return productMap.keys.toList();
+  }
+
+  static List<Product> mockProducts() {
+    return [
+      Product(
+        id: "LIQTRA FX-7 Pro",
+        energyUsed: 1500.0,
+        co2Emissions: 300.0,
+        lastUpdated: DateTime.now(),
+        type: 'CNC Lathe',
+        material: "R-PA12",
+        manufacturer: 'IAPT',
+        virginMaterial: 80.0,
+        recycledMaterial: 20.0,
+        imagePath: "assets/images/bauteil_image.png",
+      ),
+      Product(
+        id: 'machine_002',
+        energyUsed: 2000.0,
+        co2Emissions: 400.0,
+        lastUpdated: DateTime.now(),
+        type: '3D Printer',
+        material: 'Plastic',
+        manufacturer: 'PrintTech',
+        virginMaterial: 70.0,
+        recycledMaterial: 30.0,
+        imagePath: "assets/images/bauteil_image3.png",
+      ),
+    ];
   }
 }

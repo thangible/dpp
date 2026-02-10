@@ -16,7 +16,7 @@ class NavigationController extends GetxController {
   var drawerIndex = DrawerIndex.HOME.obs;
   // Reactive variable for the current screen view.
   var screenView = Rx<Widget>(const AppHomeScreen());
-  
+
   // Reactive variable for API call state.
   var apiStatus = ApiCallStatus.loading.obs;
   // Optionally hold the API response data.
@@ -35,7 +35,7 @@ class NavigationController extends GetxController {
   void fetchData() async {
     apiStatus(ApiCallStatus.loading);
     try {
-      var data = await _client.get("sample_endpoint"); // Replace with your endpoint
+      var data = await _client.get("");
       apiData.value = data;
       apiStatus(ApiCallStatus.success);
       debugPrint("API data received: $data");

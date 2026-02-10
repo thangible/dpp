@@ -1,6 +1,7 @@
+import 'package:dpp/app/data_model/hive/nameplate_hive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dpp/app/services/test/machineServiceJson.dart';
+import 'package:dpp/app/services/test/product_service.dart';
 
 class SearchController extends GetxController {
   final textController = TextEditingController();
@@ -9,11 +10,11 @@ class SearchController extends GetxController {
   var filteredSuggestions = <String>[].obs;
   var query = ''.obs;
   var showSuggestions = false.obs;
-  final MachineDiscoveryService _machineService = MachineDiscoveryService();
 
   @override
   void onInit() {
     super.onInit();
+    ProductService.init();
     _loadMachineIds();
     // Update our query whenever the text field value changes.
     textController.addListener(() {
@@ -24,11 +25,9 @@ class SearchController extends GetxController {
   }
 
   Future<void> _loadMachineIds() async {
-    // In a real app, replace this with a service call.
-    // machineIds.assignAll(await MockProductService.fetchMachineIds());
-    final responses = await _machineService.fetchFullMachineData();
-    List<String> allIds = _machineService.allRootIds;
-    machineIds.assignAll(allIds);
+    machineIds.assignAll(ProductService.productIds);
+    print("Loaded ${machineIds.length} machine IDs.");
+    print(machineIds);
   }
 
   void _filterSuggestions() {
