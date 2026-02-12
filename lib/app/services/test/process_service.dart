@@ -6,44 +6,44 @@ import 'package:dpp/app/data_model/api/base_aas_model.dart';
 
 class ProcessService {
   static late final List<AasResponse>? responses;
-  static late final Map<String, dynamic> manifestMap;
   static late final List<Process> processes;
   static late final Map<String, Process> processMap;
 
   static Future<void> init() async {
-    List<AasResponse> tempResponses = [];
-    final String manifestContent = await rootBundle.loadString(
-      'AssetManifest.json',
-    );
-    manifestMap = json.decode(manifestContent) as Map<String, dynamic>;
+    // List<AasResponse> tempResponses = [];
+    // final String manifestContent = await rootBundle.loadString(
+    //   'AssetManifest.json',
+    // );
+    // manifestMap = json.decode(manifestContent) as Map<String, dynamic>;
 
-    final jsonPaths =
-        manifestMap.keys
-            .where(
-              (String key) =>
-                  key.startsWith('assets/data/') && key.endsWith('.json'),
-            )
-            .toList();
+    // final jsonPaths =
+    //     manifestMap.keys
+    //         .where(
+    //           (String key) =>
+    //               key.startsWith('assets/data/') && key.endsWith('.json'),
+    //         )
+    //         .toList();
 
-    for (String path in jsonPaths) {
-      print('Loading JSON from $path');
-      try {
-        final String jsonString = await rootBundle.loadString(path);
-        final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-        tempResponses.add(AasResponse.fromJson(jsonMap));
-      } catch (e) {
-        print('Error parsing $path: $e');
-      }
-    }
+    // for (String path in jsonPaths) {
+    //   print('Loading JSON from $path');
+    //   try {
+    //     final String jsonString = await rootBundle.loadString(path);
+    //     final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    //     tempResponses.add(AasResponse.fromJson(jsonMap));
+    //   } catch (e) {
+    //     print('Error parsing $path: $e');
+    //   }
+    // }
 
-    responses = tempResponses;
+    // responses = tempResponses;
 
-    // Map process IDs to their corresponding Process objects
-    processes =
-        responses?.map((response) {
-          return Process.fromJson(response);
-        }).toList() ??
-        [];
+    // // Map process IDs to their corresponding Process objects
+    // processes =
+    //     responses?.map((response) {
+    //       return Process.fromJson(response);
+    //     }).toList() ??
+    //     [];
+    processes = [];
     List<Process> mocks = mockProcesses();
     processes.addAll(mocks);
     processMap = {for (var process in processes) process.id: process};
@@ -74,7 +74,7 @@ class ProcessService {
         manufacturer: 'IAPT',
         virginMaterial: 80.0,
         recycledMaterial: 20.0,
-        imagePath: "assets/images/bauteil_image.png",
+        imagePath: "assets/images/machine_example.png",
         progress: 75.5,
       ),
       Process(

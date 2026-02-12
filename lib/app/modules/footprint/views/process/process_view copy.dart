@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dpp/app/modules/footprint/views/widgets/cards/download_info_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/title_view.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/cards/process_identifier_card.dart';
@@ -114,65 +115,64 @@ class _ProcessScreenState extends State<ProcessScreen>
           lastUpdated: process!.lastUpdated,
         ),
       );
+
+      // Summary Section
+      listViews.add(
+        TitleView(
+          titleTxt: 'Process Summary',
+          subTxt: 'Details',
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
+
+      // Download Section
+      // listViews.add(
+      //   DownloadInfoCard(
+      //     product: null, // Pass null since this is for processes
+      //     // You might want to create a Process-specific download card
+      //     // or modify DownloadInfoCard to accept Process objects
+      //     animation: cardAnimation,
+      //     animationController: widget.animationController!,
+      //   ),
+      // );
+    } else {
+      // Show empty state or instructions
+      listViews.add(
+        Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              Icon(
+                Icons.precision_manufacturing,
+                size: 64,
+                color: AppTheme.grey.withOpacity(0.5),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'No Process Selected',
+                style: TextStyle(
+                  fontFamily: AppTheme.fontName,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.grey,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Use the search bar above to find and select a process',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: AppTheme.fontName,
+                  fontSize: 14,
+                  color: AppTheme.grey.withOpacity(0.7),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
-
-    //   // Summary Section
-    listViews.add(
-      TitleView(
-        titleTxt: 'Process Summary',
-        subTxt: 'Details',
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
-
-    // Download Section
-    // listViews.add(
-    //   DownloadInfoCard(
-    //     product: null, // Pass null since this is for processes
-    //     // You might want to create a Process-specific download card
-    //     // or modify DownloadInfoCard to accept Process objects
-    //     animation: cardAnimation,
-    //     animationController: widget.animationController!,
-    //   ),
-    // );
-    // } else {
-    //   // Show empty state or instructions
-    //   listViews.add(
-    //     Container(
-    //       padding: const EdgeInsets.all(24),
-    //       child: Column(
-    //         children: [
-    //           Icon(
-    //             Icons.precision_manufacturing,
-    //             size: 64,
-    //             color: AppTheme.grey.withOpacity(0.5),
-    //           ),
-    //           const SizedBox(height: 16),
-    //           Text(
-    //             'No Process Selected',
-    //             style: TextStyle(
-    //               fontFamily: AppTheme.fontName,
-    //               fontSize: 18,
-    //               fontWeight: FontWeight.w600,
-    //               color: AppTheme.grey,
-    //             ),
-    //           ),
-    //           const SizedBox(height: 8),
-    //           Text(
-    //             'Use the search bar above to find and select a process',
-    //             textAlign: TextAlign.center,
-    //             style: TextStyle(
-    //               fontFamily: AppTheme.fontName,
-    //               fontSize: 14,
-    //               color: AppTheme.grey.withOpacity(0.7),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   );
-    // }
   }
 
   Future<bool> getData() async {

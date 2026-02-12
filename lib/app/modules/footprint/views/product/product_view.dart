@@ -80,8 +80,8 @@ class _ProductScreenState extends State<ProductScreen>
   }
 
   // METHODS
-  Future<void> loadDataAfterSearch(String machineId) async {
-    final data = await ProductService.getProductById(machineId);
+  Future<void> loadDataAfterSearch(String productId) async {
+    final data = await ProductService.getProductById(productId);
     setState(() {
       product = data;
     });
@@ -137,7 +137,7 @@ class _ProductScreenState extends State<ProductScreen>
 
       listViews.add(
         DownloadInfoCard(
-          product: product,
+          // product: product,
           animation: cardAnimation,
           animationController: widget.animationController!,
         ),
@@ -269,14 +269,15 @@ class _ProductScreenState extends State<ProductScreen>
                             ),
                             Spacer(),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
+                              width: MediaQuery.of(context).size.width * 0.5,
                               child: SearchBarWidget(
-                                onMachineSelected: (
-                                  String selectedMachineId,
+                                searchType: SearchBarType.product,
+                                onItemSelected: (
+                                  String selectedProductId,
                                 ) async {
-                                  print("Machine selected: $selectedMachineId");
-                                  _selectedMachineId = selectedMachineId;
-                                  await loadDataAfterSearch(selectedMachineId);
+                                  print("Machine selected: $selectedProductId");
+                                  _selectedMachineId = selectedProductId;
+                                  await loadDataAfterSearch(selectedProductId);
                                   addCards(); // Refresh list with animation
                                 },
                               ),

@@ -67,7 +67,7 @@ class ProductService {
   static List<Product> mockProducts() {
     return [
       Product(
-        id: "LIQTRA FX-7 Pro",
+        id: "Product A",
         energyUsed: 1500.0,
         co2Emissions: 300.0,
         lastUpdated: DateTime.now(),
@@ -79,7 +79,7 @@ class ProductService {
         imagePath: "assets/images/bauteil_image.png",
       ),
       Product(
-        id: 'machine_002',
+        id: 'Product B',
         energyUsed: 2000.0,
         co2Emissions: 400.0,
         lastUpdated: DateTime.now(),

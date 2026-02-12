@@ -2,62 +2,92 @@ import 'package:flutter/material.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 import 'dart:async';
 import 'package:dpp/app/services/test/product_service.dart';
+import 'package:dpp/app/services/test/process_service.dart';
+
+enum SearchBarType { product, process }
 
 class SearchBarWidget extends StatefulWidget {
-  final ValueChanged<String> onMachineSelected;
+  final ValueChanged<String> onItemSelected;
+  final SearchBarType searchType;
 
-  const SearchBarWidget({Key? key, required this.onMachineSelected})
-    : super(key: key);
+  const SearchBarWidget({
+    Key? key,
+    required this.onItemSelected,
+    this.searchType = SearchBarType.product,
+  }) : super(key: key);
 
   @override
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-  List<String> machineIds = [];
+  List<String> productIds = [];
+  List<String> processIds = [];
   List<String> searchHistory = [];
-  String? selectedMachineId;
+  String? selectedId;
 
   @override
   void initState() {
     super.initState();
-    _loadMachineIds();
+    _loadIds();
+    print("SearchBar initialized with search type: ${widget.searchType}");
   }
 
-  Future<void> _loadMachineIds() async {
-    final ids = await ProductService.productIds;
+  Future<void> _loadIds() async {
+    // await ProductService.init();
+    // await ProcessService.init();
     setState(() {
-      machineIds = ids;
+      productIds = ProductService.productIds;
+      processIds = ProcessService.processIds;
     });
+    print(
+      "Loaded ${productIds.length} product IDs and ${processIds.length} process IDs.",
+    );
+    print("Current search type: ${widget.searchType}");
+  }
+
+  List<String> get currentIds {
+    switch (widget.searchType) {
+      case SearchBarType.product:
+        return productIds;
+      case SearchBarType.process:
+        return processIds;
+    }
+  }
+
+  String get searchHint {
+    switch (widget.searchType) {
+      case SearchBarType.product:
+        return 'Search product ID';
+      case SearchBarType.process:
+        return 'Search process ID';
+    }
+  }
+
+  IconData get searchIcon {
+    switch (widget.searchType) {
+      case SearchBarType.product:
+        return Icons.inventory_2;
+      case SearchBarType.process:
+        return Icons.precision_manufacturing;
+    }
   }
 
   Iterable<Widget> getHistoryList(SearchController controller) {
-    return searchHistory.map(
-      (String machineId) => ListTile(
-        leading: const Icon(Icons.history, color: AppTheme.grey),
-        title: Text(machineId, style: AppTheme.body1),
-        trailing: IconButton(
-          icon: const Icon(Icons.call_missed, color: AppTheme.nearlyBlue),
-          onPressed: () {
-            controller.text = machineId;
-            controller.selection = TextSelection.collapsed(
-              offset: controller.text.length,
-            );
-          },
-        ),
-      ),
-    );
-  }
+    // Filter history by current search type
+    final historyForType =
+        searchHistory.where((id) {
+          return currentIds.contains(id);
+        }).toList();
 
-  Iterable<Widget> getSuggestions(SearchController controller) {
-    final String input = controller.value.text.toLowerCase();
-    final filteredIds = machineIds.where(
-      (id) => id.toLowerCase().contains(input),
-    );
-    return filteredIds.map(
+    return historyForType.map(
       (String id) => ListTile(
-        leading: const Icon(Icons.memory, color: AppTheme.nearlyBlue),
+        leading: Icon(Icons.history, color: AppTheme.grey),
         title: Text(id, style: AppTheme.body1),
+        subtitle: Text(
+          widget.searchType == SearchBarType.product ? 'Product' : 'Process',
+          style: TextStyle(fontSize: 12, color: AppTheme.grey.withOpacity(0.7)),
+        ),
         trailing: IconButton(
           icon: const Icon(Icons.call_missed, color: AppTheme.nearlyBlue),
           onPressed: () {
@@ -75,29 +105,60 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     );
   }
 
-  void handleSelection(String machineId) {
+  Iterable<Widget> getSuggestions(SearchController controller) {
+    final String input = controller.value.text.toLowerCase();
+    final filteredIds = currentIds.where(
+      (id) => id.toLowerCase().contains(input),
+    );
+
+    return filteredIds.map(
+      (String id) => ListTile(
+        leading: Icon(searchIcon, color: AppTheme.nearlyBlue),
+        title: Text(id, style: AppTheme.body1),
+        subtitle: Text(
+          widget.searchType == SearchBarType.product
+              ? 'Product ID'
+              : 'Process ID',
+          style: TextStyle(fontSize: 12, color: AppTheme.grey.withOpacity(0.7)),
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.call_missed, color: AppTheme.nearlyBlue),
+          onPressed: () {
+            controller.text = id;
+            controller.selection = TextSelection.collapsed(
+              offset: controller.text.length,
+            );
+          },
+        ),
+        onTap: () {
+          controller.closeView(id);
+          handleSelection(id);
+        },
+      ),
+    );
+  }
+
+  void handleSelection(String selectedId) {
     setState(() {
-      selectedMachineId = machineId;
+      selectedId = selectedId;
+      // Update search history
+      if (searchHistory.contains(selectedId)) {
+        searchHistory.remove(selectedId);
+      }
       if (searchHistory.length >= 5) {
         searchHistory.removeLast();
       }
-      searchHistory.insert(0, machineId);
+      searchHistory.insert(0, selectedId);
     });
 
-    // ✅ Notify the parent using the callback
-    widget.onMachineSelected(machineId);
-
-    // Optionally fetch more data if needed
-    // ProductService.fetchProductSummaryData(machineId);
+    // Notify the parent using the callback
+    widget.onItemSelected(selectedId);
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = ThemeData(
-      colorSchemeSeed:
-          selectedMachineId != null
-              ? AppTheme.nearlyDarkBlue
-              : AppTheme.nearlyDarkBlue,
+      colorSchemeSeed: AppTheme.nearlyDarkBlue,
       scaffoldBackgroundColor: AppTheme.background,
     );
     final ColorScheme colors = themeData.colorScheme;
@@ -112,8 +173,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               return SearchBar(
                 controller: controller,
                 elevation: const WidgetStatePropertyAll<double>(0),
-                hintText: 'Search machine ID',
-                leading: const Icon(Icons.search),
+                hintText: searchHint,
+                leading: Icon(searchIcon),
                 backgroundColor: WidgetStateProperty.all(AppTheme.nearlyWhite),
                 textStyle: WidgetStateProperty.all(
                   const TextStyle(
@@ -137,19 +198,72 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               SearchController controller,
             ) {
               if (controller.text.isEmpty) {
-                if (searchHistory.isNotEmpty) {
-                  return getHistoryList(controller).toList();
+                final historyList = getHistoryList(controller).toList();
+                if (historyList.isNotEmpty) {
+                  return [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Recent ${widget.searchType == SearchBarType.product ? 'Products' : 'Processes'}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: colors.primary,
+                        ),
+                      ),
+                    ),
+                    ...historyList,
+                  ];
                 }
                 return <Widget>[
                   Center(
-                    child: Text(
-                      'No search history.',
-                      style: AppTheme.body1.copyWith(color: colors.outline),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Icon(searchIcon, size: 48, color: colors.outline),
+                          const SizedBox(height: 8),
+                          Text(
+                            'No search history for ${widget.searchType == SearchBarType.product ? 'products' : 'processes'}.',
+                            style: AppTheme.body1.copyWith(
+                              color: colors.outline,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ];
               }
-              return getSuggestions(controller).toList();
+
+              final suggestions = getSuggestions(controller).toList();
+              if (suggestions.isEmpty) {
+                return <Widget>[
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'No ${widget.searchType == SearchBarType.product ? 'products' : 'processes'} found.',
+                        style: AppTheme.body1.copyWith(color: colors.outline),
+                      ),
+                    ),
+                  ),
+                ];
+              }
+
+              return [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    '${suggestions.length} ${widget.searchType == SearchBarType.product ? 'Product' : 'Process'} Results',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: colors.primary,
+                    ),
+                  ),
+                ),
+                ...suggestions,
+              ];
             },
           ),
         ),
