@@ -21,7 +21,7 @@ void main() async {
 
   // Initialize services
 
-  debugPaintSizeEnabled = true;
+  // debugPaintSizeEnabled = true;
 
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,

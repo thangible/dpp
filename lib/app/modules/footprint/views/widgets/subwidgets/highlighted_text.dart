@@ -56,35 +56,39 @@ class HighlightedTextWithIConWidget extends StatelessWidget {
                 children: [
                   SizedBox(width: 28, height: 28, child: Image.asset(iconPath)),
                   Padding(
-                    padding: const EdgeInsets.only(left: 4, bottom: 3),
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontName,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: AppTheme.darkerText,
+                    padding: const EdgeInsets.only(left: 0, bottom: 3),
+                    child: SizedBox(
+                      width: 50, // Fixed width for value
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          fontFamily: AppTheme.fontName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppTheme.darkerText,
+                        ),
+                        textAlign: TextAlign.right, // Right align the text
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 4, bottom: 3),
+                    padding: const EdgeInsets.only(left: 4, bottom: 4),
                     child: Text(
                       unit,
                       style: TextStyle(
                         fontFamily: AppTheme.fontName,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
-                        letterSpacing: -0.2,
+                        // letterSpacing: -0.2,
                         color: AppTheme.grey.withOpacity(0.5),
                       ),
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

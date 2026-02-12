@@ -18,7 +18,8 @@ class MaterialPieChartWrapped extends StatefulWidget {
   });
 
   @override
-  State<MaterialPieChartWrapped> createState() => _MaterialPieChartWrappedState();
+  State<MaterialPieChartWrapped> createState() =>
+      _MaterialPieChartWrappedState();
 }
 
 class _MaterialPieChartWrappedState extends State<MaterialPieChartWrapped> {
@@ -33,10 +34,7 @@ class _MaterialPieChartWrappedState extends State<MaterialPieChartWrapped> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(widget.size),
-          border: Border.all(
-            width: 4,
-            color: Colors.grey.withOpacity(0.2),
-          ),
+          border: Border.all(width: 4, color: Colors.grey.withOpacity(0.2)),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -51,8 +49,8 @@ class _MaterialPieChartWrappedState extends State<MaterialPieChartWrapped> {
                       touchedIndex = -1;
                       return;
                     }
-                    touchedIndex = pieTouchResponse
-                        .touchedSection!.touchedSectionIndex;
+                    touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
                   });
                 },
               ),
@@ -69,10 +67,9 @@ class _MaterialPieChartWrappedState extends State<MaterialPieChartWrapped> {
   List<PieChartSectionData> _showingSections() {
     return List.generate(widget.values.length, (i) {
       final isTouched = i == touchedIndex;
-      final double radius = isTouched
-          ? (widget.radii?[i] ?? 40) + 10
-          : (widget.radii?[i] ?? 40);
-      final fontSize = isTouched ? 16.0 : 12.0;
+      final double radius =
+          isTouched ? (widget.radii?[i] ?? 40) + 10 : (widget.radii?[i] ?? 40);
+      final fontSize = isTouched ? 10.0 : 8.0;
 
       return PieChartSectionData(
         color: widget.colors[i],

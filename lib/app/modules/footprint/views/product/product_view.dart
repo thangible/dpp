@@ -119,6 +119,8 @@ class _ProductScreenState extends State<ProductScreen>
         TitleView(
           titleTxt: 'Summary',
           subTxt: 'Details',
+          productID: product!.id.toString(),
+          product: product,
           animation: cardAnimation,
           animationController: widget.animationController!,
         ),
@@ -126,7 +128,7 @@ class _ProductScreenState extends State<ProductScreen>
 
       listViews.add(
         ProductSummaryCard(
-          energyUsed: product!.energyUsed ,
+          energyUsed: product!.energyUsed,
           co2Emissions: product!.co2Emissions,
           animation: cardAnimation,
           animationController: widget.animationController!,
@@ -135,6 +137,7 @@ class _ProductScreenState extends State<ProductScreen>
 
       listViews.add(
         DownloadInfoCard(
+          product: product,
           animation: cardAnimation,
           animationController: widget.animationController!,
         ),
@@ -247,7 +250,9 @@ class _ProductScreenState extends State<ProductScreen>
                           bottom: 12 - 8.0 * topBarOpacity,
                         ),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                              CrossAxisAlignment
+                                  .center, // Changed from start to center
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.only(left: 50),
@@ -256,7 +261,7 @@ class _ProductScreenState extends State<ProductScreen>
                                 style: TextStyle(
                                   fontFamily: AppTheme.fontName,
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 22 + 6 - 6 * topBarOpacity,
+                                  fontSize: 18 + 6 - 6,
                                   letterSpacing: 1.2,
                                   color: AppTheme.darkerText,
                                 ),
@@ -264,7 +269,7 @@ class _ProductScreenState extends State<ProductScreen>
                             ),
                             Spacer(),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.5,
+                              width: MediaQuery.of(context).size.width * 0.4,
                               child: SearchBarWidget(
                                 onMachineSelected: (
                                   String selectedMachineId,

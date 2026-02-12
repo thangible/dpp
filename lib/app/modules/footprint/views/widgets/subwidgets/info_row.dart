@@ -4,11 +4,8 @@ import 'package:dpp/config/utils/hex_color.dart';
 
 class InfoRowWidget extends StatelessWidget {
   final double animationValue;
-  
-  const InfoRowWidget({
-    super.key,
-    required this.animationValue,
-  });
+
+  const InfoRowWidget({super.key, required this.animationValue});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +13,7 @@ class InfoRowWidget extends StatelessWidget {
       children: [
         Expanded(
           child: TextWithBarWidget(
-            label: 'Recycled from scrap',
+            label: 'From scrap',
             remaining: '60%',
             color: HexColor('#F56E98'),
             progress: 1.2,
@@ -25,7 +22,7 @@ class InfoRowWidget extends StatelessWidget {
         ),
         Expanded(
           child: TextWithBarWidget(
-            label: 'Recycled from others',
+            label: 'From others',
             remaining: '30%',
             color: HexColor('#F1B440'),
             progress: 2.0,
@@ -34,9 +31,9 @@ class InfoRowWidget extends StatelessWidget {
         ),
         Expanded(
           child: TextWithBarWidget(
-            label: 'Virgin Material',
+            label: 'Virgin material',
             remaining: '10%',
-            color:  HexColor('#87A0E5'),
+            color: HexColor('#87A0E5'),
             progress: 1.2,
             animationValue: animationValue,
           ),

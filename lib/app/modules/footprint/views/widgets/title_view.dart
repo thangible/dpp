@@ -2,11 +2,13 @@ import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_detail.dart';
+import 'package:dpp/app/data_model/test/product.dart';
 
 class TitleView extends StatelessWidget {
   final String titleTxt;
   final String subTxt;
   final String? productID;
+  final Product? product;
   final AnimationController? animationController;
   final Animation<double>? animation;
 
@@ -15,6 +17,7 @@ class TitleView extends StatelessWidget {
     this.titleTxt = "",
     this.subTxt = "",
     this.productID = "",
+    this.product,
     required this.animationController,
     this.animation,
   });
@@ -74,7 +77,7 @@ class TitleView extends StatelessWidget {
                 MaterialPageRoute(
                   builder:
                       (context) => ProductDetailScreen(
-                        productId: productID ?? '',
+                        product: product ?? null,
                         animationController: animationController,
                       ),
                 ),

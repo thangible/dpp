@@ -129,7 +129,7 @@ class HeaderRow extends StatelessWidget {
               color: AppTheme.nearlyDarkBlue,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 24),
           Row(
             children: [
               Icon(
@@ -137,7 +137,7 @@ class HeaderRow extends StatelessWidget {
                 color: AppTheme.grey.withOpacity(0.5),
                 size: 16,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 8),
               Text(
                 lastUpdated != null
                     ? 'Last updated: \n${_formatTime(context, lastUpdated!)}'
@@ -145,7 +145,7 @@ class HeaderRow extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: AppTheme.fontName,
                   fontWeight: FontWeight.w500,
-                  fontSize: 7,
+                  fontSize: 12,
                   color: AppTheme.grey.withOpacity(0.5),
                 ),
               ),
@@ -230,31 +230,50 @@ class ProductInfoRow extends StatelessWidget {
   });
 
   Widget buildColumn(String value, String label) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontFamily: AppTheme.fontName,
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            letterSpacing: -0.2,
-            color: AppTheme.darkText,
+    return Container(
+      height: 60, // Fixed height
+      // width: 100, // Fixed width (optional if using Expanded)
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 25, // Fixed height for value text
+            alignment: Alignment.center,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontFamily: AppTheme.fontName,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                letterSpacing: -0.2,
+                color: AppTheme.darkText,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: TextStyle(
-            fontFamily: AppTheme.fontName,
-            fontWeight: FontWeight.w600,
-            fontSize: 12,
-            color: AppTheme.grey.withOpacity(0.5),
+          const SizedBox(height: 6),
+          Container(
+            height: 18, // Fixed height for label text
+            alignment: Alignment.center,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: AppTheme.fontName,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+                color: AppTheme.grey.withOpacity(0.5),
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

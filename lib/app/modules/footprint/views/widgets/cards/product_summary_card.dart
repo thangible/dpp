@@ -70,12 +70,13 @@ class ProductCardContainer extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: AppTheme.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
-                    topRight: Radius.circular(68.0),
-                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  // const BorderRadius.only(
+                  // topLeft: Radius.circular(8.0),
+                  // bottomLeft: Radius.circular(8.0),
+                  // bottomRight: Radius.circular(8.0),
+                  // topRight: Radius.circular(68.0),
+                  // ),
                   boxShadow: [
                     BoxShadow(
                       color: AppTheme.grey.withOpacity(0.2),
@@ -110,7 +111,7 @@ class ProductCardContent extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 0, left: 0, right: 0),
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
           child: Row(
             children: [
               Expanded(
@@ -160,9 +161,9 @@ class EnergyAndEmissionInfo extends StatelessWidget {
             label: 'Energy used',
             value:
                 energyUsed != null
-                    ? '${(energyUsed! * animation.value).toStringAsFixed(2)}'
+                    ? '${(energyUsed! * animation.value).toStringAsFixed(0)}'
                     : 'N/A',
-            unit: 'kWh per unit',
+            unit: 'kWh',
             iconPath: "assets/fitness_app/electric.png",
             color: HexColor('#87A0E5'),
             animationValue: animation.value,
@@ -172,7 +173,7 @@ class EnergyAndEmissionInfo extends StatelessWidget {
             label: 'CO2 Emissions',
             value:
                 co2Emissions != null
-                    ? '${(co2Emissions! * animation.value).toStringAsFixed(2)}'
+                    ? '${(co2Emissions! * animation.value).toStringAsFixed(0)}'
                     : 'N/A',
             unit: 'kg',
             iconPath: "assets/fitness_app/burned.png",
@@ -196,7 +197,7 @@ class PieChartSection extends StatelessWidget {
       child: Center(
         child: MaterialPieChartWrapped(
           size: 80,
-          titles: ['Virgin', 'Recycled\nfrom Scrap', 'Recycled\nfrom Others'],
+          titles: ['Virgin', 'Scrap', 'Others'],
           values: [10, 60, 30],
           colors: [Color(0xFF87A0E5), Color(0xFFF56E98), Color(0xFFF1B440)],
           radii: [40, 40, 40],
