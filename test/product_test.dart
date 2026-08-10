@@ -1,9 +1,4 @@
-import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
-import 'package:dpp/app/data_model/api/generic_submodel.dart';
-import 'package:dpp/app/services/test/machineServiceJson55.dart';
-import 'package:dpp/app/data_model/api/base_aas_model.dart';
 import 'package:dpp/app/data_model/test/product.dart';
 import 'package:dpp/app/services/test/product_service.dart';
 

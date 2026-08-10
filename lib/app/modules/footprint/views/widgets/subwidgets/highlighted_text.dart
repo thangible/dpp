@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
 
 class HighlightedTextWithIConWidget extends StatelessWidget {
   final String label;
@@ -21,13 +20,15 @@ class HighlightedTextWithIConWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
     return Row(
       children: [
         Container(
           height: 48,
           width: 2,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.5),
+            color: color.withValues(alpha: 0.5),
             borderRadius: BorderRadius.all(Radius.circular(4.0)),
           ),
         ),
@@ -41,12 +42,10 @@ class HighlightedTextWithIConWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 4, bottom: 2),
                 child: Text(
                   label,
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
+                  style: textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
                     letterSpacing: -0.1,
-                    color: AppTheme.grey.withOpacity(0.5),
+                    color: colors.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -61,11 +60,8 @@ class HighlightedTextWithIConWidget extends StatelessWidget {
                       width: 50, // Fixed width for value
                       child: Text(
                         value,
-                        style: TextStyle(
-                          fontFamily: AppTheme.fontName,
+                        style: textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: AppTheme.darkerText,
                         ),
                         textAlign: TextAlign.right, // Right align the text
                       ),
@@ -75,12 +71,8 @@ class HighlightedTextWithIConWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 4, bottom: 4),
                     child: Text(
                       unit,
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontName,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                        // letterSpacing: -0.2,
-                        color: AppTheme.grey.withOpacity(0.5),
+                      style: textTheme.labelMedium?.copyWith(
+                        color: colors.onSurfaceVariant,
                       ),
                     ),
                   ),

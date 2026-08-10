@@ -1,4 +1,3 @@
-import 'package:dpp/app/data_model/hive/nameplate_hive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dpp/app/services/test/product_service.dart';
@@ -19,7 +18,7 @@ class SearchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeServices();
+    // _initializeServices();
     _loadIds();
     print('SearchController initialized with search type: ${searchType.value}');
     // Update our query whenever the text field value changes.
@@ -32,10 +31,10 @@ class SearchController extends GetxController {
     ever(searchType, (_) => _filterSuggestions());
   }
 
-  Future<void> _initializeServices() async {
-    await ProductService.init();
-    await ProcessService.init();
-  }
+  // Future<void> _initializeServices() async {
+  //   await ProductService.init();
+  //   await ProcessService.init();
+  // }
 
   Future<void> _loadIds() async {
     productIds.assignAll(ProductService.productIds);

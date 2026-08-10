@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/config/utils/tabIcon_data.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_view.dart';
 import 'package:dpp/app/modules/footprint/views/process/process_view.dart';
-import 'package:dpp/app/services/test/product_service.dart';
+import 'package:dpp/app/modules/footprint/views/history/history_favorites_view.dart';
+import 'package:dpp/app/modules/footprint/views/profile/profile_view.dart';
 
 class AppHomeController extends GetxController implements TickerProvider {
   late AnimationController animationController;
-  Rx<Widget> tabBody = Rx<Widget>(Container(color: AppTheme.background));
+  Rx<Widget> tabBody = Rx<Widget>(const SizedBox.shrink());
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
 
   @override
@@ -17,7 +17,7 @@ class AppHomeController extends GetxController implements TickerProvider {
 
   @override
   void onInit() {
-    ProductService.init();
+    // ProductService.init();
     // initialize tab icons
     for (var tab in tabIconsList) {
       tab.isSelected = false;
@@ -33,15 +33,22 @@ class AppHomeController extends GetxController implements TickerProvider {
   }
 
   void changePage(int index) {
-    if (index == 0 || index == 2) {
-      animationController.reverse().then((_) {
-        tabBody.value = ProductScreen(animationController: animationController);
-      });
-    } else if (index == 1 || index == 3) {
-      animationController.reverse().then((_) {
-        tabBody.value = ProcessScreen(animationController: animationController);
-      });
-    }
+    animationController.reverse().then((_) {
+      switch (index) {
+        case 0:
+          tabBody.value = ProductScreen(
+            animationController: animationController,
+          );
+        case 1:
+          tabBody.value = ProcessScreen(
+            animationController: animationController,
+          );
+        case 2:
+          tabBody.value = const HistoryFavoritesScreen();
+        case 3:
+          tabBody.value = const ProfileScreen();
+      }
+    });
   }
 
   @override

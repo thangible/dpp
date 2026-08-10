@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:dpp/app/modules/footprint/views/widgets/cards/download_info_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/title_view.dart';
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/cards/product_summary_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/cards/product_identifier_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.dart';
 //service
 import 'package:dpp/app/services/test/product_service.dart';
 import 'package:dpp/app/data_model/test/product.dart';
+import 'package:dpp/app/data_model/history/history_entry.dart';
+import 'package:dpp/app/modules/history/controllers/history_controller.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key, this.animationController});
@@ -81,10 +83,16 @@ class _ProductScreenState extends State<ProductScreen>
 
   // METHODS
   Future<void> loadDataAfterSearch(String productId) async {
-    final data = await ProductService.getProductById(productId);
+    final data = ProductService.getProductById(productId);
     setState(() {
       product = data;
     });
+    if (data != null && Get.isRegistered<HistoryController>()) {
+      Get.find<HistoryController>().addEntry(
+        productId,
+        HistoryItemType.product,
+      );
+    }
   }
 
   // Add cards
@@ -153,13 +161,13 @@ class _ProductScreenState extends State<ProductScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.background,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
             getMainListViewUI(),
-            getAppBarUI(),
+            getAppBarUI(context),
             SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
@@ -211,7 +219,9 @@ class _ProductScreenState extends State<ProductScreen>
     );
   }
 
-  Widget getAppBarUI() {
+  Widget getAppBarUI(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: <Widget>[
         AnimatedBuilder(
@@ -227,13 +237,15 @@ class _ProductScreenState extends State<ProductScreen>
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppTheme.white.withOpacity(topBarOpacity),
+                    color: colors.surface.withValues(alpha: topBarOpacity),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(32.0),
                     ),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                        color: AppTheme.grey.withOpacity(0.4 * topBarOpacity),
+                        color: colors.shadow.withValues(
+                          alpha: 0.4 * topBarOpacity,
+                        ),
                         offset: const Offset(1.1, 1.1),
                         blurRadius: 10.0,
                       ),
@@ -258,12 +270,8 @@ class _ProductScreenState extends State<ProductScreen>
                               padding: const EdgeInsets.only(left: 50),
                               child: Text(
                                 'Products',
-                                style: TextStyle(
-                                  fontFamily: AppTheme.fontName,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 18 + 6 - 6,
+                                style: textTheme.titleLarge?.copyWith(
                                   letterSpacing: 1.2,
-                                  color: AppTheme.darkerText,
                                 ),
                               ),
                             ),

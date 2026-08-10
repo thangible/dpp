@@ -27,14 +27,18 @@ class _MaterialPieChartWrappedState extends State<MaterialPieChartWrapped> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SizedBox(
       width: widget.size,
       height: widget.size,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(widget.size),
-          border: Border.all(width: 4, color: Colors.grey.withOpacity(0.2)),
+          border: Border.all(
+            width: 4,
+            color: colors.outlineVariant,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

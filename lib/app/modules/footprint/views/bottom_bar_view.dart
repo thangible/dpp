@@ -1,8 +1,7 @@
 import 'dart:math' as math;
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/config/utils/tabIcon_data.dart';
+import 'package:dpp/config/utils/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:dpp/config/utils/hex_color.dart';
 
 
 class BottomBarView extends StatefulWidget {
@@ -32,6 +31,22 @@ class _BottomBarViewState extends State<BottomBarView>
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    // On a phone the bar already fills the available width; on an iPad this
+    // keeps it from stretching edge-to-edge with the icons spread far apart
+    // — centered and capped at a normal phone-tab-bar width instead.
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: AppBreakpoints.tabBarMaxWidth,
+        ),
+        child: _buildBar(context, colors),
+      ),
+    );
+  }
+
+  Widget _buildBar(BuildContext context, ColorScheme colors) {
     return Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: <Widget>[
@@ -41,7 +56,7 @@ class _BottomBarViewState extends State<BottomBarView>
             return Transform(
               transform: Matrix4.translationValues(0.0, 0.0, 0.0),
               child: PhysicalShape(
-                color: AppTheme.white,
+                color: colors.surface,
                 elevation: 16.0,
                 clipper: TabClipper(
                     radius: Tween<double>(begin: 0.0, end: 1.0)
@@ -53,10 +68,10 @@ class _BottomBarViewState extends State<BottomBarView>
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: 62,
+                      height: 72,
                       child: Padding(
                         padding:
-                            const EdgeInsets.only(left: 8, right: 8, top: 4),
+                            const EdgeInsets.only(left: 8, right: 8, top: 6),
                         child: Row(
                           children: <Widget>[
                             Expanded(
@@ -121,7 +136,7 @@ class _BottomBarViewState extends State<BottomBarView>
               EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           child: SizedBox(
             width: 38 * 2.0,
-            height: 38 + 62.0,
+            height: 38 + 72.0,
             child: Container(
               alignment: Alignment.topCenter,
               color: Colors.transparent,
@@ -137,21 +152,15 @@ class _BottomBarViewState extends State<BottomBarView>
                             parent: animationController!,
                             curve: Curves.fastOutSlowIn)),
                     child: Container(
-                      // alignment: Alignment.center,s
                       decoration: BoxDecoration(
-                        color: AppTheme.nearlyDarkBlue,
                         gradient: LinearGradient(
-                            colors: [
-                              AppTheme.nearlyDarkBlue,
-                              HexColor('#6A88E5'),
-                            ],
+                            colors: [colors.primary, colors.secondary],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight),
                         shape: BoxShape.circle,
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                              color: AppTheme.nearlyDarkBlue
-                                  .withOpacity(0.4),
+                              color: colors.primary.withValues(alpha: 0.4),
                               offset: const Offset(8.0, 16.0),
                               blurRadius: 16.0),
                         ],
@@ -159,13 +168,13 @@ class _BottomBarViewState extends State<BottomBarView>
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          splashColor: Colors.white.withOpacity(0.1),
+                          splashColor: Colors.white.withValues(alpha: 0.1),
                           highlightColor: Colors.transparent,
                           focusColor: Colors.transparent,
                           onTap: widget.addClick,
                           child: Icon(
                             Icons.qr_code_scanner,
-                            color: AppTheme.white,
+                            color: colors.onPrimary,
                             size: 32,
                           ),
                         ),
@@ -225,99 +234,48 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Center(
-        child: InkWell(
-          splashColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          onTap: () {
-            if (!widget.tabIconData!.isSelected) {
-              setAnimation();
-            }
-          },
-          child: IgnorePointer(
-            child: Stack(
-              alignment: AlignmentDirectional.center,
-              children: <Widget>[
-                ScaleTransition(
-                  alignment: Alignment.center,
-                  scale: Tween<double>(begin: 0.88, end: 1.0).animate(
-                      CurvedAnimation(
-                          parent: widget.tabIconData!.animationController!,
-                          curve:
-                              Interval(0.1, 1.0, curve: Curves.fastOutSlowIn))),
-                  child: Image.asset(widget.tabIconData!.isSelected
-                      ? widget.tabIconData!.selectedImagePath
-                      : widget.tabIconData!.imagePath),
-                ),
-                Positioned(
-                  top: 4,
-                  left: 6,
-                  right: 0,
-                  child: ScaleTransition(
-                    alignment: Alignment.center,
-                    scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: widget.tabIconData!.animationController!,
-                            curve: Interval(0.2, 1.0,
-                                curve: Curves.fastOutSlowIn))),
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: AppTheme.nearlyDarkBlue,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  left: 6,
-                  bottom: 8,
-                  child: ScaleTransition(
-                    alignment: Alignment.center,
-                    scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: widget.tabIconData!.animationController!,
-                            curve: Interval(0.5, 0.8,
-                                curve: Curves.fastOutSlowIn))),
-                    child: Container(
-                      width: 4,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: AppTheme.nearlyDarkBlue,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 6,
-                  right: 8,
-                  bottom: 0,
-                  child: ScaleTransition(
-                    alignment: Alignment.center,
-                    scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: widget.tabIconData!.animationController!,
-                            curve: Interval(0.5, 0.6,
-                                curve: Curves.fastOutSlowIn))),
-                    child: Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: AppTheme.nearlyDarkBlue,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+    final colors = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final isSelected = widget.tabIconData!.isSelected;
+    final color = isSelected ? colors.primary : colors.onSurfaceVariant;
+
+    return InkWell(
+      splashColor: Colors.transparent,
+      focusColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      onTap: () {
+        if (!widget.tabIconData!.isSelected) {
+          setAnimation();
+        }
+      },
+      child: IgnorePointer(
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 1.0, end: 1.08).animate(
+            CurvedAnimation(
+              parent: widget.tabIconData!.animationController!,
+              curve: const Interval(0.0, 0.5, curve: Curves.fastOutSlowIn),
             ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                isSelected
+                    ? widget.tabIconData!.selectedIcon
+                    : widget.tabIconData!.icon,
+                color: color,
+                size: 24,
+              ),
+              const SizedBox(height: 3),
+              Text(
+                widget.tabIconData!.label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: color,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
       ),

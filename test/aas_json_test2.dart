@@ -23,8 +23,9 @@ void main() {
       try {
         final element = elements?.firstWhere((e) => e.idShort == idShort);
         if (element is Property) return element.value.toString();
-        if (element is MultiLanguageProperty)
+        if (element is MultiLanguageProperty) {
           return element.value.first.text ?? "";
+        }
         return "Not a Property";
       } catch (_) {
         return "Not Found";

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
-
 
 class TextWithBarWidget extends StatelessWidget {
   final String label;
@@ -20,18 +18,18 @@ class TextWithBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontFamily: AppTheme.fontName,
+          style: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w500,
-            fontSize: 16,
             letterSpacing: -0.2,
-            color: AppTheme.grey.withOpacity(0.5),
+            color: colors.onSurfaceVariant,
           ),
         ),
         Padding(
@@ -40,7 +38,7 @@ class TextWithBarWidget extends StatelessWidget {
             height: 4,
             width: 70,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.all(Radius.circular(4.0)),
             ),
             child: Row(
@@ -51,7 +49,7 @@ class TextWithBarWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
                       color,
-                      color.withOpacity(0.5),
+                      color.withValues(alpha: 0.5),
                     ]),
                     borderRadius: BorderRadius.all(Radius.circular(4.0)),
                   ),
@@ -64,12 +62,7 @@ class TextWithBarWidget extends StatelessWidget {
           padding: const EdgeInsets.only(top: 6),
           child: Text(
             remaining,
-            style: TextStyle(
-              fontFamily: AppTheme.fontName,
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
-              color: AppTheme.darkText ,
-            ),
+            style: textTheme.labelMedium?.copyWith(color: colors.onSurface),
           ),
         ),
       ],

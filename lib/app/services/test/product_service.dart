@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:dpp/app/data_model/test/product.dart';
 import 'package:dpp/app/data_model/api/generic_submodel.dart';
-import 'package:dpp/app/data_model/api/base_aas_model.dart';
 
 // import 'package:dpp/app/data_model/test/machine.dart';
 

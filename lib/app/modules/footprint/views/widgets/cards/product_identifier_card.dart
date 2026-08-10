@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/theme.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/divider.dart';
 
 class ProductIdentifierCard extends StatelessWidget {
@@ -26,6 +25,7 @@ class ProductIdentifierCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return AnimatedBuilder(
       animation: animationController!,
       builder: (BuildContext context, Widget? child) {
@@ -37,11 +37,11 @@ class ProductIdentifierCard extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colors.surface,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: colors.shadow.withValues(alpha: 0.2),
                       spreadRadius: 2,
                       blurRadius: 8,
                       offset: const Offset(0, 4),
@@ -115,6 +115,8 @@ class HeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Column(
@@ -122,19 +124,14 @@ class HeaderRow extends StatelessWidget {
         children: [
           Text(
             identifier,
-            style: TextStyle(
-              fontFamily: AppTheme.fontName,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: AppTheme.nearlyDarkBlue,
-            ),
+            style: textTheme.titleMedium?.copyWith(color: colors.primary),
           ),
           const SizedBox(height: 24),
           Row(
             children: [
               Icon(
                 Icons.access_time,
-                color: AppTheme.grey.withOpacity(0.5),
+                color: colors.onSurfaceVariant,
                 size: 16,
               ),
               const SizedBox(width: 8),
@@ -142,11 +139,8 @@ class HeaderRow extends StatelessWidget {
                 lastUpdated != null
                     ? 'Last updated: \n${_formatTime(context, lastUpdated!)}'
                     : 'Unknown last update',
-                style: TextStyle(
-                  fontFamily: AppTheme.fontName,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                  color: AppTheme.grey.withOpacity(0.5),
+                style: textTheme.labelMedium?.copyWith(
+                  color: colors.onSurfaceVariant,
                 ),
               ),
             ],
@@ -187,16 +181,17 @@ class ImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     if (imagePath == null || imagePath == "No Image") {
       return ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: Container(
           width: 150,
           height: 150,
-          color: AppTheme.grey.withOpacity(0.2),
+          color: colors.surfaceContainerHighest,
           child: Icon(
             Icons.image_not_supported,
-            color: AppTheme.grey.withOpacity(0.5),
+            color: colors.onSurfaceVariant,
             size: 50,
           ),
         ),
@@ -229,10 +224,11 @@ class ProductInfoRow extends StatelessWidget {
     required this.manufacturer,
   });
 
-  Widget buildColumn(String value, String label) {
+  Widget buildColumn(BuildContext context, String value, String label) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       height: 60, // Fixed height
-      // width: 100, // Fixed width (optional if using Expanded)
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -243,12 +239,9 @@ class ProductInfoRow extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               value,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
+              style: textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
-                fontSize: 16,
                 letterSpacing: -0.2,
-                color: AppTheme.darkText,
               ),
               textAlign: TextAlign.center,
               maxLines: 1,
@@ -261,11 +254,8 @@ class ProductInfoRow extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               label,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-                color: AppTheme.grey.withOpacity(0.5),
+              style: textTheme.labelMedium?.copyWith(
+                color: colors.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
               maxLines: 1,
@@ -281,9 +271,9 @@ class ProductInfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: buildColumn(material, 'Material')),
-        Expanded(child: buildColumn(productType, 'Product Type')),
-        Expanded(child: buildColumn(manufacturer, 'Manufacturer')),
+        Expanded(child: buildColumn(context, material, 'Material')),
+        Expanded(child: buildColumn(context, productType, 'Product Type')),
+        Expanded(child: buildColumn(context, manufacturer, 'Manufacturer')),
       ],
     );
   }

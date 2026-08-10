@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/title_view.dart';
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/cards/process_identifier_card.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/search_bar.dart';
 import 'package:dpp/app/services/test/process_service.dart';
 import 'package:dpp/app/data_model/test/process.dart';
+import 'package:dpp/app/data_model/history/history_entry.dart';
+import 'package:dpp/app/modules/history/controllers/history_controller.dart';
 
 class ProcessScreen extends StatefulWidget {
   const ProcessScreen({super.key, this.animationController});
@@ -53,7 +55,7 @@ class _ProcessScreenState extends State<ProcessScreen>
       ),
     );
 
-    _initializeServices();
+    // _initializeServices();
     addCards();
 
     scrollController.addListener(() {
@@ -74,9 +76,9 @@ class _ProcessScreenState extends State<ProcessScreen>
     });
   }
 
-  Future<void> _initializeServices() async {
-    await ProcessService.init();
-  }
+  // Future<void> _initializeServices() async {
+  //   await ProcessService.init();
+  // }
 
   Future<void> loadDataAfterSearch(String processId) async {
     final data = ProcessService.getProcessById(processId);
@@ -84,6 +86,12 @@ class _ProcessScreenState extends State<ProcessScreen>
       process = data;
       _selectedProcessId = processId;
     });
+    if (data != null && Get.isRegistered<HistoryController>()) {
+      Get.find<HistoryController>().addEntry(
+        processId,
+        HistoryItemType.process,
+      );
+    }
     addCards(); // Refresh cards with new data
   }
 
@@ -112,19 +120,23 @@ class _ProcessScreenState extends State<ProcessScreen>
           material: process!.material,
           progress: process!.progress,
           lastUpdated: process!.lastUpdated,
+          imagePath: process!.imagePath,
         ),
       );
     }
 
-    //   // Summary Section
-    listViews.add(
-      TitleView(
-        titleTxt: 'Process Summary',
-        subTxt: 'Details',
-        animation: cardAnimation,
-        animationController: widget.animationController!,
-      ),
-    );
+    // Summary Section
+    if (process != null) {
+      listViews.add(
+        TitleView(
+          titleTxt: 'Process Summary',
+          subTxt: 'Details',
+          process: process,
+          animation: cardAnimation,
+          animationController: widget.animationController!,
+        ),
+      );
+    }
 
     // Download Section
     // listViews.add(
@@ -183,13 +195,13 @@ class _ProcessScreenState extends State<ProcessScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.background,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
             getMainListViewUI(),
-            getAppBarUI(),
+            getAppBarUI(context),
             SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
@@ -241,7 +253,9 @@ class _ProcessScreenState extends State<ProcessScreen>
     );
   }
 
-  Widget getAppBarUI() {
+  Widget getAppBarUI(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: <Widget>[
         AnimatedBuilder(
@@ -257,13 +271,15 @@ class _ProcessScreenState extends State<ProcessScreen>
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppTheme.white.withOpacity(topBarOpacity),
+                    color: colors.surface.withValues(alpha: topBarOpacity),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(32.0),
                     ),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                        color: AppTheme.grey.withOpacity(0.4 * topBarOpacity),
+                        color: colors.shadow.withValues(
+                          alpha: 0.4 * topBarOpacity,
+                        ),
                         offset: const Offset(1.1, 1.1),
                         blurRadius: 10.0,
                       ),
@@ -286,12 +302,9 @@ class _ProcessScreenState extends State<ProcessScreen>
                               padding: const EdgeInsets.only(left: 50),
                               child: Text(
                                 'Process',
-                                style: TextStyle(
-                                  fontFamily: AppTheme.fontName,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 22 + 6 - 6 * topBarOpacity,
+                                style: textTheme.titleLarge?.copyWith(
+                                  fontSize: 22 - 6 * topBarOpacity,
                                   letterSpacing: 1.2,
-                                  color: AppTheme.darkerText,
                                 ),
                               ),
                             ),

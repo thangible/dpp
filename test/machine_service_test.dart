@@ -7,15 +7,15 @@ import 'package:dpp/app/data_model/api/base_aas_model.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final _machineService = MachineDiscoveryService();
+  final machineService = MachineDiscoveryService();
 
   test('Print all machine IDs', () async {
     try {
-      final responses = await _machineService.fetchFullMachineData();
-      String? machineId = _machineService.firstRootId;
+      final responses = await machineService.fetchFullMachineData();
+      String? machineId = machineService.firstRootId;
       // print('Discovered Machine IDs:');
       // print('  - $machineId');
-      List<String> allIds = _machineService.allRootIds;
+      List<String> allIds = machineService.allRootIds;
       for (var id in allIds) {
         print('  - $id');
       }
@@ -218,7 +218,7 @@ void main() {
           }
         }
 
-        print('\n' + '=' * 80);
+        print('\n${'=' * 80}');
       }
 
       print('\n✅ Summary: Successfully processed ${responses.length} machines');

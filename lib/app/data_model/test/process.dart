@@ -29,7 +29,7 @@ class Process {
   });
 
   factory Process.fromJson(AasResponse jsonResponse) {
-    String process_id = '';
+    String processId = '';
     String? manufacturerName;
     String? processType;
     String? yearOfConstruction;
@@ -39,7 +39,7 @@ class Process {
     // Extract basic process ID
     if (jsonResponse.assetAdministrationShells?.isNotEmpty == true) {
       final aas = jsonResponse.assetAdministrationShells!.first;
-      process_id = aas.idShort;
+      processId = aas.idShort;
 
       // Extract asset type from asset information
       if (aas.assetInformation != null) {
@@ -129,7 +129,7 @@ class Process {
     }
 
     return Process(
-      id: process_id,
+      id: processId,
       manufacturer: manufacturerName,
       type: processType,
       co2Emissions: co2Value,

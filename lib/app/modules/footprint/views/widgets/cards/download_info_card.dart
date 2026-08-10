@@ -1,7 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
-import 'package:dpp/config/utils/hex_color.dart';
 
 class DownloadInfoCard extends StatelessWidget {
   final AnimationController? animationController;
@@ -10,6 +7,8 @@ class DownloadInfoCard extends StatelessWidget {
   const DownloadInfoCard({super.key, this.animationController, this.animation});
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return AnimatedBuilder(
       animation: animationController!,
       builder: (BuildContext context, Widget? child) {
@@ -30,18 +29,8 @@ class DownloadInfoCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 16),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: HexColor("#D7E0F9"),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8.0),
-                                bottomLeft: Radius.circular(8.0),
-                                bottomRight: Radius.circular(8.0),
-                                topRight: Radius.circular(8.0)),
-                            // boxShadow: <BoxShadow>[
-                            //   BoxShadow(
-                            //       color: FitnessAppTheme.grey.withOpacity(0.2),
-                            //       offset: Offset(1.1, 1.1),
-                            //       blurRadius: 10.0),
-                            // ],
+                            color: colors.primaryContainer,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Column(
                             children: <Widget>[
@@ -51,13 +40,9 @@ class DownloadInfoCard extends StatelessWidget {
                                 child: Text(
                                   'Click here to download report',
                                   textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontFamily: AppTheme.fontName,
+                                  style: textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    letterSpacing: 0.0,
-                                    color: AppTheme.nearlyDarkBlue
-                                        .withOpacity(0.6),
+                                    color: colors.onPrimaryContainer,
                                   ),
                                 ),
                               ),
@@ -74,7 +59,7 @@ class DownloadInfoCard extends StatelessWidget {
                           child: Icon(
                           Icons.download,
                           size: 30,
-                          color: AppTheme.nearlyDarkBlue.withOpacity(0.6),
+                          color: colors.onPrimaryContainer,
                           ),
                         ),
                       )

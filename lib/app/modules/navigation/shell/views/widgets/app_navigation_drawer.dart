@@ -1,14 +1,17 @@
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:dpp/app/modules/navigation/models/drawer_model.dart';
+import 'package:dpp/app/modules/settings/controllers/theme_controller.dart';
+import 'package:dpp/app/modules/auth/controllers/auth_controller.dart';
+import 'package:dpp/app/routes/app_pages.dart';
 
 class AppNavigationDrawer extends StatefulWidget {
-  const AppNavigationDrawer(
-      {Key? key,
-      this.screenIndex,
-      this.iconAnimationController,
-      this.callBackIndex})
-      : super(key: key);
+  const AppNavigationDrawer({
+    super.key,
+    this.screenIndex,
+    this.iconAnimationController,
+    this.callBackIndex,
+  });
 
   final AnimationController? iconAnimationController;
   final DrawerIndex? screenIndex;
@@ -64,10 +67,10 @@ class _AppNavigationDrawerState extends State<AppNavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     return Scaffold(
-      backgroundColor: AppTheme.notWhite.withOpacity(0.5),
+      backgroundColor: colors.surface,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -85,32 +88,43 @@ class _AppNavigationDrawerState extends State<AppNavigationDrawer> {
                     animation: widget.iconAnimationController!,
                     builder: (BuildContext context, Widget? child) {
                       return ScaleTransition(
-                        scale: AlwaysStoppedAnimation<double>(1.0 -
-                            (widget.iconAnimationController!.value) * 0.2),
+                        scale: AlwaysStoppedAnimation<double>(
+                          1.0 - (widget.iconAnimationController!.value) * 0.2,
+                        ),
                         child: RotationTransition(
-                          turns: AlwaysStoppedAnimation<double>(Tween<double>(
-                                      begin: 0.0, end: 24.0)
-                                  .animate(CurvedAnimation(
-                                      parent: widget.iconAnimationController!,
-                                      curve: Curves.fastOutSlowIn))
-                                  .value /
-                              360),
+                          turns: AlwaysStoppedAnimation<double>(
+                            Tween<double>(begin: 0.0, end: 24.0)
+                                    .animate(
+                                      CurvedAnimation(
+                                        parent: widget.iconAnimationController!,
+                                        curve: Curves.fastOutSlowIn,
+                                      ),
+                                    )
+                                    .value /
+                                360,
+                          ),
                           child: Container(
-                            height: 120,
-                            width: 120,
+                            height: 92,
+                            width: 92,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
+                              border: Border.all(
+                                color: colors.primary.withValues(alpha: 0.25),
+                                width: 2,
+                              ),
                               boxShadow: <BoxShadow>[
                                 BoxShadow(
-                                    color: AppTheme.grey.withOpacity(0.6),
-                                    offset: const Offset(2.0, 4.0),
-                                    blurRadius: 8),
+                                  color: colors.shadow.withValues(alpha: 0.25),
+                                  offset: const Offset(0, 4),
+                                  blurRadius: 12,
+                                ),
                               ],
                             ),
                             child: ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.asset('assets/images/userImage.png'),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(46.0),
+                              ),
+                              child: Image.asset('assets/images/userImage.jpg'),
                             ),
                           ),
                         ),
@@ -118,13 +132,22 @@ class _AppNavigationDrawerState extends State<AppNavigationDrawer> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 4),
+                    padding: const EdgeInsets.only(top: 12, left: 4),
+                    child: Obx(
+                      () => Text(
+                        Get.find<AuthController>().displayName.value,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: colors.onSurface,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2, left: 4),
                     child: Text(
-                      'IAPT User',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: isLightMode ? AppTheme.grey : AppTheme.white,
-                        fontSize: 18,
+                      'Digital Product Passport',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colors.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -132,51 +155,37 @@ class _AppNavigationDrawerState extends State<AppNavigationDrawer> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 4,
-          ),
-          Divider(
-            height: 1,
-            color: AppTheme.grey.withOpacity(0.6),
-          ),
+          const SizedBox(height: 4),
+          Divider(height: 1, color: colors.outlineVariant),
           Expanded(
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               itemCount: drawerList?.length,
               itemBuilder: (BuildContext context, int index) {
-                return inkwell(drawerList![index]);
+                return inkwell(drawerList![index], colors, theme);
               },
             ),
           ),
-          Divider(
-            height: 1,
-            color: AppTheme.grey.withOpacity(0.6),
-          ),
+          Divider(height: 1, color: colors.outlineVariant),
+          _DarkModeToggle(colors: colors, theme: theme),
+          Divider(height: 1, color: colors.outlineVariant),
           Column(
             children: <Widget>[
               ListTile(
                 title: Text(
                   'Sign Out',
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppTheme.darkText,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: colors.onSurface,
                   ),
                   textAlign: TextAlign.left,
                 ),
-                trailing: Icon(
-                  Icons.power_settings_new,
-                  color: Colors.red,
-                ),
+                trailing: Icon(Icons.power_settings_new, color: colors.error),
                 onTap: () {
                   onTapped();
                 },
               ),
-              SizedBox(
-                height: MediaQuery.of(context).padding.bottom,
-              )
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
             ],
           ),
         ],
@@ -184,106 +193,67 @@ class _AppNavigationDrawerState extends State<AppNavigationDrawer> {
     );
   }
 
-  void onTapped() {
-    print('Doing Something...'); // Print to console.
+  Future<void> onTapped() async {
+    await Get.find<AuthController>().signOut();
+    Get.offAllNamed(Routes.SIGN_IN);
   }
 
-  Widget inkwell(DrawerList listData) {
+  Widget inkwell(DrawerList listData, ColorScheme colors, ThemeData theme) {
+    final bool isSelected = widget.screenIndex == listData.index;
+    final Color itemColor = isSelected ? colors.primary : colors.onSurfaceVariant;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        splashColor: Colors.grey.withOpacity(0.1),
+        splashColor: colors.primary.withValues(alpha: 0.08),
         highlightColor: Colors.transparent,
         onTap: () {
           navigationtoScreen(listData.index!);
         },
         child: Stack(
+          alignment: Alignment.centerLeft,
           children: <Widget>[
+            if (isSelected)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: Container(
+                  width: double.infinity,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: colors.primaryContainer,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
             Container(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 20.0,
+              ),
               child: Row(
                 children: <Widget>[
-                  Container(
-                    width: 6.0,
-                    height: 46.0,
-                    // decoration: BoxDecoration(
-                    //   color: widget.screenIndex == listData.index
-                    //       ? Colors.blue
-                    //       : Colors.transparent,
-                    //   borderRadius: new BorderRadius.only(
-                    //     topLeft: Radius.circular(0),
-                    //     topRight: Radius.circular(16),
-                    //     bottomLeft: Radius.circular(0),
-                    //     bottomRight: Radius.circular(16),
-                    //   ),
-                    // ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(4.0),
-                  ),
                   listData.isAssetsImage
-                      ? Container(
-                          width: 24,
-                          height: 24,
-                          child: Image.asset(listData.imageName,
-                              color: widget.screenIndex == listData.index
-                                  ? Colors.blue
-                                  : AppTheme.nearlyBlack),
-                        )
-                      : Icon(listData.icon?.icon,
-                          color: widget.screenIndex == listData.index
-                              ? Colors.blue
-                              : AppTheme.nearlyBlack),
-                  const Padding(
-                    padding: EdgeInsets.all(4.0),
-                  ),
+                      ? SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Image.asset(
+                          listData.imageName,
+                          color: itemColor,
+                        ),
+                      )
+                      : Icon(listData.icon?.icon, color: itemColor, size: 24),
+                  const SizedBox(width: 20),
                   Text(
                     listData.labelName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color: widget.screenIndex == listData.index
-                          ? Colors.black
-                          : AppTheme.nearlyBlack,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: itemColor,
                     ),
                     textAlign: TextAlign.left,
                   ),
                 ],
               ),
             ),
-            widget.screenIndex == listData.index
-                ? AnimatedBuilder(
-                    animation: widget.iconAnimationController!,
-                    builder: (BuildContext context, Widget? child) {
-                      return Transform(
-                        transform: Matrix4.translationValues(
-                            (MediaQuery.of(context).size.width * 0.75 - 64) *
-                                (1.0 -
-                                    widget.iconAnimationController!.value -
-                                    1.0),
-                            0.0,
-                            0.0),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 8, bottom: 8),
-                          child: Container(
-                            width:
-                                MediaQuery.of(context).size.width * 0.75 - 64,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.2),
-                              borderRadius: new BorderRadius.only(
-                                topLeft: Radius.circular(0),
-                                topRight: Radius.circular(28),
-                                bottomLeft: Radius.circular(0),
-                                bottomRight: Radius.circular(28),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : const SizedBox()
           ],
         ),
       ),
@@ -295,3 +265,29 @@ class _AppNavigationDrawerState extends State<AppNavigationDrawer> {
   }
 }
 
+/// Dark mode switch shown in the drawer footer, wired to [ThemeController].
+class _DarkModeToggle extends StatelessWidget {
+  final ColorScheme colors;
+  final ThemeData theme;
+
+  const _DarkModeToggle({required this.colors, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<ThemeController>();
+    return Obx(
+      () => SwitchListTile(
+        value: controller.isDarkMode,
+        onChanged: controller.toggleDarkMode,
+        secondary: Icon(
+          controller.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+          color: colors.onSurfaceVariant,
+        ),
+        title: Text(
+          'Dark mode',
+          style: theme.textTheme.bodyLarge?.copyWith(color: colors.onSurface),
+        ),
+      ),
+    );
+  }
+}

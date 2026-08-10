@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/highlighted_text.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/info_row.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/divider.dart';
-import 'package:dpp/config/theme/app_theme.dart';
-import 'package:dpp/config/utils/hex_color.dart';
+import 'package:dpp/config/theme/app_colors_extension.dart';
 import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/piechart.dart';
 
 // import 'package:dpp/app/modules/footprint/views/widgets/subwidgets/speedometer.dart';
@@ -69,17 +68,13 @@ class ProductCardContainer extends StatelessWidget {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppTheme.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  // const BorderRadius.only(
-                  // topLeft: Radius.circular(8.0),
-                  // bottomLeft: Radius.circular(8.0),
-                  // bottomRight: Radius.circular(8.0),
-                  // topRight: Radius.circular(68.0),
-                  // ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.grey.withOpacity(0.2),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.shadow.withValues(alpha: 0.2),
                       offset: const Offset(1.1, 1.1),
                       blurRadius: 10.0,
                     ),
@@ -153,6 +148,7 @@ class EnergyAndEmissionInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chartPalette = context.semanticColors.chartPalette;
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
       child: Column(
@@ -161,11 +157,11 @@ class EnergyAndEmissionInfo extends StatelessWidget {
             label: 'Energy used',
             value:
                 energyUsed != null
-                    ? '${(energyUsed! * animation.value).toStringAsFixed(0)}'
+                    ? (energyUsed! * animation.value).toStringAsFixed(0)
                     : 'N/A',
             unit: 'kWh',
             iconPath: "assets/fitness_app/electric.png",
-            color: HexColor('#87A0E5'),
+            color: chartPalette[0],
             animationValue: animation.value,
           ),
           const SizedBox(height: 8),
@@ -173,11 +169,11 @@ class EnergyAndEmissionInfo extends StatelessWidget {
             label: 'CO2 Emissions',
             value:
                 co2Emissions != null
-                    ? '${(co2Emissions! * animation.value).toStringAsFixed(0)}'
+                    ? (co2Emissions! * animation.value).toStringAsFixed(0)
                     : 'N/A',
             unit: 'kg',
             iconPath: "assets/fitness_app/burned.png",
-            color: HexColor('#F56E98'),
+            color: chartPalette[1],
             animationValue: animation.value,
           ),
         ],
@@ -197,12 +193,11 @@ class PieChartSection extends StatelessWidget {
       child: Center(
         child: MaterialPieChartWrapped(
           size: 80,
-          titles: ['Virgin', 'Scrap', 'Others'],
-          values: [10, 60, 30],
-          colors: [Color(0xFF87A0E5), Color(0xFFF56E98), Color(0xFFF1B440)],
-          radii: [40, 40, 40],
+          titles: const ['Virgin', 'Scrap', 'Others'],
+          values: const [10, 60, 30],
+          colors: context.semanticColors.chartPalette,
+          radii: const [40, 40, 40],
         ),
-        // piechart
       ),
     );
   }

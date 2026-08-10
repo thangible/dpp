@@ -44,7 +44,7 @@ class MachineDiscoveryService {
     for (var response in responses!) {
       if (response.assetAdministrationShells != null) {
         for (var shell in response.assetAdministrationShells!) {
-          allIds.add(shell.idShort!);
+          allIds.add(shell.idShort);
         }
       }
     }

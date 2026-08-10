@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
 import 'dart:async';
 import 'package:dpp/app/services/test/product_service.dart';
 import 'package:dpp/app/services/test/process_service.dart';
@@ -11,10 +10,10 @@ class SearchBarWidget extends StatefulWidget {
   final SearchBarType searchType;
 
   const SearchBarWidget({
-    Key? key,
+    super.key,
     required this.onItemSelected,
     this.searchType = SearchBarType.product,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
@@ -30,20 +29,13 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   void initState() {
     super.initState();
     _loadIds();
-    print("SearchBar initialized with search type: ${widget.searchType}");
   }
 
   Future<void> _loadIds() async {
-    // await ProductService.init();
-    // await ProcessService.init();
     setState(() {
       productIds = ProductService.productIds;
       processIds = ProcessService.processIds;
     });
-    print(
-      "Loaded ${productIds.length} product IDs and ${processIds.length} process IDs.",
-    );
-    print("Current search type: ${widget.searchType}");
   }
 
   List<String> get currentIds {
@@ -73,7 +65,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     }
   }
 
-  Iterable<Widget> getHistoryList(SearchController controller) {
+  Iterable<Widget> getHistoryList(SearchController controller, ColorScheme colors) {
     // Filter history by current search type
     final historyForType =
         searchHistory.where((id) {
@@ -82,14 +74,13 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
     return historyForType.map(
       (String id) => ListTile(
-        leading: Icon(Icons.history, color: AppTheme.grey),
-        title: Text(id, style: AppTheme.body1),
+        leading: Icon(Icons.history, color: colors.onSurfaceVariant),
+        title: Text(id),
         subtitle: Text(
           widget.searchType == SearchBarType.product ? 'Product' : 'Process',
-          style: TextStyle(fontSize: 12, color: AppTheme.grey.withOpacity(0.7)),
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.call_missed, color: AppTheme.nearlyBlue),
+          icon: Icon(Icons.call_missed, color: colors.primary),
           onPressed: () {
             controller.text = id;
             controller.selection = TextSelection.collapsed(
@@ -105,7 +96,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     );
   }
 
-  Iterable<Widget> getSuggestions(SearchController controller) {
+  Iterable<Widget> getSuggestions(SearchController controller, ColorScheme colors) {
     final String input = controller.value.text.toLowerCase();
     final filteredIds = currentIds.where(
       (id) => id.toLowerCase().contains(input),
@@ -113,16 +104,15 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
     return filteredIds.map(
       (String id) => ListTile(
-        leading: Icon(searchIcon, color: AppTheme.nearlyBlue),
-        title: Text(id, style: AppTheme.body1),
+        leading: Icon(searchIcon, color: colors.primary),
+        title: Text(id),
         subtitle: Text(
           widget.searchType == SearchBarType.product
               ? 'Product ID'
               : 'Process ID',
-          style: TextStyle(fontSize: 12, color: AppTheme.grey.withOpacity(0.7)),
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.call_missed, color: AppTheme.nearlyBlue),
+          icon: Icon(Icons.call_missed, color: colors.primary),
           onPressed: () {
             controller.text = id;
             controller.selection = TextSelection.collapsed(
@@ -157,11 +147,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = ThemeData(
-      colorSchemeSeed: AppTheme.nearlyDarkBlue,
-      scaffoldBackgroundColor: AppTheme.background,
-    );
-    final ColorScheme colors = themeData.colorScheme;
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Column(
       children: <Widget>[
@@ -175,14 +162,13 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 elevation: const WidgetStatePropertyAll<double>(0),
                 hintText: searchHint,
                 leading: Icon(searchIcon),
-                backgroundColor: WidgetStateProperty.all(AppTheme.nearlyWhite),
+                backgroundColor: WidgetStateProperty.all(
+                  colors.surfaceContainerHighest,
+                ),
                 textStyle: WidgetStateProperty.all(
-                  const TextStyle(
-                    fontFamily: AppTheme.fontName,
+                  textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
                     letterSpacing: -0.1,
-                    color: AppTheme.grey,
                   ),
                 ),
                 onTap: () {
@@ -198,15 +184,14 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               SearchController controller,
             ) {
               if (controller.text.isEmpty) {
-                final historyList = getHistoryList(controller).toList();
+                final historyList = getHistoryList(controller, colors).toList();
                 if (historyList.isNotEmpty) {
                   return [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         'Recent ${widget.searchType == SearchBarType.product ? 'Products' : 'Processes'}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        style: textTheme.labelLarge?.copyWith(
                           color: colors.primary,
                         ),
                       ),
@@ -224,7 +209,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                           const SizedBox(height: 8),
                           Text(
                             'No search history for ${widget.searchType == SearchBarType.product ? 'products' : 'processes'}.',
-                            style: AppTheme.body1.copyWith(
+                            style: textTheme.bodyLarge?.copyWith(
                               color: colors.outline,
                             ),
                             textAlign: TextAlign.center,
@@ -236,7 +221,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 ];
               }
 
-              final suggestions = getSuggestions(controller).toList();
+              final suggestions = getSuggestions(controller, colors).toList();
               if (suggestions.isEmpty) {
                 return <Widget>[
                   Center(
@@ -244,7 +229,9 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         'No ${widget.searchType == SearchBarType.product ? 'products' : 'processes'} found.',
-                        style: AppTheme.body1.copyWith(color: colors.outline),
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: colors.outline,
+                        ),
                       ),
                     ),
                   ),
@@ -256,10 +243,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     '${suggestions.length} ${widget.searchType == SearchBarType.product ? 'Product' : 'Process'} Results',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: colors.primary,
-                    ),
+                    style: textTheme.labelLarge?.copyWith(color: colors.primary),
                   ),
                 ),
                 ...suggestions,

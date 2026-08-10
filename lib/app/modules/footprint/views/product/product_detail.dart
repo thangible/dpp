@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
+import 'package:dpp/config/theme/app_colors_extension.dart';
 import 'package:dpp/app/data_model/test/product.dart';
 import 'package:dpp/app/services/test/product_service.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -10,11 +10,11 @@ class ProductDetailScreen extends StatefulWidget {
   final AnimationController? animationController;
 
   const ProductDetailScreen({
-    Key? key,
+    super.key,
     this.product,
     this.productId,
     this.animationController,
-  }) : super(key: key);
+  });
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -30,6 +30,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   late Animation<double> _fadeAnimation;
   late Animation<double> _slideAnimation;
   late Animation<double> _scaleAnimation;
+
+  ColorScheme get _colors => Theme.of(context).colorScheme;
+  TextTheme get _text => Theme.of(context).textTheme;
+  AppSemanticColors get _semantic => context.semanticColors;
 
   @override
   void initState() {
@@ -92,8 +96,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         error = null;
       });
 
-      final productData = await ProductService.getProductById(
-        widget.productId ?? product?.id?.toString() ?? '',
+      final productData = ProductService.getProductById(
+        widget.productId ?? product?.id.toString() ?? '',
       );
 
       if (!mounted) return;
@@ -117,7 +121,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   }
 
   String get _productId =>
-      widget.productId ?? product?.id?.toString() ?? 'Unknown';
+      widget.productId ?? product?.id.toString() ?? 'Unknown';
 
   @override
   void dispose() {
@@ -130,7 +134,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
       body: CustomScrollView(
         slivers: [
           _buildSliverAppBar(),
@@ -147,27 +150,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
       expandedHeight: 120,
       pinned: true,
       floating: false,
-      backgroundColor: AppTheme.white,
-      foregroundColor: AppTheme.darkText,
+      backgroundColor: _colors.surface,
+      foregroundColor: _colors.onSurface,
       elevation: 0,
       flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          'Product Details',
-          style: TextStyle(
-            fontFamily: AppTheme.fontName,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-            color: AppTheme.darkText,
-          ),
-        ),
+        title: Text('Product Details', style: _text.titleLarge),
         background: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                AppTheme.nearlyDarkBlue.withOpacity(0.1),
-                AppTheme.white,
+                _colors.primary.withValues(alpha: 0.1),
+                _colors.surface,
               ],
             ),
           ),
@@ -190,19 +185,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                AppTheme.nearlyDarkBlue,
-              ),
-            ),
+            CircularProgressIndicator(color: _colors.primary),
             const SizedBox(height: 24),
             Text(
               'Loading product details...',
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 16,
-                color: AppTheme.grey,
-              ),
+              style: _text.bodyLarge?.copyWith(color: _colors.onSurfaceVariant),
             ),
           ],
         ),
@@ -221,26 +208,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               Icon(
                 Icons.error_outline,
                 size: 80,
-                color: AppTheme.grey.withOpacity(0.5),
+                color: _colors.onSurfaceVariant.withValues(alpha: 0.6),
               ),
               const SizedBox(height: 24),
               Text(
                 'Oops! Something went wrong',
-                style: TextStyle(
-                  fontFamily: AppTheme.fontName,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.darkText,
-                ),
+                style: _text.headlineSmall,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
               Text(
                 error ?? 'Unknown error occurred',
-                style: TextStyle(
-                  fontFamily: AppTheme.fontName,
-                  fontSize: 14,
-                  color: AppTheme.grey,
+                style: _text.bodyMedium?.copyWith(
+                  color: _colors.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -249,17 +229,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                 onPressed: _loadProductData,
                 icon: const Icon(Icons.refresh),
                 label: const Text('Try Again'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.nearlyDarkBlue,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
               ),
             ],
           ),
@@ -281,7 +250,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                 scale: _scaleAnimation.value,
                 child: RefreshIndicator(
                   onRefresh: _loadProductData,
-                  color: AppTheme.nearlyDarkBlue,
+                  color: _colors.primary,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -311,20 +280,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     );
   }
 
+  BoxDecoration _cardDecoration() {
+    return BoxDecoration(
+      color: _colors.surface,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: _colors.shadow.withValues(alpha: 0.1),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
+  }
+
   Widget _buildProductOverview() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: _cardDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -333,12 +306,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppTheme.nearlyDarkBlue.withOpacity(0.1),
+                  color: _colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.inventory_2,
-                  color: AppTheme.nearlyDarkBlue,
+                  color: _colors.primary,
                   size: 28,
                 ),
               ),
@@ -348,22 +321,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product?.id?.toString() ?? 'N/A',
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontName,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.darkText,
-                      ),
+                      product?.id.toString() ?? 'N/A',
+                      style: _text.headlineSmall,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       product?.type ?? 'Unknown Type',
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontName,
-                        fontSize: 16,
+                      style: _text.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: AppTheme.nearlyDarkBlue,
+                        color: _colors.primary,
                       ),
                     ),
                   ],
@@ -395,23 +361,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             width: 120,
             child: Text(
               label,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
+              style: _text.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: AppTheme.grey,
+                color: _colors.onSurfaceVariant,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.darkText,
-              ),
+              style: _text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -422,29 +381,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   Widget _buildQuickActions() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: _cardDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Quick Actions',
-            style: TextStyle(
-              fontFamily: AppTheme.fontName,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.darkText,
-            ),
-          ),
+          Text('Quick Actions', style: _text.titleLarge),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -452,25 +393,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               _buildActionButton(
                 icon: Icons.qr_code,
                 label: 'QR Code',
-                color: AppTheme.nearlyDarkBlue,
+                color: _colors.primary,
                 onPressed: _showQRDialog,
               ),
               _buildActionButton(
                 icon: Icons.share,
                 label: 'Share',
-                color: Colors.green,
+                color: _semantic.success,
                 onPressed: _shareProduct,
               ),
               _buildActionButton(
                 icon: Icons.download,
                 label: 'Export',
-                color: Colors.orange,
+                color: _semantic.warning,
                 onPressed: _exportData,
               ),
               _buildActionButton(
                 icon: Icons.analytics,
                 label: 'Analytics',
-                color: Colors.purple,
+                color: _semantic.info,
                 onPressed: _showAnalytics,
               ),
             ],
@@ -497,7 +438,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 24),
@@ -505,12 +446,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             const SizedBox(height: 8),
             Text(
               label,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.darkText,
-              ),
+              style: _text.labelMedium?.copyWith(color: _colors.onSurface),
             ),
           ],
         ),
@@ -522,17 +458,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     return Container(
       width: double.infinity,
       height: 220,
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: _cardDecoration(),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child:
@@ -555,8 +481,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppTheme.grey.withOpacity(0.1),
-            AppTheme.nearlyDarkBlue.withOpacity(0.1),
+            _colors.onSurfaceVariant.withValues(alpha: 0.1),
+            _colors.primary.withValues(alpha: 0.1),
           ],
         ),
       ),
@@ -564,16 +490,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.image_not_supported, size: 64, color: AppTheme.grey),
+            Icon(
+              Icons.image_not_supported,
+              size: 64,
+              color: _colors.onSurfaceVariant,
+            ),
             const SizedBox(height: 12),
             Text(
               'No image available',
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: AppTheme.grey,
-              ),
+              style: _text.bodyLarge?.copyWith(color: _colors.onSurfaceVariant),
             ),
           ],
         ),
@@ -585,14 +510,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     return _buildSection(
       title: 'Environmental Impact',
       icon: Icons.eco,
-      iconColor: Colors.green,
+      iconColor: _semantic.success,
       child: Column(
         children: [
           _buildMetricCard(
             title: 'Energy Used',
             value: '${(product?.energyUsed ?? 0).toStringAsFixed(2)} kWh',
             icon: Icons.bolt,
-            color: Colors.orange,
+            color: _semantic.warning,
             subtitle: _getEnergyEfficiencyRating(product?.energyUsed ?? 0),
           ),
           const SizedBox(height: 12),
@@ -600,7 +525,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             title: 'CO2 Emissions',
             value: '${(product?.co2Emissions ?? 0).toStringAsFixed(2)} kg',
             icon: Icons.cloud,
-            color: Colors.red,
+            color: _colors.error,
             subtitle: _getCO2Rating(product?.co2Emissions ?? 0),
           ),
         ],
@@ -612,57 +537,48 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     final virginMaterial = product?.virginMaterial ?? 0;
     final recycledMaterial = product?.recycledMaterial ?? 0;
     final totalMaterial = virginMaterial + recycledMaterial;
+    final isMostlyRecycled =
+        totalMaterial > 0 && recycledMaterial / totalMaterial > 0.5;
 
     return _buildSection(
       title: 'Material Composition',
       icon: Icons.layers,
-      iconColor: Colors.blue,
+      iconColor: _colors.primary,
       child: Column(
         children: [
           _buildProgressCard(
             title: 'Recycled Material',
             percentage: recycledMaterial * 100,
-            color: Colors.green,
+            color: _semantic.success,
           ),
           const SizedBox(height: 12),
           _buildProgressCard(
             title: 'Virgin Material',
             percentage: virginMaterial * 100,
-            color: Colors.orange,
+            color: _semantic.warning,
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color:
-                  totalMaterial > 0 && recycledMaterial / totalMaterial > 0.5
-                      ? Colors.green.withOpacity(0.1)
-                      : Colors.orange.withOpacity(0.1),
+              color: (isMostlyRecycled ? _semantic.success : _semantic.warning)
+                  .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
                 Icon(
-                  totalMaterial > 0 && recycledMaterial / totalMaterial > 0.5
-                      ? Icons.eco
-                      : Icons.warning,
-                  color:
-                      totalMaterial > 0 &&
-                              recycledMaterial / totalMaterial > 0.5
-                          ? Colors.green
-                          : Colors.orange,
+                  isMostlyRecycled ? Icons.eco : Icons.warning,
+                  color: isMostlyRecycled ? _semantic.success : _semantic.warning,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    totalMaterial > 0 && recycledMaterial / totalMaterial > 0.5
+                    isMostlyRecycled
                         ? 'Eco-friendly: High recycled content'
                         : 'Consider using more recycled materials',
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontName,
-                      fontSize: 14,
+                    style: _text.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.darkText,
                     ),
                   ),
                 ),
@@ -678,10 +594,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     return _buildSection(
       title: 'Technical Details',
       icon: Icons.settings,
-      iconColor: Colors.grey.shade600,
+      iconColor: _colors.onSurfaceVariant,
       child: Column(
         children: [
-          _buildDetailRow('Product ID', product?.id?.toString() ?? 'N/A'),
+          _buildDetailRow('Product ID', product?.id.toString() ?? 'N/A'),
           _buildDetailRow('Type', product?.type ?? 'N/A'),
           _buildDetailRow('Material', product?.material ?? 'N/A'),
           _buildDetailRow('Manufacturer', product?.manufacturer ?? 'N/A'),
@@ -700,17 +616,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   }) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: _cardDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -718,15 +624,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             children: [
               Icon(icon, color: iconColor, size: 24),
               const SizedBox(width: 12),
-              Text(
-                title,
-                style: TextStyle(
-                  fontFamily: AppTheme.fontName,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.darkText,
-                ),
-              ),
+              Text(title, style: _text.titleLarge),
             ],
           ),
           const SizedBox(height: 16),
@@ -746,16 +644,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -767,33 +665,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppTheme.grey,
+                  style: _text.bodyMedium?.copyWith(
+                    color: _colors.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.darkText,
-                  ),
+                  style: _text.titleLarge,
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontName,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: color,
-                    ),
+                    style: _text.labelMedium?.copyWith(color: color),
                   ),
                 ],
               ],
@@ -817,18 +702,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           children: [
             Text(
               title,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.darkText,
-              ),
+              style: _text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             Text(
               '${percentage.toStringAsFixed(1)}%',
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
+              style: _text.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: color,
               ),
@@ -836,11 +714,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           ],
         ),
         const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: percentage / 100,
-          backgroundColor: AppTheme.grey.withOpacity(0.2),
-          valueColor: AlwaysStoppedAnimation<Color>(color),
-          minHeight: 8,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: percentage / 100,
+            backgroundColor: _colors.onSurfaceVariant.withValues(alpha: 0.2),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 8,
+          ),
         ),
       ],
     );
@@ -856,23 +737,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             width: 140,
             child: Text(
               label,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppTheme.grey,
+              style: _text.bodyMedium?.copyWith(
+                color: _colors.onSurfaceVariant,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.darkText,
-              ),
+              style: _text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -890,28 +763,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             child: Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: AppTheme.white,
+                color: _colors.surface,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Product QR Code',
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontName,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.darkText,
-                    ),
-                  ),
+                  Text('Product QR Code', style: _text.titleLarge),
                   const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppTheme.white,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppTheme.grey.withOpacity(0.3)),
+                      border: Border.all(
+                        color: _colors.outlineVariant,
+                      ),
                     ),
                     child: QrImageView(
                       data: _productId,
@@ -922,22 +789,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   const SizedBox(height: 20),
                   Text(
                     'ID: $_productId',
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontName,
-                      fontSize: 14,
-                      color: AppTheme.grey,
+                    style: _text.bodyMedium?.copyWith(
+                      color: _colors.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.nearlyDarkBlue,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
                     child: const Text('Close'),
                   ),
                 ],

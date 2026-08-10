@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:get/get.dart';
 // Controllers
 import 'package:dpp/app/modules/navigation/shell/controllers/navigation_controller.dart';
@@ -9,17 +8,18 @@ import 'package:dpp/app/modules/navigation/shell/views/widgets/app_navigation_dr
 // Models
 import 'package:dpp/app/modules/navigation/models/drawer_model.dart';
 
-// ...existing code...
 class HomeScreen extends GetView<NavigationController> {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
-      color: AppTheme.white,
+      color: colors.surface,
       child: SafeArea(
         top: false,
         bottom: false,
         child: Scaffold(
-          backgroundColor: AppTheme.nearlyWhite,
           body: Obx(() {
             if (controller.apiStatus.value == ApiCallStatus.loading) {
               return const Center(child: CircularProgressIndicator());
@@ -28,9 +28,9 @@ class HomeScreen extends GetView<NavigationController> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Error fetching data.",
-                      style: TextStyle(fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 12),
                     ElevatedButton(
@@ -60,21 +60,19 @@ class AppNavigationScaffold extends StatelessWidget {
   final DrawerIndex? screenIndex;
 
   const AppNavigationScaffold({
-    Key? key,
+    super.key,
     this.screenView,
     this.menuView,
     this.screenIndex,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<DrawerUserController>();
-
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
+    final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
+      backgroundColor: colors.surface,
       body: SingleChildScrollView(
         controller: controller.scrollController,
         scrollDirection: Axis.horizontal,
@@ -114,10 +112,10 @@ class AppNavigationScaffold extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppTheme.white,
+                    color: colors.surface,
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                        color: AppTheme.grey.withOpacity(0.6),
+                        color: colors.shadow.withValues(alpha: 0.3),
                         blurRadius: 24,
                       ),
                     ],
@@ -158,10 +156,7 @@ class AppNavigationScaffold extends StatelessWidget {
                                 child:
                                     menuView ??
                                     AnimatedIcon(
-                                      color:
-                                          isLightMode
-                                              ? AppTheme.darkGrey
-                                              : AppTheme.white,
+                                      color: colors.onSurface,
                                       icon: AnimatedIcons.arrow_menu,
                                       progress:
                                           controller.iconAnimationController,

@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 
 class TabIconData {
   TabIconData({
-    this.imagePath = '',
+    this.icon = Icons.circle_outlined,
+    this.selectedIcon = Icons.circle,
+    this.label = '',
     this.index = 0,
-    this.selectedImagePath = '',
     this.isSelected = false,
     this.animationController,
   });
 
-  String imagePath;
-  String selectedImagePath;
+  IconData icon;
+  IconData selectedIcon;
+  String label;
   bool isSelected;
   int index;
 
@@ -18,32 +20,32 @@ class TabIconData {
 
   static List<TabIconData> tabIconsList = <TabIconData>[
     TabIconData(
-      imagePath: 'assets/fitness_app/tab_1.png',
-      selectedImagePath: 'assets/fitness_app/tab_1s.png',
+      icon: Icons.inventory_2_outlined,
+      selectedIcon: Icons.inventory_2,
+      label: 'Products',
       index: 0,
       isSelected: true,
-      animationController: null,
     ),
     TabIconData(
-      imagePath: 'assets/fitness_app/tab_2.png',
-      selectedImagePath: 'assets/fitness_app/tab_2s.png',
+      icon: Icons.precision_manufacturing_outlined,
+      selectedIcon: Icons.precision_manufacturing,
+      label: 'Process',
       index: 1,
       isSelected: false,
-      animationController: null,
     ),
     TabIconData(
-      imagePath: 'assets/fitness_app/tab_3.png',
-      selectedImagePath: 'assets/fitness_app/tab_3s.png',
+      icon: Icons.history,
+      selectedIcon: Icons.history,
+      label: 'History',
       index: 2,
       isSelected: false,
-      animationController: null,
     ),
     TabIconData(
-      imagePath: 'assets/fitness_app/tab_4.png',
-      selectedImagePath: 'assets/fitness_app/tab_4s.png',
+      icon: Icons.person_outline,
+      selectedIcon: Icons.person,
+      label: 'Profile',
       index: 3,
       isSelected: false,
-      animationController: null,
     ),
   ];
 }

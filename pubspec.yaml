@@ -21,22 +21,14 @@ version: 1.0.0+1
 environment:
   sdk: ^3.7.2
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.5
   http: ^1.1.0
-  dio: ^5.0.0 # Or the latest version
-  retrofit: ^4.0.0 # Or the latest version
-  json_annotation: ^4.8.0 # For JSON serialization/deserialization
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  dio: ^5.0.0
+  retrofit: ^4.0.0
+  json_annotation: ^4.8.0
   cupertino_icons: ^1.0.8
   qr_flutter: ^4.0.0
   fl_chart: ^0.66.2
@@ -47,45 +39,41 @@ dependencies:
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
   share_plus: ^7.2.1
+  mobile_scanner: ^7.4.0
 
 dev_dependencies:
   analyzer: 6.11.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  retrofit_generator: ^9.2.0 # Or the latest version
+  retrofit_generator: ^9.2.0
   json_serializable: ^6.7.0
   hive_generator: ^2.0.1
+  flutter_launcher_icons: ^0.13.1 # Add this line
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+# Add flutter_icons configuration
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/app_icon.png" # You'll need to convert SVG to PNG
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+  windows:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
 
-# The following section is specific to Flutter packages.
-
-# The following section is specific to Flutter.
 flutter:
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
     - assets/fitness_app/
     - assets/data/
+    - assets/icon/
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
   fonts:
     - family: WorkSans
       fonts:
@@ -102,6 +90,5 @@ flutter:
         - asset: assets/fonts/Roboto-Regular.ttf
         - asset: assets/fonts/Roboto-Medium.ttf
           weight: 400
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+
+

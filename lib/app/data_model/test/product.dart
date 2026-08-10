@@ -27,7 +27,7 @@ class Product {
   });
 
   factory Product.fromJson(AasResponse jsonResponse) {
-    String product_id = '';
+    String productId = '';
     String? manufacturerName;
     String? productType;
     String? yearOfConstruction;
@@ -36,7 +36,7 @@ class Product {
     // Extract basic product ID
     if (jsonResponse.assetAdministrationShells?.isNotEmpty == true) {
       final aas = jsonResponse.assetAdministrationShells!.first;
-      product_id = aas.idShort;
+      productId = aas.idShort;
 
       // Extract asset type from asset information
       if (aas.assetInformation != null) {
@@ -108,7 +108,7 @@ class Product {
     }
 
     return Product(
-      id: product_id,
+      id: productId,
       manufacturer: manufacturerName,
       type: productType,
       co2Emissions: co2Value,

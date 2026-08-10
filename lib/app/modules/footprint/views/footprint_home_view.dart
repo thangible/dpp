@@ -1,9 +1,9 @@
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dpp/app/modules/footprint/bindings/footprint_home_binding.dart';
 import 'package:dpp/app/modules/footprint/controllers/footprint_home_controller.dart';
 import 'package:dpp/app/modules/footprint/views/bottom_bar_view.dart';
+import 'package:dpp/app/modules/scanner/views/scanner_screen.dart';
 
 class AppHomeScreen extends StatelessWidget {
   const AppHomeScreen({super.key});
@@ -15,7 +15,7 @@ class AppHomeScreen extends StatelessWidget {
     final controller = Get.find<AppHomeController>();
 
     return Container(
-      color: AppTheme.background,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: FutureBuilder<bool>(
@@ -43,7 +43,7 @@ class AppHomeScreen extends StatelessWidget {
         const Expanded(child: SizedBox()),
         BottomBarView(
           tabIconsList: controller.tabIconsList,
-          addClick: () {},
+          addClick: () => Get.to(() => const ScannerScreen()),
           changeIndex: (int index) {
             controller.changePage(index);
           },

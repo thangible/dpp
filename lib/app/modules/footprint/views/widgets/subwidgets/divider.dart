@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/config/theme/app_theme.dart';
 
 class CustomDividerWidget extends StatelessWidget {
   const CustomDividerWidget({super.key});
@@ -9,7 +8,7 @@ class CustomDividerWidget extends StatelessWidget {
     return Container(
       height: 2,
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: Theme.of(context).colorScheme.outlineVariant,
         borderRadius: BorderRadius.all(Radius.circular(4.0)),
       ),
     );

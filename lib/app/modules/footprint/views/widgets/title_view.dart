@@ -1,14 +1,16 @@
-import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_detail.dart';
+import 'package:dpp/app/modules/footprint/views/process/process_detail.dart';
 import 'package:dpp/app/data_model/test/product.dart';
+import 'package:dpp/app/data_model/test/process.dart';
 
 class TitleView extends StatelessWidget {
   final String titleTxt;
   final String subTxt;
   final String? productID;
   final Product? product;
+  final Process? process;
   final AnimationController? animationController;
   final Animation<double>? animation;
 
@@ -18,6 +20,7 @@ class TitleView extends StatelessWidget {
     this.subTxt = "",
     this.productID = "",
     this.product,
+    this.process,
     required this.animationController,
     this.animation,
   });
@@ -50,18 +53,18 @@ class TitleView extends StatelessWidget {
   }
 
   Widget _buildTitleRow(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: <Widget>[
         Expanded(
           child: Text(
             titleTxt,
             textAlign: TextAlign.left,
-            style: TextStyle(
-              fontFamily: AppTheme.fontName,
+            style: textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 18,
               letterSpacing: 0.5,
-              color: AppTheme.lightText,
+              color: colors.onSurfaceVariant,
             ),
           ),
         ),
@@ -71,15 +74,22 @@ class TitleView extends StatelessWidget {
           onTap: () {
             if (subTxt == "Get QR Code") {
               _showQRCodeDialog(context);
-            } else if (subTxt == "Details") {
+            } else if (subTxt == "Details" && product != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder:
                       (context) => ProductDetailScreen(
-                        product: product ?? null,
+                        product: product,
                         animationController: animationController,
                       ),
+                ),
+              );
+            } else if (subTxt == "Details" && process != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProcessDetailScreen(process: process),
                 ),
               );
             }
@@ -91,20 +101,18 @@ class TitleView extends StatelessWidget {
                 Text(
                   subTxt,
                   textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
+                  style: textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.normal,
-                    fontSize: 16,
                     letterSpacing: 0.5,
-                    color: AppTheme.nearlyDarkBlue,
+                    color: colors.primary,
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 38,
                   width: 26,
                   child: Icon(
                     Icons.arrow_forward,
-                    color: AppTheme.darkText,
+                    color: colors.onSurface,
                     size: 18,
                   ),
                 ),
