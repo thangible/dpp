@@ -26,7 +26,22 @@ class AppHomeScreen extends StatelessWidget {
             } else {
               return Stack(
                 children: <Widget>[
-                  Obx(() => controller.tabBody.value),
+                  Obx(
+                    () => AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 220),
+                      switchInCurve: Curves.easeOut,
+                      switchOutCurve: Curves.easeIn,
+                      transitionBuilder:
+                          (child, animation) => FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                      child: KeyedSubtree(
+                        key: ValueKey(controller.tabBody.value.runtimeType),
+                        child: controller.tabBody.value,
+                      ),
+                    ),
+                  ),
                   _bottomBar(controller),
                 ],
               );

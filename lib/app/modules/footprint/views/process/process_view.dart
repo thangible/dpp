@@ -51,7 +51,7 @@ class _ProcessScreenState extends State<ProcessScreen>
     cardAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: widget.animationController!,
-        curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn),
+        curve: Curves.easeOutCubic,
       ),
     );
 
@@ -217,13 +217,15 @@ class _ProcessScreenState extends State<ProcessScreen>
           return const SizedBox();
         } else {
           return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 380),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
             transitionBuilder: (Widget child, Animation<double> animation) {
               return FadeTransition(
                 opacity: animation,
                 child: SlideTransition(
                   position: Tween<Offset>(
-                    begin: const Offset(1.0, 0.0),
+                    begin: const Offset(0.06, 0.0),
                     end: Offset.zero,
                   ).animate(animation),
                   child: child,

@@ -172,6 +172,16 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   ),
                 ),
                 onTap: () {
+                  // Re-opening a bar that already has a query (e.g.
+                  // searching a second time) should select the existing
+                  // text so typing replaces it cleanly, instead of
+                  // inserting at wherever the cursor happens to land.
+                  if (controller.text.isNotEmpty) {
+                    controller.selection = TextSelection(
+                      baseOffset: 0,
+                      extentOffset: controller.text.length,
+                    );
+                  }
                   controller.openView();
                 },
                 onChanged: (_) {

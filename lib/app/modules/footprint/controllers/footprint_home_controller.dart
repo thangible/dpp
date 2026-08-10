@@ -33,22 +33,21 @@ class AppHomeController extends GetxController implements TickerProvider {
   }
 
   void changePage(int index) {
-    animationController.reverse().then((_) {
-      switch (index) {
-        case 0:
-          tabBody.value = ProductScreen(
-            animationController: animationController,
-          );
-        case 1:
-          tabBody.value = ProcessScreen(
-            animationController: animationController,
-          );
-        case 2:
-          tabBody.value = const HistoryFavoritesScreen();
-        case 3:
-          tabBody.value = const ProfileScreen();
-      }
-    });
+    // Reset instantly (no visible reverse-out wait) so the switch itself
+    // feels immediate; the outer AnimatedSwitcher in AppHomeScreen handles
+    // the cross-fade, and this lets the new screen's own card stagger play
+    // from the start via .forward().
+    animationController.value = 0;
+    switch (index) {
+      case 0:
+        tabBody.value = ProductScreen(animationController: animationController);
+      case 1:
+        tabBody.value = ProcessScreen(animationController: animationController);
+      case 2:
+        tabBody.value = const HistoryFavoritesScreen();
+      case 3:
+        tabBody.value = const ProfileScreen();
+    }
   }
 
   @override

@@ -27,8 +27,12 @@ class TabIconData {
       isSelected: true,
     ),
     TabIconData(
-      icon: Icons.precision_manufacturing_outlined,
-      selectedIcon: Icons.precision_manufacturing,
+      // precision_manufacturing's glyph is drawn off-center (weighted to
+      // the left within its bounding box), which reads as misaligned
+      // against the centered label under it. factory is visually
+      // symmetric and still reads as "manufacturing process".
+      icon: Icons.factory_outlined,
+      selectedIcon: Icons.factory,
       label: 'Process',
       index: 1,
       isSelected: false,
