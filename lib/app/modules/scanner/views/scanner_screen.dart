@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:dpp/app/data_model/history/history_entry.dart';
-import 'package:dpp/app/modules/history/controllers/history_controller.dart';
 import 'package:dpp/app/services/test/product_service.dart';
-import 'package:dpp/app/services/test/process_service.dart';
+import 'package:dpp/app/services/test/material_service.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_detail.dart';
-import 'package:dpp/app/modules/footprint/views/process/process_detail.dart';
+import 'package:dpp/app/modules/footprint/views/material/material_detail.dart';
+import 'package:dpp/l10n/generated/app_localizations.dart';
 
 /// Full-screen camera scanner. Looks a decoded code up against products
-/// then processes (same two-service check the search bar already does) and
-/// jumps straight to whichever matches, logging it to history on the way.
+/// then materials and jumps straight to whichever matches (the detail
+/// screen it lands on logs the history entry itself).
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
 
@@ -38,10 +36,12 @@ class _ScannerScreenState extends State<ScannerScreen> {
     _resolve(code);
   }
 
+  // History logging lives on ProductDetailScreen/MaterialDetailScreen
+  // themselves (see their _logHistory), so a scanned match is covered by
+  // just navigating to it below — no separate log-then-navigate step here.
   Future<void> _resolve(String code) async {
     final product = ProductService.getProductById(code);
     if (product != null) {
-      await _logHistory(code, HistoryItemType.product);
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -51,13 +51,12 @@ class _ScannerScreenState extends State<ScannerScreen> {
       return;
     }
 
-    final process = ProcessService.getProcessById(code);
-    if (process != null) {
-      await _logHistory(code, HistoryItemType.process);
+    final material = MaterialService.getMaterialById(code);
+    if (material != null) {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => ProcessDetailScreen(process: process),
+          builder: (_) => MaterialDetailScreen(material: material),
         ),
       );
       return;
@@ -65,12 +64,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
     if (!mounted) return;
     setState(() => _notFoundCode = code);
-  }
-
-  Future<void> _logHistory(String id, HistoryItemType type) async {
-    if (Get.isRegistered<HistoryController>()) {
-      await Get.find<HistoryController>().addEntry(id, type);
-    }
   }
 
   void _scanAgain() {
@@ -83,13 +76,14 @@ class _ScannerScreenState extends State<ScannerScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Scan QR Code', style: TextStyle(color: Colors.white)),
+        title: Text(l10n.scannerTitle, style: const TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.flash_on, color: Colors.white),
@@ -103,7 +97,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
           MobileScanner(
             controller: _controller,
             onDetect: _onDetect,
-            errorBuilder: (context, error) => _PermissionDenied(colors: colors),
+            errorBuilder:
+                (context, error) => _PermissionDenied(colors: colors, l10n: l10n),
           ),
           const _ScannerFrame(),
           if (_notFoundCode != null)
@@ -111,6 +106,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
               code: _notFoundCode!,
               onRetry: _scanAgain,
               colors: colors,
+              l10n: l10n,
             ),
         ],
       ),
@@ -142,11 +138,13 @@ class _NotFoundBanner extends StatelessWidget {
   final String code;
   final VoidCallback onRetry;
   final ColorScheme colors;
+  final AppLocalizations l10n;
 
   const _NotFoundBanner({
     required this.code,
     required this.onRetry,
     required this.colors,
+    required this.l10n,
   });
 
   @override
@@ -166,12 +164,12 @@ class _NotFoundBanner extends StatelessWidget {
             const Icon(Icons.error_outline, color: Colors.white, size: 28),
             const SizedBox(height: 8),
             Text(
-              'No match for "$code"',
+              l10n.scannerNoMatch(code),
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
-            ElevatedButton(onPressed: onRetry, child: const Text('Scan Again')),
+            ElevatedButton(onPressed: onRetry, child: Text(l10n.scannerScanAgain)),
           ],
         ),
       ),
@@ -181,8 +179,9 @@ class _NotFoundBanner extends StatelessWidget {
 
 class _PermissionDenied extends StatelessWidget {
   final ColorScheme colors;
+  final AppLocalizations l10n;
 
-  const _PermissionDenied({required this.colors});
+  const _PermissionDenied({required this.colors, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -195,20 +194,20 @@ class _PermissionDenied extends StatelessWidget {
         children: [
           const Icon(Icons.no_photography_outlined, color: Colors.white, size: 48),
           const SizedBox(height: 16),
-          const Text(
-            'Camera access needed',
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
+          Text(
+            l10n.scannerPermissionTitle,
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Enable camera access in Settings to scan a QR code.',
+          Text(
+            l10n.scannerPermissionBody,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70),
+            style: const TextStyle(color: Colors.white70),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => openAppSettings(),
-            child: const Text('Open Settings'),
+            child: Text(l10n.scannerOpenSettings),
           ),
         ],
       ),

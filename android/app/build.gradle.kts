@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -7,17 +9,17 @@ plugins {
 
 android {
     namespace = "com.example.dpp"
-    compileSdk = flutter.compileSdkVersion
+    // androidx.camera (pulled in by mobile_scanner) requires compileSdk 36+;
+    // overridden explicitly since the bundled Flutter SDK's default
+    // (flutter.compileSdkVersion) is still 35. Independent of targetSdk,
+    // which stays Flutter-managed.
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
     // ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     defaultConfig {
@@ -25,7 +27,9 @@ android {
         applicationId = "com.example.dpp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // mobile_scanner requires minSdk 23+ (uses APIs unavailable below it);
+        // overridden since Flutter's own default floor (flutter.minSdkVersion) is 21.
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -37,6 +41,12 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
     }
 }
 

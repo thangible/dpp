@@ -38,8 +38,12 @@ dependencies:
   hive_flutter: ^1.1.0
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
-  share_plus: ^7.2.1
+  share_plus: ^12.0.2
   mobile_scanner: ^7.4.0
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  google_fonts: ^6.3.2
 
 dev_dependencies:
   analyzer: 6.11.0
@@ -67,28 +71,17 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/images/
     - assets/fitness_app/
     - assets/data/
+    - assets/materials/
     - assets/icon/
 
-  fonts:
-    - family: WorkSans
-      fonts:
-        - asset: assets/fonts/WorkSans-Regular.ttf
-        - asset: assets/fonts/WorkSans-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/WorkSans-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/WorkSans-Bold.ttf
-          weight: 700
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto-Bold.ttf
-        - asset: assets/fonts/Roboto-Regular.ttf
-        - asset: assets/fonts/Roboto-Medium.ttf
-          weight: 400
+  # Typography now comes from google_fonts (Inter) — see AppTheme. The old
+  # manually-bundled WorkSans/Roboto files are unused; left in assets/fonts/
+  # for now rather than deleted, but no longer registered here.
 
 

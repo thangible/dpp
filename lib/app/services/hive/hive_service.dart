@@ -7,8 +7,10 @@ class HiveService {
   static const String _settingsBoxName = 'settings';
   static const String _historyBoxName = 'history';
   static const String _themeModeKey = 'themeMode';
+  static const String _localeKey = 'locale';
   static const String _sessionKey = 'session';
   static const String _historyEntriesKey = 'entries';
+  static const String _onboardingSeenKey = 'onboardingSeen';
   static Box? _nameplateBox;
   static Box? _settingsBox;
   static Box? _historyBox;
@@ -43,6 +45,31 @@ class HiveService {
       throw Exception('HiveService not initialized. Call HiveService.init() first.');
     }
     return _historyBox!;
+  }
+
+  // --- App preferences ---
+
+  /// Whether the first-run onboarding carousel has already been shown.
+  static bool hasSeenOnboarding() {
+    return settingsBox.get(_onboardingSeenKey, defaultValue: false) as bool;
+  }
+
+  static Future<void> markOnboardingSeen() async {
+    await settingsBox.put(_onboardingSeenKey, true);
+  }
+
+  /// Read the persisted language code ('en'/'de'), or null to follow the
+  /// device locale.
+  static String? getLocaleCode() {
+    return settingsBox.get(_localeKey) as String?;
+  }
+
+  static Future<void> saveLocaleCode(String? code) async {
+    if (code == null) {
+      await settingsBox.delete(_localeKey);
+    } else {
+      await settingsBox.put(_localeKey, code);
+    }
   }
 
   // --- Auth session ---

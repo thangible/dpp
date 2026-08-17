@@ -3,11 +3,16 @@ import 'package:dpp/app/data_model/api/base_aas_model.dart';
 
 class Product {
   final String id;
+  // energyUsed/co2Emissions represent the footprint of the manufacturing
+  // *process* this product went through (there's no standalone Process
+  // entity anymore — see legacy/ — its data lives here instead).
   final double? energyUsed;
   final double? co2Emissions;
+  final double? processProgress; // 0-100%, from the old Process.progress
   final DateTime? lastUpdated;
   final String? type;
   final String? material;
+  final String? materialId; // links to a Material (its own searchable entity)
   final String? manufacturer;
   final double? virginMaterial;
   final double? recycledMaterial;
@@ -17,9 +22,11 @@ class Product {
     required this.id,
     this.energyUsed,
     this.co2Emissions,
+    this.processProgress,
     this.lastUpdated,
     this.type,
     this.material,
+    this.materialId,
     this.manufacturer,
     this.virginMaterial,
     this.recycledMaterial,

@@ -4,6 +4,7 @@ import 'package:dpp/app/modules/footprint/bindings/footprint_home_binding.dart';
 import 'package:dpp/app/modules/footprint/controllers/footprint_home_controller.dart';
 import 'package:dpp/app/modules/footprint/views/bottom_bar_view.dart';
 import 'package:dpp/app/modules/scanner/views/scanner_screen.dart';
+import 'package:dpp/config/utils/motion.dart';
 
 class AppHomeScreen extends StatelessWidget {
   const AppHomeScreen({super.key});
@@ -28,9 +29,9 @@ class AppHomeScreen extends StatelessWidget {
                 children: <Widget>[
                   Obx(
                     () => AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 220),
-                      switchInCurve: Curves.easeOut,
-                      switchOutCurve: Curves.easeIn,
+                      duration: AppMotion.normal,
+                      switchInCurve: AppMotion.enter,
+                      switchOutCurve: AppMotion.exit,
                       transitionBuilder:
                           (child, animation) => FadeTransition(
                             opacity: animation,

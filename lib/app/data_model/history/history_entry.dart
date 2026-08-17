@@ -1,4 +1,4 @@
-enum HistoryItemType { product, process }
+enum HistoryItemType { product, material }
 
 class HistoryEntry {
   final String id;

@@ -25,18 +25,20 @@ class AuthController extends GetxController {
     }
   }
 
-  /// Returns an error message on failure, or null on success.
-  Future<String?> signIn(String enteredUsername, String enteredPassword) async {
+  /// Returns true on success. The screen owns the (localized) error
+  /// message on failure — this controller has no BuildContext to
+  /// translate one itself.
+  Future<bool> signIn(String enteredUsername, String enteredPassword) async {
     final user = enteredUsername.trim();
     if (user != _adminUsername || enteredPassword != _adminPassword) {
-      return 'Incorrect username or password.';
+      return false;
     }
     username.value = user;
     displayName.value = 'Admin';
     isGuest.value = false;
     isAuthenticated.value = true;
     await HiveService.saveSession(username: user, displayName: 'Admin');
-    return null;
+    return true;
   }
 
   void continueAsGuest() {

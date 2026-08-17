@@ -4,25 +4,29 @@ import 'package:get/get.dart';
 import 'package:dpp/config/theme/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app/routes/app_pages.dart';
 import 'package:dpp/app/services/hive/hive_service.dart';
 import 'package:dpp/app/services/test/product_service.dart';
-import 'package:dpp/app/services/test/process_service.dart';
+import 'package:dpp/app/services/test/material_service.dart';
 import 'package:dpp/app/modules/settings/controllers/theme_controller.dart';
+import 'package:dpp/app/modules/settings/controllers/locale_controller.dart';
 import 'package:dpp/app/modules/auth/controllers/auth_controller.dart';
 import 'package:dpp/app/modules/history/controllers/history_controller.dart';
 import 'package:dpp/config/utils/responsive.dart';
+import 'package:dpp/l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ProductService.init();
-  await ProcessService.init();
+  await MaterialService.init();
   // Initialize Hive
   await HiveService.init();
 
   // Initialize services
   final themeController = Get.put(ThemeController(), permanent: true);
   final authController = Get.put(AuthController(), permanent: true);
+  final localeController = Get.put(LocaleController(), permanent: true);
   Get.put(HistoryController(), permanent: true);
 
   // debugPaintSizeEnabled = true;
@@ -40,18 +44,24 @@ void main() async {
     ]);
   }
   runApp(
-    MyApp(themeController: themeController, authController: authController),
+    MyApp(
+      themeController: themeController,
+      authController: authController,
+      localeController: localeController,
+    ),
   );
 }
 
 class MyApp extends StatelessWidget {
   final ThemeController themeController;
   final AuthController authController;
+  final LocaleController localeController;
 
   const MyApp({
     super.key,
     required this.themeController,
     required this.authController,
+    required this.localeController,
   });
 
   @override
@@ -62,8 +72,18 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeController.themeMode.value,
+      locale: localeController.locale.value,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       initialRoute:
-          authController.isAuthenticated.value
+          !HiveService.hasSeenOnboarding()
+              ? Routes.ONBOARDING
+              : authController.isAuthenticated.value
               ? Routes.NAVIGATION_HOME
               : Routes.SIGN_IN,
       getPages: AppPages.pages,

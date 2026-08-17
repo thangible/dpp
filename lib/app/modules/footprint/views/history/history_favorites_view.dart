@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:dpp/app/data_model/history/history_entry.dart';
 import 'package:dpp/app/modules/history/controllers/history_controller.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_detail.dart';
-import 'package:dpp/app/modules/footprint/views/process/process_detail.dart';
+import 'package:dpp/app/modules/footprint/views/material/material_detail.dart';
+import 'package:dpp/l10n/generated/app_localizations.dart';
 
 class HistoryFavoritesScreen extends StatefulWidget {
   const HistoryFavoritesScreen({super.key});
@@ -22,6 +23,7 @@ class _HistoryFavoritesScreenState extends State<HistoryFavoritesScreen> {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final controller = Get.find<HistoryController>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       color: theme.scaffoldBackgroundColor,
@@ -31,8 +33,8 @@ class _HistoryFavoritesScreenState extends State<HistoryFavoritesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 50, right: 20, top: 16),
-              child: Text('History & Favorites', style: theme.textTheme.headlineSmall),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Text(l10n.historyTitle, style: theme.textTheme.headlineSmall),
             ),
             const SizedBox(height: 4),
             Expanded(
@@ -41,9 +43,8 @@ class _HistoryFavoritesScreenState extends State<HistoryFavoritesScreen> {
                   padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
                   children: [
                     _Section(
-                      title: 'Favorites',
-                      emptyText:
-                          'Nothing favorited yet. Tap the star on any item to save it here.',
+                      title: l10n.historyFavoritesSection,
+                      emptyText: l10n.historyFavoritesEmpty,
                       entries: controller.favorites,
                       showAll: _showAllFavorites,
                       onToggleShowAll:
@@ -52,12 +53,12 @@ class _HistoryFavoritesScreenState extends State<HistoryFavoritesScreen> {
                           ),
                       colors: colors,
                       theme: theme,
+                      l10n: l10n,
                     ),
                     const SizedBox(height: 28),
                     _Section(
-                      title: 'Recent',
-                      emptyText:
-                          'No history yet. Search or scan a product/process to see it here.',
+                      title: l10n.historyRecentSection,
+                      emptyText: l10n.historyRecentEmpty,
                       entries: controller.recent,
                       showAll: _showAllRecent,
                       onToggleShowAll:
@@ -66,6 +67,7 @@ class _HistoryFavoritesScreenState extends State<HistoryFavoritesScreen> {
                           ),
                       colors: colors,
                       theme: theme,
+                      l10n: l10n,
                     ),
                   ],
                 ),
@@ -88,6 +90,7 @@ class _Section extends StatelessWidget {
   final VoidCallback onToggleShowAll;
   final ColorScheme colors;
   final ThemeData theme;
+  final AppLocalizations l10n;
 
   const _Section({
     required this.title,
@@ -97,6 +100,7 @@ class _Section extends StatelessWidget {
     required this.onToggleShowAll,
     required this.colors,
     required this.theme,
+    required this.l10n,
   });
 
   @override
@@ -112,7 +116,11 @@ class _Section extends StatelessWidget {
             if (entries.length > previewCount)
               TextButton(
                 onPressed: onToggleShowAll,
-                child: Text(showAll ? 'Show less' : 'See all (${entries.length})'),
+                child: Text(
+                  showAll
+                      ? l10n.historyShowLess
+                      : l10n.historySeeAll(entries.length),
+                ),
               ),
           ],
         ),
@@ -136,7 +144,12 @@ class _Section extends StatelessWidget {
           ...visible.map(
             (entry) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: _HistoryTile(entry: entry, colors: colors, theme: theme),
+              child: _HistoryTile(
+                entry: entry,
+                colors: colors,
+                theme: theme,
+                l10n: l10n,
+              ),
             ),
           ),
       ],
@@ -148,11 +161,13 @@ class _HistoryTile extends StatelessWidget {
   final HistoryEntry entry;
   final ColorScheme colors;
   final ThemeData theme;
+  final AppLocalizations l10n;
 
   const _HistoryTile({
     required this.entry,
     required this.colors,
     required this.theme,
+    required this.l10n,
   });
 
   bool get _isProduct => entry.type == HistoryItemType.product;
@@ -176,7 +191,7 @@ class _HistoryTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  _isProduct ? Icons.inventory_2 : Icons.precision_manufacturing,
+                  _isProduct ? Icons.inventory_2 : Icons.factory,
                   color: colors.primary,
                   size: 20,
                 ),
@@ -195,7 +210,8 @@ class _HistoryTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      '${_isProduct ? 'Product' : 'Process'} · ${_relativeTime(entry.viewedAt)}',
+                      '${_isProduct ? l10n.historyItemProduct : l10n.historyItemMaterial} · '
+                      '${_relativeTime(entry.viewedAt, l10n)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colors.onSurfaceVariant,
                       ),
@@ -233,18 +249,18 @@ class _HistoryTile extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProcessDetailScreen(processId: entry.id),
+          builder: (context) => MaterialDetailScreen(materialId: entry.id),
         ),
       );
     }
   }
 
-  String _relativeTime(DateTime time) {
+  String _relativeTime(DateTime time, AppLocalizations l10n) {
     final diff = DateTime.now().difference(time);
-    if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    if (diff.inMinutes < 1) return l10n.relativeJustNow;
+    if (diff.inMinutes < 60) return l10n.relativeMinutesAgo(diff.inMinutes);
+    if (diff.inHours < 24) return l10n.relativeHoursAgo(diff.inHours);
+    if (diff.inDays < 7) return l10n.relativeDaysAgo(diff.inDays);
     return '${time.day}/${time.month}/${time.year}';
   }
 }

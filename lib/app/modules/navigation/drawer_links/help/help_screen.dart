@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dpp/l10n/generated/app_localizations.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});
@@ -17,52 +18,46 @@ class _HelpScreenState extends State<HelpScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    return Container(
-      color: colors.surface,
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: colors.surface,
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.drawerHelp)),
+      body: SafeArea(
         top: false,
-        child: Scaffold(
-          backgroundColor: colors.surface,
-          body: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top,
-                  left: 16,
-                  right: 16,
-                ),
-                child: Image.asset('assets/images/helpImage.png'),
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+              child: Image.asset('assets/images/helpImage.png'),
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                'How can we help you?',
+                style: theme.textTheme.headlineSmall,
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  'How can we help you?',
-                  style: theme.textTheme.headlineSmall,
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text(
+                'It looks like you are experiencing problems\nwith our sign up process. We are here to\nhelp so please get in touch with us',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: colors.onSurfaceVariant,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  'It looks like you are experiencing problems\nwith our sign up process. We are here to\nhelp so please get in touch with us',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: colors.onSurfaceVariant,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Chat with Us'),
                   ),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Chat with Us'),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

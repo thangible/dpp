@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:dpp/config/theme/app_colors_extension.dart';
 
 /// Central design system: brand colors, light/dark [ColorScheme]s, and the
@@ -8,46 +9,49 @@ class AppTheme {
   AppTheme._();
 
   // ---- Brand palette --------------------------------------------------
-  // DHL-inspired: confident red + yellow on white/near-black, true-neutral
-  // greys (no cool cast) so the accent colors carry the identity.
+  // Grab-inspired: a confident, single-hue green carries the identity
+  // (primary + secondary are both greens, one hue apart) on white/near-black
+  // neutrals, rather than pairing it with an unrelated accent — that's what
+  // keeps a green brand reading as "professional" instead of "seasonal".
+  // Red/amber are reserved strictly for their semantic roles (error,
+  // warning) so they still mean something when they show up.
   static const Color white = Color(0xFFFFFFFF);
   static const Color nearlyWhite = Color(0xFFFAFAFA);
-  static const Color background = Color(0xFFF3F3F1);
-  static const Color dhlRed = Color(0xFFD40511);
-  static const Color dhlYellow = Color(0xFFFFCC00);
+  static const Color background = Color(0xFFF4F7F5);
+  static const Color brandGreen = Color(0xFF00A651);
+  static const Color brandGreenDeep = Color(0xFF00753A);
+  static const Color brandMint = Color(0xFF2FBE73);
   static const Color grey = Color(0xFF6B6B6B);
   static const Color darkerText = Color(0xFF1A1A1A);
   static const Color lightText = Color(0xFF5C5C5C);
 
   // Dark-mode surfaces: neutral elevation scale (unchanged shape, just no
-  // longer tied to the old blue brand).
+  // longer tied to the old brand hue).
   static const Color darkBackground = Color(0xFF121212);
   static const Color darkSurface = Color(0xFF1E1E1E);
   static const Color darkSurfaceVariant = Color(0xFF2A2A2A);
   static const Color darkOnSurface = Color(0xFFF0F0F0);
   static const Color darkOnSurfaceVariant = Color(0xFFB8B8B8);
 
-  static const String fontFamily = 'WorkSans';
-
   static const double cardRadius = 12;
   static const double controlRadius = 8;
 
   static final ColorScheme _lightScheme =
       ColorScheme.fromSeed(
-        seedColor: dhlRed,
+        seedColor: brandGreen,
         brightness: Brightness.light,
       ).copyWith(
-        primary: dhlRed,
+        primary: brandGreen,
         onPrimary: white,
-        primaryContainer: Color.lerp(white, dhlRed, 0.12),
-        onPrimaryContainer: dhlRed,
-        secondary: dhlYellow,
-        onSecondary: const Color(0xFF241C00),
-        secondaryContainer: dhlYellow,
-        onSecondaryContainer: const Color(0xFF241C00),
+        primaryContainer: Color.lerp(white, brandGreen, 0.12),
+        onPrimaryContainer: brandGreenDeep,
+        secondary: brandMint,
+        onSecondary: white,
+        secondaryContainer: Color.lerp(white, brandMint, 0.16),
+        onSecondaryContainer: const Color(0xFF0B4A28),
         surface: white,
         onSurface: darkerText,
-        surfaceContainerHighest: const Color(0xFFEFEFEC),
+        surfaceContainerHighest: const Color(0xFFEDF2EE),
         onSurfaceVariant: lightText,
         outline: grey.withValues(alpha: 0.35),
         outlineVariant: grey.withValues(alpha: 0.15),
@@ -56,17 +60,17 @@ class AppTheme {
 
   static final ColorScheme _darkScheme =
       ColorScheme.fromSeed(
-        seedColor: dhlRed,
+        seedColor: brandGreen,
         brightness: Brightness.dark,
       ).copyWith(
-        primary: const Color(0xFFFF5A64),
-        onPrimary: const Color(0xFF3A0007),
-        primaryContainer: Color.lerp(darkSurface, dhlRed, 0.35),
-        onPrimaryContainer: const Color(0xFFFFD9DB),
-        secondary: dhlYellow,
-        onSecondary: const Color(0xFF241C00),
-        secondaryContainer: dhlYellow,
-        onSecondaryContainer: const Color(0xFF241C00),
+        primary: const Color(0xFF34D399),
+        onPrimary: const Color(0xFF00341E),
+        primaryContainer: Color.lerp(darkSurface, brandGreen, 0.35),
+        onPrimaryContainer: const Color(0xFFBBF7D8),
+        secondary: const Color(0xFF6EE7B7),
+        onSecondary: const Color(0xFF04331D),
+        secondaryContainer: Color.lerp(darkSurface, brandMint, 0.3),
+        onSecondaryContainer: const Color(0xFFBBF7D8),
         surface: darkSurface,
         onSurface: darkOnSurface,
         surfaceContainerHighest: darkSurfaceVariant,
@@ -90,28 +94,33 @@ class AppTheme {
     chartPalette: [Color(0xFF8CA1EA), Color(0xFFF288A6), Color(0xFFEDC06B)],
   );
 
+  // Inter: designed by Rasmus Andersson specifically for computer screens
+  // and UI text (tall x-height, open apertures, hinted for small sizes) —
+  // used by GitHub, Figma, Mozilla and most modern product UIs for exactly
+  // that reason. One family, one set of weights, used everywhere so the
+  // whole app reads as one system instead of a mix of platform defaults.
   static TextTheme _textTheme({
     required Color primaryText,
     required Color secondaryText,
   }) {
-    return TextTheme(
+    final base = TextTheme(
       headlineMedium: TextStyle(
         fontWeight: FontWeight.w800,
         fontSize: 32,
-        letterSpacing: 0.3,
+        letterSpacing: 0.1,
         height: 1.15,
         color: primaryText,
       ),
       headlineSmall: TextStyle(
         fontWeight: FontWeight.w800,
         fontSize: 24,
-        letterSpacing: 0.2,
+        letterSpacing: 0.1,
         color: primaryText,
       ),
       titleLarge: TextStyle(
-        fontWeight: FontWeight.w800,
+        fontWeight: FontWeight.w700,
         fontSize: 18,
-        letterSpacing: 0.15,
+        letterSpacing: 0.1,
         color: primaryText,
       ),
       titleMedium: TextStyle(
@@ -155,6 +164,7 @@ class AppTheme {
         color: secondaryText,
       ),
     );
+    return GoogleFonts.interTextTheme(base);
   }
 
   static ThemeData get light => _build(
@@ -185,7 +195,7 @@ class AppTheme {
       brightness: scheme.brightness,
       colorScheme: scheme,
       scaffoldBackgroundColor: scaffoldBackground,
-      fontFamily: fontFamily,
+      fontFamily: GoogleFonts.inter().fontFamily,
       textTheme: textTheme,
       splashFactory: InkRipple.splashFactory,
       extensions: <ThemeExtension<dynamic>>[semantic],

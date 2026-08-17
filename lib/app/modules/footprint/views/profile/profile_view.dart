@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dpp/app/modules/auth/controllers/auth_controller.dart';
+import 'package:dpp/app/modules/settings/controllers/locale_controller.dart';
 import 'package:dpp/app/routes/app_pages.dart';
+import 'package:dpp/l10n/generated/app_localizations.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -9,6 +11,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: SafeArea(
@@ -17,8 +20,8 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 50, right: 20, top: 16),
-              child: Text('Profile', style: theme.textTheme.headlineSmall),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Text(l10n.profileTitle, style: theme.textTheme.headlineSmall),
             ),
             Expanded(
               child: Obx(() {
@@ -42,6 +45,7 @@ class _GuestPrompt extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(28),
@@ -55,13 +59,13 @@ class _GuestPrompt extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Sign in to set up your profile',
+              l10n.profileGuestTitle,
               style: theme.textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
-              'Guests can browse and keep history for this session, but a profile needs an account.',
+              l10n.profileGuestBody,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colors.onSurfaceVariant,
               ),
@@ -73,7 +77,7 @@ class _GuestPrompt extends StatelessWidget {
                 await Get.find<AuthController>().signOut();
                 Get.offAllNamed(Routes.SIGN_IN);
               },
-              child: const Text('Sign In'),
+              child: Text(l10n.profileSignIn),
             ),
           ],
         ),
@@ -121,6 +125,7 @@ class _ProfileFormState extends State<_ProfileForm> {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final auth = Get.find<AuthController>();
+    final l10n = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -147,20 +152,26 @@ class _ProfileFormState extends State<_ProfileForm> {
             ),
           ),
           const SizedBox(height: 28),
-          Text('Display name', style: theme.textTheme.labelLarge),
+          Text(l10n.profileDisplayName, style: theme.textTheme.labelLarge),
           const SizedBox(height: 8),
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(hintText: 'Your name'),
+            decoration: InputDecoration(hintText: l10n.profileNameHint),
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => _save(),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _save,
-            child: Text(_saved ? 'Saved ✓' : 'Save'),
+            child: Text(_saved ? l10n.profileSaved : l10n.profileSave),
           ),
           const SizedBox(height: 28),
+          Divider(color: colors.outlineVariant),
+          const SizedBox(height: 20),
+          Text(l10n.profileLanguage, style: theme.textTheme.labelLarge),
+          const SizedBox(height: 10),
+          const _LanguagePicker(),
+          const SizedBox(height: 24),
           Divider(color: colors.outlineVariant),
           const SizedBox(height: 16),
           Row(
@@ -168,7 +179,7 @@ class _ProfileFormState extends State<_ProfileForm> {
               Icon(Icons.badge_outlined, color: colors.onSurfaceVariant, size: 20),
               const SizedBox(width: 12),
               Text(
-                'Signed in as ${auth.username.value}',
+                l10n.profileSignedInAs(auth.username.value),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colors.onSurfaceVariant,
                 ),
@@ -182,10 +193,45 @@ class _ProfileFormState extends State<_ProfileForm> {
               Get.offAllNamed(Routes.SIGN_IN);
             },
             icon: Icon(Icons.logout, color: colors.error),
-            label: Text('Sign Out', style: TextStyle(color: colors.error)),
+            label: Text(l10n.profileSignOut, style: TextStyle(color: colors.error)),
           ),
         ],
       ),
     );
+  }
+}
+
+/// English / German / match-system picker, wired to [LocaleController].
+class _LanguagePicker extends StatelessWidget {
+  const _LanguagePicker();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final controller = Get.find<LocaleController>();
+
+    return Obx(() {
+      final current = controller.locale.value?.languageCode;
+      return Wrap(
+        spacing: 8,
+        children: [
+          ChoiceChip(
+            label: Text(l10n.profileLanguageSystem),
+            selected: current == null,
+            onSelected: (_) => controller.setLocale(null),
+          ),
+          ChoiceChip(
+            label: Text(l10n.profileLanguageEnglish),
+            selected: current == 'en',
+            onSelected: (_) => controller.setLocale(const Locale('en')),
+          ),
+          ChoiceChip(
+            label: Text(l10n.profileLanguageGerman),
+            selected: current == 'de',
+            onSelected: (_) => controller.setLocale(const Locale('de')),
+          ),
+        ],
+      );
+    });
   }
 }
