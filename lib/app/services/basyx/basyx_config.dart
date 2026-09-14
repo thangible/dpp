@@ -6,7 +6,7 @@ class BasyxConfig {
 
   /// Set to false once the real server is reachable. Rest of the app
   /// doesn't need to change.
-  static const bool useMockData = true;
+  static const bool useMockData = false;
 
   /// Only matters when useMockData is false.
   static const String baseUrl = 'http://10.75.50.133:3300';

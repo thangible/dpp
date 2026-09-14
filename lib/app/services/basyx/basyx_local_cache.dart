@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
+import 'basyx_log.dart';
 import 'basyx_models.dart';
 
 /// The "keep it on disk" part of the sync flow. Doesn't care whether mock
@@ -26,10 +27,15 @@ class BasyxLocalCache {
       if (!await dir.exists()) {
         await dir.create(recursive: true);
       }
+      basyxLog('local cache dir: ${dir.path}');
       _dir = dir;
       return dir;
-    } catch (_) {
+    } catch (e) {
       // probably web, no filesystem here — remember it so we stop retrying
+      basyxLog(
+        'no local cache available (${e.runtimeType}) — will fetch fresh '
+        'every time instead of persisting between launches',
+      );
       _unavailable = true;
       return null;
     }
@@ -80,14 +86,19 @@ class BasyxLocalCache {
       'package': packageJson,
     };
     await file.writeAsString(jsonEncode(wrapped));
+    basyxLog('cached package for $shellId -> ${file.path}');
   }
 
   Future<Map<String, dynamic>?> loadPackage(String shellId) async {
     final dir = await _cacheDir();
     if (dir == null) return null;
     final file = File('${dir.path}/${_safeName(shellId)}.package.json');
-    if (!await file.exists()) return null;
+    if (!await file.exists()) {
+      basyxLog('no cached package for $shellId');
+      return null;
+    }
     final wrapped = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+    basyxLog('read cached package for $shellId');
     return wrapped['package'] as Map<String, dynamic>;
   }
 

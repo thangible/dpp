@@ -6,6 +6,7 @@ import 'package:dpp/app/services/test/material_service.dart';
 import 'package:dpp/app/services/test/product_service.dart';
 import 'basyx_config.dart';
 import 'basyx_local_cache.dart';
+import 'basyx_log.dart';
 import 'basyx_mock_repository.dart';
 import 'basyx_models.dart';
 import 'basyx_remote_repository.dart';
@@ -34,23 +35,35 @@ class BasyxSyncService {
   /// Runs at startup so it can't throw — worst case we just don't get
   /// anything new this launch, same as before this whole thing existed.
   Future<void> syncOnAppStart() async {
+    basyxLog(
+      BasyxConfig.useMockData
+          ? 'starting sync (mock mode)'
+          : 'starting sync (real server: ${BasyxConfig.baseUrl})',
+    );
     try {
       final shells = await _repository.fetchShellList();
       await _cache.saveShellList(shells);
+      var okCount = 0;
       for (final shell in shells) {
-        await _syncShell(shell);
+        // One bad shell (bad data, a request that fails partway through)
+        // shouldn't take the rest of the batch down with it.
+        try {
+          await _syncShell(shell);
+          okCount++;
+        } catch (e) {
+          basyxLog('FAILED to sync shell ${shell.idShort}: $e');
+        }
       }
+      basyxLog('sync done: $okCount/${shells.length} shell(s) registered');
     } catch (e) {
       // A failed sync (server unreachable, mock asset missing, ...)
       // shouldn't block the app from starting — fall back to whatever the
       // last successful sync already put in the local cache.
-      // ignore: avoid_print
-      print('BasyxSyncService: sync failed ($e), using local cache only');
+      basyxLog('sync failed ($e), falling back to local cache only');
       try {
         await _registerFromCacheOnly();
       } catch (e2) {
-        // ignore: avoid_print
-        print('BasyxSyncService: local cache fallback also failed ($e2)');
+        basyxLog('local cache fallback also failed ($e2) — nothing to show');
       }
     }
   }
@@ -65,8 +78,10 @@ class BasyxSyncService {
     String? imagePath = await _cache.thumbnailPath(shell.id);
 
     if (isFresh) {
+      basyxLog('${shell.idShort}: using cached copy from $downloadedAt');
       packageJson = (await _cache.loadPackage(shell.id))!;
     } else {
+      basyxLog('${shell.idShort}: downloading fresh copy');
       final package = await _repository.fetchShellPackage(shell);
       packageJson = package.toJson();
       await _cache.savePackage(shell.id, packageJson);
@@ -82,6 +97,7 @@ class BasyxSyncService {
 
   Future<void> _registerFromCacheOnly() async {
     final shells = await _cache.loadShellList();
+    basyxLog('registering ${shells.length} shell(s) from local cache');
     for (final shell in shells) {
       final packageJson = await _cache.loadPackage(shell.id);
       if (packageJson == null) continue;
@@ -103,6 +119,12 @@ class BasyxSyncService {
     );
     if (product.id.isNotEmpty) {
       ProductService.registerProduct(product);
+      basyxLog(
+        'registered product "${product.id}"'
+        '${material != null ? ' with material "${material.id}"' : ''}',
+      );
+    } else {
+      basyxLog('package had no usable product id, skipped');
     }
   }
 

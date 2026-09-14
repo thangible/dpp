@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:dpp/app/data_model/api/generic_submodel.dart';
+import 'basyx_log.dart';
 import 'basyx_models.dart';
 import 'basyx_repository.dart';
 
@@ -18,8 +19,10 @@ class BasyxMockRepository implements BasyxRepository {
   Future<List<Map<String, dynamic>>> _loadIndex() async {
     final cached = _index;
     if (cached != null) return cached;
+    basyxLog('loading mock index: $_indexAsset');
     final raw = await rootBundle.loadString(_indexAsset);
     final list = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
+    basyxLog('mock index has ${list.length} shell(s)');
     _index = list;
     return list;
   }
@@ -49,6 +52,7 @@ class BasyxMockRepository implements BasyxRepository {
   Future<AasResponse> fetchShellPackage(ShellDescriptor shell) async {
     final entry = await _entryFor(shell);
     final packageAsset = entry['packageAsset'] as String;
+    basyxLog('loading mock package for ${shell.idShort}: $packageAsset');
     final raw = await rootBundle.loadString(packageAsset);
     return AasResponse.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
@@ -57,7 +61,11 @@ class BasyxMockRepository implements BasyxRepository {
   Future<Uint8List?> fetchThumbnail(ShellDescriptor shell) async {
     final entry = await _entryFor(shell);
     final thumbnailAsset = entry['thumbnailAsset'] as String?;
-    if (thumbnailAsset == null) return null;
+    if (thumbnailAsset == null) {
+      basyxLog('no mock thumbnail listed for ${shell.idShort}');
+      return null;
+    }
+    basyxLog('loading mock thumbnail for ${shell.idShort}: $thumbnailAsset');
     final bytes = await rootBundle.load(thumbnailAsset);
     return bytes.buffer.asUint8List();
   }

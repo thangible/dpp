@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "DPP (web, fixed port)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "web-server",
+            "args": [
+                "--web-port=8765",
+                "--web-hostname=127.0.0.1"
+            ]
+        },
+        {
+            "name": "DPP (Chrome, fixed port)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "args": [
+                "--web-port=8765",
+                "--web-hostname=127.0.0.1"
+            ]
+        }
+    ]
+}
