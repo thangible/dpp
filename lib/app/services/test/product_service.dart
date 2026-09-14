@@ -63,8 +63,8 @@ class ProductService {
     return productMap.keys.toList();
   }
 
-  /// Adds or replaces one product, e.g. one just synced in from BaSyx — see
-  /// [BasyxSyncService]. Existing bundled/mock products are untouched.
+  /// For adding one product after the fact, e.g. from BasyxSyncService.
+  /// Doesn't touch the bundled/mock ones.
   static void registerProduct(Product product) {
     productMap[product.id] = product;
     products.removeWhere((p) => p.id == product.id);

@@ -29,8 +29,8 @@ class MaterialService {
 
   static List<String> get materialIds => materialMap.keys.toList();
 
-  /// Adds or replaces one material, e.g. one just synced in from BaSyx —
-  /// see [BasyxSyncService]. Existing bundled materials are untouched.
+  /// Same idea as ProductService.registerProduct — one material added
+  /// after the fact (BasyxSyncService), bundled ones left alone.
   static void registerMaterial(Material material) {
     materialMap[material.id] = material;
     materials.removeWhere((m) => m.id == material.id);

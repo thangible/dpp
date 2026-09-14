@@ -5,11 +5,10 @@ import 'section_card.dart';
 
 /// The product photo, or a placeholder if it has none / it fails to load.
 ///
-/// [imagePath] is either a bundled Flutter asset key (e.g.
-/// "assets/images/...png", for the app's own mock products) or a
-/// `file://` URI (for a product BasyxSyncService downloaded — see
-/// BasyxLocalCache.saveThumbnail) pointing at a file on local storage.
-/// The `file://` scheme is the marker that tells the two apart.
+/// [imagePath] is either a bundled asset key ("assets/images/...png", for
+/// the app's own mock products) or a `file://` URI for something
+/// BasyxSyncService downloaded to local storage — that prefix is how we
+/// tell the two apart.
 class ProductImageCard extends StatelessWidget {
   const ProductImageCard({super.key, required this.imagePath});
 

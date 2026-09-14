@@ -21,12 +21,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ProductService.init();
   await MaterialService.init();
-  // "Every time we open the app, ask the server what's new and download
-  // it" — awaited here (like the two lines above) so the synced product is
-  // already searchable by the time the first frame shows, since both this
-  // mock and a real BaSyx call are expected to be fast. If a slow
-  // real-network deployment later makes that noticeable, this is the line
-  // to move to a background call instead.
+  // Sync BaSyx on every open, same as the two lines above, so synced
+  // products are searchable before the first frame shows. Should be fine
+  // since both mock and real calls are fast for now — move this to a
+  // background call later if a slow real server ever makes it noticeable.
   await BasyxSyncService().syncOnAppStart();
   // Initialize Hive
   await HiveService.init();

@@ -33,12 +33,11 @@ class Product {
     this.imagePath,
   });
 
-  /// [resolvedImagePath] and [resolvedMaterialId] are for a caller that has
-  /// already resolved things this factory can't figure out from the AAS
-  /// JSON alone — e.g. the BaSyx sync service downloading the product's
-  /// thumbnail File element separately and linking a matching entry in the
-  /// Material catalog. Existing call sites that don't pass them are
-  /// unaffected.
+  /// [resolvedImagePath] and [resolvedMaterialId] are for when the caller
+  /// already figured out something this factory can't get from the AAS
+  /// JSON alone — e.g. BasyxSyncService downloading the thumbnail
+  /// separately and linking a Material entry. Old call sites that skip
+  /// these two just work like before.
   factory Product.fromJson(
     AasResponse jsonResponse, {
     String? resolvedImagePath,
@@ -90,9 +89,8 @@ class Product {
                 }
                 break;
               case 'ManufacturerProductDesignation':
-                // Fallback for "type" on packages with no assetType (e.g.
-                // a Bauteil/part rather than a machine) — a human-readable
-                // product name/designation instead of a technical one.
+                // fallback for "type" when there's no assetType (parts
+                // don't usually have one, only machines seem to)
                 if (element is MultiLanguageProperty &&
                     element.value.isNotEmpty) {
                   productDesignation = element.value.first.text;
@@ -120,10 +118,8 @@ class Product {
                   final footprintElements = footprint.value!;
 
                   for (var fpElement in footprintElements) {
-                    // 'ProductCarbonFootprintValue' is the idShort in the
-                    // app's older mock fixtures; 'PcfCO2eq' is the idShort
-                    // IDTA 02023 actually specifies — recognize both so
-                    // packages following the standard naming still work.
+                    // old mock files use 'ProductCarbonFootprintValue',
+                    // real IDTA 02023 packages use 'PcfCO2eq' - take either
                     final isCo2Value =
                         fpElement.idShort == 'ProductCarbonFootprintValue' ||
                         fpElement.idShort == 'PcfCO2eq';
@@ -139,8 +135,8 @@ class Product {
             }
           }
         }
-        // Extract material name, if this package embeds a DIN SPEC 91481
-        // material-data submodel alongside the product itself.
+        // grab the material name too, if this package has a DIN SPEC
+        // 91481 material-data submodel sitting next to the product
         else if (idShort == 'MaterialData_DINSPEC91481' &&
             submodel.submodelElements != null) {
           for (var element in submodel.submodelElements!) {

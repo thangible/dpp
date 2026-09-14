@@ -4,16 +4,12 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'basyx_models.dart';
 
-/// The "downloaded files kept in local" half of the sync flow. Both
-/// [BasyxMockRepository] and [BasyxRemoteRepository] feed the *same* cache
-/// shape here — this class has no idea (and doesn't need to know) which one
-/// supplied what it's writing. On the next app start, whatever's here is
-/// available immediately, before any network/asset round-trip completes.
+/// The "keep it on disk" part of the sync flow. Doesn't care whether mock
+/// or remote wrote what's here, just reads/writes files.
 ///
-/// path_provider has no local-filesystem concept on Flutter Web, so every
-/// method here degrades to a harmless no-op/miss there (caught once, in
-/// [_cacheDir]) instead of throwing — a missing cache should mean "download
-/// fresh every time", never "crash on startup".
+/// Web has no real filesystem, so every method here just quietly does
+/// nothing there instead of throwing (see [_cacheDir]) — a missing cache
+/// should mean "fetch fresh next time", not "crash on startup".
 class BasyxLocalCache {
   static const _dirName = 'basyx_cache';
 
@@ -33,15 +29,14 @@ class BasyxLocalCache {
       _dir = dir;
       return dir;
     } catch (_) {
-      // No local filesystem on this platform (e.g. web) — remember that so
-      // every call after the first fails fast instead of retrying.
+      // probably web, no filesystem here — remember it so we stop retrying
       _unavailable = true;
       return null;
     }
   }
 
-  /// Turns an AAS id (a long URL) into something safe to use as a file
-  /// name, while staying human-readable enough to debug by eye.
+  /// AAS ids are long URLs — turn one into something safe to use as a
+  /// filename (and still readable enough to eyeball while debugging).
   String _safeName(String id) {
     final cleaned = id.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '_');
     return cleaned.length > 120 ? cleaned.substring(0, 120) : cleaned;
@@ -107,10 +102,9 @@ class BasyxLocalCache {
 
   // ---- Per-shell thumbnail -----------------------------------------------
 
-  /// Saves the image and returns a `file://`-prefixed path — the marker
-  /// [ProductImageCard] uses to know this is a filesystem path, not a
-  /// bundled Flutter asset key, and load it with `Image.file` instead of
-  /// `Image.asset`. Null if there's no local filesystem to save it to.
+  /// Returns a `file://` path — that's the marker ProductImageCard checks
+  /// for to use Image.file instead of Image.asset. Null if there's nowhere
+  /// to save it (no local filesystem).
   Future<String?> saveThumbnail(String shellId, Uint8List bytes) async {
     final dir = await _cacheDir();
     if (dir == null) return null;

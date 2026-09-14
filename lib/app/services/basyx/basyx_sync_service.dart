@@ -11,17 +11,15 @@ import 'basyx_models.dart';
 import 'basyx_remote_repository.dart';
 import 'basyx_repository.dart';
 
-/// The "every time we open the app" half of the integration: ask the
-/// server (or, with [BasyxConfig.useMockData], the mock standing in for
-/// one) what shells exist, download whatever's new, and fold the result
-/// into [ProductService]/[MaterialService] — the same catalog Home search,
-/// History, and the detail screens already read from, so a synced product
-/// shows up exactly like any bundled mock product without the rest of the
-/// app needing to know where it came from.
+/// Runs on every app open: ask the server (or the mock standing in for
+/// one) what's out there, pull down anything new, and fold it into
+/// [ProductService]/[MaterialService] — same catalog Home search, History,
+/// and the detail screens already read from, so a synced product just
+/// shows up next to the regular mock ones without anything else needing to
+/// know where it came from.
 ///
-/// If the sync fails outright (server down, no network), it falls back to
-/// whatever was cached from the last successful run rather than leaving
-/// the app with nothing — see [BasyxLocalCache].
+/// If it can't reach anything, falls back to whatever synced successfully
+/// last time (see [BasyxLocalCache]) instead of showing nothing.
 class BasyxSyncService {
   BasyxSyncService({BasyxRepository? repository, BasyxLocalCache? cache})
     : _repository = repository ?? _defaultRepository(),
@@ -33,11 +31,8 @@ class BasyxSyncService {
   final BasyxRepository _repository;
   final BasyxLocalCache _cache;
 
-  /// Never lets an exception escape: this runs during app startup (see
-  /// main.dart), and a sync going wrong — server down, a malformed mock
-  /// asset, no local filesystem on this platform — must never be the
-  /// reason the app fails to open. Worst case it just registers nothing
-  /// new this launch, same as before BaSyx existed.
+  /// Runs at startup so it can't throw — worst case we just don't get
+  /// anything new this launch, same as before this whole thing existed.
   Future<void> syncOnAppStart() async {
     try {
       final shells = await _repository.fetchShellList();
@@ -111,13 +106,11 @@ class BasyxSyncService {
     }
   }
 
-  /// Builds a [model.Material] from a "MaterialData_DINSPEC91481" submodel
-  /// if the package has one (plus a "Temperaturen" submodel, if present,
-  /// for the processing-condition fields) — the same convention-driven,
-  /// idShort-based mapping [Product.fromJson] uses for its own fields, just
-  /// living here since deciding *whether* an AAS package's material data is
-  /// rich enough to deserve its own catalog entry is a sync-layer call, not
-  /// something the plain data model should hardcode.
+  /// Pulls a [model.Material] out of a "MaterialData_DINSPEC91481"
+  /// submodel if the package has one (plus "Temperaturen" for the
+  /// print-condition fields, if that's there too). Lives here rather than
+  /// on Product itself since "is this worth its own catalog entry" felt
+  /// like a sync-layer call, not something the data model should decide.
   model.Material? _materialFromDinSpec91481(AasResponse aasResponse) {
     final submodels = aasResponse.submodels ?? const <Submodel>[];
     Submodel? materialData;
@@ -146,8 +139,7 @@ class BasyxSyncService {
     final initialWeight = field('Initialgewicht_g');
     final spoolId = field('SpoolmanSpoolId');
 
-    // Nothing worth a catalog entry for — every field the UI would show
-    // came back empty.
+    // nothing worth showing, skip it
     if (polymerType == null && tradeName == null && manufacturerName == null) {
       return null;
     }
@@ -166,9 +158,8 @@ class BasyxSyncService {
     final bedMin = temp('Betttemperatur_min_C');
     final bedMax = temp('Betttemperatur_max_C');
 
-    // Deterministic, not random: re-syncing the same lot of the same
-    // polymer should resolve to the same catalog entry instead of piling
-    // up duplicates every time the app opens.
+    // deterministic id, so re-syncing the same lot doesn't create a new
+    // duplicate entry every time the app opens
     final slug = (polymerType ?? tradeName ?? 'MATERIAL')
         .toUpperCase()
         .replaceAll(RegExp(r'[^A-Z0-9]+'), '');

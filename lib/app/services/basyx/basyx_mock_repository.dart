@@ -4,15 +4,12 @@ import 'package:dpp/app/data_model/api/generic_submodel.dart';
 import 'basyx_models.dart';
 import 'basyx_repository.dart';
 
-/// Offline stand-in for the real BaSyx server: reads the same shell-list /
-/// package / thumbnail shapes [BasyxRepository] promises, but from assets
-/// bundled at build time (assets/basyx_mock/) instead of over HTTP.
+/// Stands in for the real server — same shapes as [BasyxRepository]
+/// promises, just reading from bundled assets instead of the network.
 ///
-/// assets/basyx_mock/shells_index.json is the mock's own bookkeeping — it
-/// maps each shell id to which asset holds its package JSON and (if any)
-/// its thumbnail image. That file's shape is specific to this mock; a real
-/// server obviously doesn't need it; it's how this class fakes having a
-/// server there in the first place.
+/// shells_index.json is our own bookkeeping (shell id -> which asset has
+/// its package/thumbnail). Only exists because this is a mock — a real
+/// server obviously wouldn't need a file like this.
 class BasyxMockRepository implements BasyxRepository {
   static const _indexAsset = 'assets/basyx_mock/shells_index.json';
 

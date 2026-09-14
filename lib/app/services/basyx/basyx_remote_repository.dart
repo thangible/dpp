@@ -7,14 +7,11 @@ import 'basyx_config.dart';
 import 'basyx_models.dart';
 import 'basyx_repository.dart';
 
-/// Talks to a real BaSyx AAS/Submodel Repository over the IDTA "Part 2:
-/// APIs" REST interface (the same one BaSyx itself implements). Not yet
-/// exercised against a live server — [BasyxConfig.useMockData] is what
-/// decides whether this class or [BasyxMockRepository] is used, and it's
-/// still true, so this is the "prepare for later" half of the integration.
-/// The endpoints below are the standard ones; if the actual deployment at
-/// [BasyxConfig.baseUrl] differs, this is the one file that needs to change
-/// — [BasyxSyncService] and everything above it stays the same either way.
+/// Real HTTP calls to a BaSyx server, following the standard IDTA REST API.
+/// Haven't been able to test this against an actual live server yet
+/// (useMockData is still true) — the endpoints below are the spec-standard
+/// ones, so if the real deployment does something slightly different, this
+/// is the one file that needs fixing.
 class BasyxRemoteRepository implements BasyxRepository {
   BasyxRemoteRepository({http.Client? client, String? baseUrl})
     : _client = client ?? http.Client(),
@@ -23,14 +20,13 @@ class BasyxRemoteRepository implements BasyxRepository {
   final http.Client _client;
   final String _baseUrl;
 
-  /// AAS API identifiers go in the URL Base64Url-encoded (IDTA Part 2,
-  /// "Interface OpenAPI" — every {aasIdentifier}/{submodelIdentifier} path
-  /// segment is the actual id, not the idShort).
+  /// Ids go in the URL base64url-encoded, per spec — the real id, not the
+  /// idShort.
   String _encodeId(String id) => base64Url.encode(utf8.encode(id));
 
   @override
   Future<List<ShellDescriptor>> fetchShellList() async {
-    // GET /shells — paginated list of Asset Administration Shells.
+    // GET /shells - paginated shell list
     final uri = Uri.parse('$_baseUrl/shells');
     final response = await _client.get(uri);
     _checkOk(response, 'GET /shells');
@@ -47,9 +43,8 @@ class BasyxRemoteRepository implements BasyxRepository {
 
   @override
   Future<AasResponse> fetchShellPackage(ShellDescriptor shell) async {
-    // GET /shells/{aasIdentifier} — shell + its submodel *references*; the
-    // submodels' actual content lives in the Submodel Repository and has
-    // to be fetched separately, one call per referenced submodel.
+    // shell only has submodel *references* — actual content needs a
+    // separate call per submodel
     final shellUri = Uri.parse('$_baseUrl/shells/${_encodeId(shell.id)}');
     final shellResponse = await _client.get(shellUri);
     _checkOk(shellResponse, 'GET /shells/{id}');
@@ -84,9 +79,7 @@ class BasyxRemoteRepository implements BasyxRepository {
 
   @override
   Future<Uint8List?> fetchThumbnail(ShellDescriptor shell) async {
-    // GET /shells/{aasIdentifier}/asset-information/thumbnail — the
-    // dedicated endpoint for a shell's thumbnail. A 404 just means this
-    // shell doesn't have one, which is a normal, expected outcome here.
+    // 404 here just means no thumbnail, not an error
     final uri = Uri.parse(
       '$_baseUrl/shells/${_encodeId(shell.id)}/asset-information/thumbnail',
     );

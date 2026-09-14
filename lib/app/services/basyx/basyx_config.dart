@@ -1,24 +1,18 @@
-/// Single on/off switch for the whole BaSyx integration. With
-/// [useMockData] true, [BasyxSyncService] reads everything from bundled
-/// assets (see BasyxMockRepository); set it false and the exact same sync
-/// flow instead calls [baseUrl] over HTTP (see BasyxRemoteRepository) — no
-/// other code needs to change either way, since both repositories satisfy
-/// the same [BasyxRepository] contract and return the same shapes.
+/// On/off switch for BaSyx. Mock mode reads from bundled assets, real mode
+/// hits [baseUrl] instead — same sync flow either way, nothing else in the
+/// app cares which one is active.
 class BasyxConfig {
   BasyxConfig._();
 
-  /// Flip this to false once a real BaSyx server is reachable. Everything
-  /// downstream (the product list, images, the local cache) already works
-  /// the same way in both modes.
+  /// Set to false once the real server is reachable. Rest of the app
+  /// doesn't need to change.
   static const bool useMockData = true;
 
-  /// BaSyx AAS/Submodel Repository base URL (IDTA Part 2 REST API). Only
-  /// used when [useMockData] is false.
+  /// Only matters when useMockData is false.
   static const String baseUrl = 'http://10.75.50.133:3300';
 
-  /// How long a locally-cached package is trusted before the sync service
-  /// re-downloads it on next app start, even if the shell list hasn't
-  /// changed. Keeps a stale cache from lingering forever if a package is
-  /// ever updated server-side without changing its id.
+  /// How long we trust a cached package before re-downloading it, even if
+  /// the shell list looks the same. Just so a stale copy doesn't stick
+  /// around forever.
   static const Duration cacheTtl = Duration(days: 7);
 }
