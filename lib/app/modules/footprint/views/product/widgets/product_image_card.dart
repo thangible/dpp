@@ -1,9 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dpp/l10n/generated/app_localizations.dart';
 import 'section_card.dart';
 
-/// The product photo, or a placeholder if it has none / the asset fails to
-/// load.
+/// The product photo, or a placeholder if it has none / it fails to load.
+///
+/// [imagePath] is either a bundled Flutter asset key (e.g.
+/// "assets/images/...png", for the app's own mock products) or a
+/// `file://` URI (for a product BasyxSyncService downloaded — see
+/// BasyxLocalCache.saveThumbnail) pointing at a file on local storage.
+/// The `file://` scheme is the marker that tells the two apart.
 class ProductImageCard extends StatelessWidget {
   const ProductImageCard({super.key, required this.imagePath});
 
@@ -11,23 +17,29 @@ class ProductImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final path = imagePath;
+    Widget image;
+    if (path == null || path.isEmpty) {
+      image = const _ImagePlaceholder();
+    } else if (path.startsWith('file://')) {
+      image = Image.file(
+        File.fromUri(Uri.parse(path)),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const _ImagePlaceholder(),
+      );
+    } else {
+      image = Image.asset(
+        path,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const _ImagePlaceholder(),
+      );
+    }
+
     return Container(
       width: double.infinity,
       height: 220,
       decoration: cardDecoration(context),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child:
-            (imagePath?.isNotEmpty ?? false)
-                ? Image.asset(
-                  imagePath!,
-                  fit: BoxFit.cover,
-                  errorBuilder:
-                      (context, error, stackTrace) =>
-                          const _ImagePlaceholder(),
-                )
-                : const _ImagePlaceholder(),
-      ),
+      child: ClipRRect(borderRadius: BorderRadius.circular(16), child: image),
     );
   }
 }

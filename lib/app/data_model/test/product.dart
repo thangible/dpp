@@ -33,10 +33,22 @@ class Product {
     this.imagePath,
   });
 
-  factory Product.fromJson(AasResponse jsonResponse) {
+  /// [resolvedImagePath] and [resolvedMaterialId] are for a caller that has
+  /// already resolved things this factory can't figure out from the AAS
+  /// JSON alone — e.g. the BaSyx sync service downloading the product's
+  /// thumbnail File element separately and linking a matching entry in the
+  /// Material catalog. Existing call sites that don't pass them are
+  /// unaffected.
+  factory Product.fromJson(
+    AasResponse jsonResponse, {
+    String? resolvedImagePath,
+    String? resolvedMaterialId,
+  }) {
     String productId = '';
     String? manufacturerName;
     String? productType;
+    String? productDesignation;
+    String? materialName;
     String? yearOfConstruction;
     double? co2Value;
 
@@ -77,6 +89,15 @@ class Product {
                   yearOfConstruction = element.value.toString();
                 }
                 break;
+              case 'ManufacturerProductDesignation':
+                // Fallback for "type" on packages with no assetType (e.g.
+                // a Bauteil/part rather than a machine) — a human-readable
+                // product name/designation instead of a technical one.
+                if (element is MultiLanguageProperty &&
+                    element.value.isNotEmpty) {
+                  productDesignation = element.value.first.text;
+                }
+                break;
             }
           }
         }
@@ -99,7 +120,14 @@ class Product {
                   final footprintElements = footprint.value!;
 
                   for (var fpElement in footprintElements) {
-                    if (fpElement.idShort == 'ProductCarbonFootprintValue' &&
+                    // 'ProductCarbonFootprintValue' is the idShort in the
+                    // app's older mock fixtures; 'PcfCO2eq' is the idShort
+                    // IDTA 02023 actually specifies — recognize both so
+                    // packages following the standard naming still work.
+                    final isCo2Value =
+                        fpElement.idShort == 'ProductCarbonFootprintValue' ||
+                        fpElement.idShort == 'PcfCO2eq';
+                    if (isCo2Value &&
                         fpElement is Property &&
                         fpElement.value != null) {
                       co2Value = double.tryParse(fpElement.value.toString());
@@ -111,13 +139,25 @@ class Product {
             }
           }
         }
+        // Extract material name, if this package embeds a DIN SPEC 91481
+        // material-data submodel alongside the product itself.
+        else if (idShort == 'MaterialData_DINSPEC91481' &&
+            submodel.submodelElements != null) {
+          for (var element in submodel.submodelElements!) {
+            if (element.idShort == 'Materialbezeichnung' &&
+                element is Property &&
+                element.value != null) {
+              materialName = element.value.toString();
+            }
+          }
+        }
       }
     }
 
     return Product(
       id: productId,
       manufacturer: manufacturerName,
-      type: productType,
+      type: productType ?? productDesignation,
       co2Emissions: co2Value,
       lastUpdated:
           yearOfConstruction != null
@@ -125,10 +165,11 @@ class Product {
               : null,
       // These fields would need to be extracted from other submodels or elements
       energyUsed: null, // Not found in current structure
-      material: null, // Not found in current structure
+      material: materialName,
+      materialId: resolvedMaterialId,
       virginMaterial: null, // Not found in current structure
       recycledMaterial: null, // Not found in current structure
-      imagePath: "No Image", // Not found in current structure
+      imagePath: resolvedImagePath ?? "No Image",
     );
   }
 }

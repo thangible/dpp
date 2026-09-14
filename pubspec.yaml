@@ -79,6 +79,8 @@ flutter:
     - assets/data/
     - assets/materials/
     - assets/icon/
+    - assets/basyx_mock/
+    - assets/basyx_mock/packages/
 
   # Typography now comes from google_fonts (Inter) — see AppTheme. The old
   # manually-bundled WorkSans/Roboto files are unused; left in assets/fonts/

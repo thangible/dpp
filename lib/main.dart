@@ -9,6 +9,7 @@ import 'app/routes/app_pages.dart';
 import 'package:dpp/app/services/hive/hive_service.dart';
 import 'package:dpp/app/services/test/product_service.dart';
 import 'package:dpp/app/services/test/material_service.dart';
+import 'package:dpp/app/services/basyx/basyx_sync_service.dart';
 import 'package:dpp/app/modules/settings/controllers/theme_controller.dart';
 import 'package:dpp/app/modules/settings/controllers/locale_controller.dart';
 import 'package:dpp/app/modules/auth/controllers/auth_controller.dart';
@@ -20,6 +21,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ProductService.init();
   await MaterialService.init();
+  // "Every time we open the app, ask the server what's new and download
+  // it" — awaited here (like the two lines above) so the synced product is
+  // already searchable by the time the first frame shows, since both this
+  // mock and a real BaSyx call are expected to be fast. If a slow
+  // real-network deployment later makes that noticeable, this is the line
+  // to move to a background call instead.
+  await BasyxSyncService().syncOnAppStart();
   // Initialize Hive
   await HiveService.init();
 
