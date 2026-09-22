@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:dpp/app/data_model/api/generic_submodel.dart';
 import 'package:dpp/app/data_model/api/base_aas_model.dart';
 
@@ -17,6 +18,11 @@ class Product {
   final double? virginMaterial;
   final double? recycledMaterial;
   final String? imagePath;
+  // Set when there's no filesystem to cache a downloaded thumbnail to (Flutter
+  // Web — see BasyxLocalCache) so the bytes are kept in memory on the Product
+  // itself instead of being handed off as a file:// path. ProductImageCard
+  // prefers this over [imagePath] when both are present.
+  final Uint8List? imageBytes;
 
   Product({
     required this.id,
@@ -31,16 +37,18 @@ class Product {
     this.virginMaterial,
     this.recycledMaterial,
     this.imagePath,
+    this.imageBytes,
   });
 
-  /// [resolvedImagePath] and [resolvedMaterialId] are for when the caller
-  /// already figured out something this factory can't get from the AAS
-  /// JSON alone — e.g. BasyxSyncService downloading the thumbnail
-  /// separately and linking a Material entry. Old call sites that skip
-  /// these two just work like before.
+  /// [resolvedImagePath], [resolvedImageBytes] and [resolvedMaterialId] are
+  /// for when the caller already figured out something this factory can't
+  /// get from the AAS JSON alone — e.g. BasyxSyncService downloading the
+  /// thumbnail separately and linking a Material entry. Old call sites that
+  /// skip these just work like before.
   factory Product.fromJson(
     AasResponse jsonResponse, {
     String? resolvedImagePath,
+    Uint8List? resolvedImageBytes,
     String? resolvedMaterialId,
   }) {
     String productId = '';
@@ -166,6 +174,7 @@ class Product {
       virginMaterial: null, // Not found in current structure
       recycledMaterial: null, // Not found in current structure
       imagePath: resolvedImagePath ?? "No Image",
+      imageBytes: resolvedImageBytes,
     );
   }
 }

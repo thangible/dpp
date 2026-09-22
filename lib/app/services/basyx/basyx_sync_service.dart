@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dpp/app/data_model/api/base_aas_model.dart';
 import 'package:dpp/app/data_model/api/generic_submodel.dart';
 import 'package:dpp/app/data_model/material/material.dart' as model;
@@ -76,6 +78,7 @@ class BasyxSyncService {
 
     Map<String, dynamic> packageJson;
     String? imagePath = await _cache.thumbnailPath(shell.id);
+    Uint8List? imageBytes;
 
     if (isFresh) {
       basyxLog('${shell.idShort}: using cached copy from $downloadedAt');
@@ -89,10 +92,17 @@ class BasyxSyncService {
       final thumbnailBytes = await _repository.fetchThumbnail(shell);
       if (thumbnailBytes != null) {
         imagePath = await _cache.saveThumbnail(shell.id, thumbnailBytes);
+        // No filesystem to save to (Flutter Web) — saveThumbnail comes back
+        // null, so keep the bytes themselves instead of losing the image.
+        if (imagePath == null) imageBytes = thumbnailBytes;
       }
     }
 
-    _registerPackage(AasResponse.fromJson(packageJson), imagePath);
+    _registerPackage(
+      AasResponse.fromJson(packageJson),
+      imagePath,
+      imageBytes,
+    );
   }
 
   Future<void> _registerFromCacheOnly() async {
@@ -102,11 +112,15 @@ class BasyxSyncService {
       final packageJson = await _cache.loadPackage(shell.id);
       if (packageJson == null) continue;
       final imagePath = await _cache.thumbnailPath(shell.id);
-      _registerPackage(AasResponse.fromJson(packageJson), imagePath);
+      _registerPackage(AasResponse.fromJson(packageJson), imagePath, null);
     }
   }
 
-  void _registerPackage(AasResponse aasResponse, String? imagePath) {
+  void _registerPackage(
+    AasResponse aasResponse,
+    String? imagePath,
+    Uint8List? imageBytes,
+  ) {
     final material = _materialFromDinSpec91481(aasResponse);
     if (material != null) {
       MaterialService.registerMaterial(material);
@@ -115,6 +129,7 @@ class BasyxSyncService {
     final product = Product.fromJson(
       aasResponse,
       resolvedImagePath: imagePath,
+      resolvedImageBytes: imageBytes,
       resolvedMaterialId: material?.id,
     );
     if (product.id.isNotEmpty) {

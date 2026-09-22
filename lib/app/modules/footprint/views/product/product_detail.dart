@@ -324,7 +324,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         const SizedBox(height: 24),
                         QuickActionsCard(productId: _productId),
                         const SizedBox(height: 24),
-                        ProductImageCard(imagePath: product?.imagePath),
+                        ProductImageCard(
+                          imagePath: product?.imagePath,
+                          imageBytes: product?.imageBytes,
+                        ),
                         const SizedBox(height: 24),
                         CarbonFootprintSection(
                           product: product,

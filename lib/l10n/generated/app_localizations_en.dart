@@ -81,29 +81,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingSlide1Title => 'Scan any code';
 
   @override
-  String get onboardingSlide1Body =>
-      'Point your camera at a product or material label to instantly pull up its digital passport.';
+  String get onboardingSlide1Body => 'Point your camera at a product or material label to instantly pull up its digital passport.';
 
   @override
   String get onboardingSlide2Title => 'See its footprint';
 
   @override
-  String get onboardingSlide2Body =>
-      'View energy use, CO2 emissions, and recycled content at a glance, right where you need them.';
+  String get onboardingSlide2Body => 'View energy use, CO2 emissions, and recycled content at a glance, right where you need them.';
 
   @override
   String get onboardingSlide3Title => 'Trace the material';
 
   @override
-  String get onboardingSlide3Body =>
-      'Every product links to the material it\'s made from — full composition, origin, and sustainability data.';
+  String get onboardingSlide3Body => 'Every product links to the material it\'s made from — full composition, origin, and sustainability data.';
 
   @override
   String get onboardingSlide4Title => 'Sign in, or just browse';
 
   @override
-  String get onboardingSlide4Body =>
-      'Create an account to keep your history across visits, or jump straight in as a guest.';
+  String get onboardingSlide4Body => 'Create an account to keep your history across visits, or jump straight in as a guest.';
 
   @override
   String get homeModeProduct => 'Product';
@@ -137,8 +133,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeEmptyMaterialsTitle => 'No materials searched yet';
 
   @override
-  String get homeEmptyHint =>
-      'Enter an ID above or use the scanner to add one to your list.';
+  String get homeEmptyHint => 'Enter an ID above or use the scanner to add one to your list.';
 
   @override
   String get homeScanButton => 'Scan a code';
@@ -147,8 +142,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeGuestCardTitle => 'Sign in for more';
 
   @override
-  String get homeGuestCardBody =>
-      'Keep your history across sessions and set up a profile.';
+  String get homeGuestCardBody => 'Keep your history across sessions and set up a profile.';
 
   @override
   String get historyTitle => 'History & Favorites';
@@ -160,12 +154,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyRecentSection => 'Recent';
 
   @override
-  String get historyFavoritesEmpty =>
-      'Nothing favorited yet. Tap the star on any item to save it here.';
+  String get historyFavoritesEmpty => 'Nothing favorited yet. Tap the star on any item to save it here.';
 
   @override
-  String get historyRecentEmpty =>
-      'No history yet. Search or scan a product/material to see it here.';
+  String get historyRecentEmpty => 'No history yet. Search or scan a product/material to see it here.';
 
   @override
   String historySeeAll(Object count) {
@@ -188,8 +180,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileGuestTitle => 'Sign in to set up your profile';
 
   @override
-  String get profileGuestBody =>
-      'Guests can browse and keep history for this session, but a profile needs an account.';
+  String get profileGuestBody => 'Guests can browse and keep history for this session, but a profile needs an account.';
 
   @override
   String get profileSignIn => 'Sign In';
@@ -241,8 +232,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scannerPermissionTitle => 'Camera access needed';
 
   @override
-  String get scannerPermissionBody =>
-      'Enable camera access in Settings to scan a QR code.';
+  String get scannerPermissionBody => 'Enable camera access in Settings to scan a QR code.';
 
   @override
   String get scannerOpenSettings => 'Open Settings';
@@ -299,8 +289,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productCo2Total => 'Total (indicative)';
 
   @override
-  String get productCo2TotalNote =>
-      'Process (kg) + material PCF (kg CO2e/kg) — a simplified estimate, not a unit-normalized LCA figure.';
+  String get productCo2TotalNote => 'Process (kg) + material PCF (kg CO2e/kg) — a simplified estimate, not a unit-normalized LCA figure.';
 
   @override
   String get productEnvironmentalImpact => 'Environmental Impact';
@@ -321,8 +310,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productEcoFriendly => 'Eco-friendly: High recycled content';
 
   @override
-  String get productConsiderRecycled =>
-      'Consider using more recycled materials';
+  String get productConsiderRecycled => 'Consider using more recycled materials';
 
   @override
   String get productTechnicalDetails => 'Technical Details';

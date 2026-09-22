@@ -9,7 +9,10 @@ class BasyxConfig {
   static const bool useMockData = false;
 
   /// Only matters when useMockData is false.
-  static const String baseUrl = 'http://10.75.50.133:3300';
+  ///
+  /// Port 3300 on this host serves the BaSyx web UI (HTML), not the REST
+  /// API — the actual AAS Environment REST API lives on 8082.
+  static const String baseUrl = 'http://10.75.50.133:8082';
 
   /// How long we trust a cached package before re-downloading it, even if
   /// the shell list looks the same. Just so a stale copy doesn't stick
