@@ -7,19 +7,21 @@ import 'package:dpp/app/data_model/api/generic_submodel.dart';
 
 class ProductService {
   static late final List<AasResponse>? responses;
-  static late final Map<String, dynamic> manifestMap;
   static late final List<Product> products;
   static late final Map<String, Product> productMap;
 
   static Future<void> init() async {
     List<AasResponse> tempResponses = [];
-    final String manifestContent = await rootBundle.loadString(
-      'AssetManifest.json',
+    // AssetManifest.json is no longer bundled by Flutter (superseded by the
+    // binary AssetManifest.bin) — use the AssetManifest API instead of
+    // loading/parsing the old JSON file directly.
+    final AssetManifest manifest = await AssetManifest.loadFromAssetBundle(
+      rootBundle,
     );
-    manifestMap = json.decode(manifestContent) as Map<String, dynamic>;
 
     final jsonPaths =
-        manifestMap.keys
+        manifest
+            .listAssets()
             .where(
               (String key) =>
                   key.startsWith('assets/data/') && key.endsWith('.json'),
