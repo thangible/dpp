@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dpp/config/theme/app_colors_extension.dart';
-import 'package:dpp/app/data_model/test/product.dart';
+import 'package:dpp/app/data_model/product/product.dart';
 import 'package:dpp/app/data_model/material/material.dart' as model;
 import 'package:dpp/app/modules/footprint/views/material/material_detail.dart';
 import 'package:dpp/l10n/generated/app_localizations.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dpp/app/data_model/test/product.dart';
+import 'package:dpp/app/data_model/product/product.dart';
 import 'package:dpp/l10n/generated/app_localizations.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_ratings.dart';
 import 'section_card.dart';

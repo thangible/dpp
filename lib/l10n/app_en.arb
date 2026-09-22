@@ -8,6 +8,8 @@
   "tabHistory": "History",
   "tabProfile": "Profile",
   "tabMore": "More",
+  "basyxStatusOnline": "Connected to server",
+  "basyxStatusOffline": "Not connected to server — showing offline data",
 
   "drawerHelp": "Help",
   "drawerFeedback": "FeedBack",

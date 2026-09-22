@@ -1,0 +1,494 @@
+<title>Module Map</title>
+<style>
+  :root {
+    --bg: #f4f6f7;
+    --surface: #ffffff;
+    --surface-2: #eaeff1;
+    --ink: #10212b;
+    --ink-muted: #52697399;
+    --ink-muted-solid: #52697a;
+    --line: #10212b26;
+    --line-strong: #10212b4d;
+    --accent: #0c7489;
+    --accent-ink: #ffffff;
+    --accent-soft: #0c748914;
+    --accent-soft-line: #0c748955;
+    --warn: #b8582a;
+    --warn-soft: #b8582a14;
+    --warn-soft-line: #b8582a66;
+    --mono-tint: #10212b0d;
+
+    --font-display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+    --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d161c;
+      --surface: #131f27;
+      --surface-2: #1a2933;
+      --ink: #e7eef2;
+      --ink-muted: #a9bcc6b3;
+      --ink-muted-solid: #a9bcc6;
+      --line: #e7eef224;
+      --line-strong: #e7eef24d;
+      --accent: #4fb8c9;
+      --accent-ink: #06171c;
+      --accent-soft: #4fb8c91f;
+      --accent-soft-line: #4fb8c966;
+      --warn: #e29457;
+      --warn-soft: #e294571f;
+      --warn-soft-line: #e2945766;
+      --mono-tint: #e7eef213;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d161c;
+    --surface: #131f27;
+    --surface-2: #1a2933;
+    --ink: #e7eef2;
+    --ink-muted: #a9bcc6b3;
+    --ink-muted-solid: #a9bcc6;
+    --line: #e7eef224;
+    --line-strong: #e7eef24d;
+    --accent: #4fb8c9;
+    --accent-ink: #06171c;
+    --accent-soft: #4fb8c91f;
+    --accent-soft-line: #4fb8c966;
+    --warn: #e29457;
+    --warn-soft: #e294571f;
+    --warn-soft-line: #e2945766;
+    --mono-tint: #e7eef213;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  ::selection { background: var(--accent-soft-line); }
+
+  .sheet {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 24px 80px;
+  }
+
+  /* ---- Title block (blueprint corner stamp) ---- */
+  .titleblock {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: end;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    padding: 20px 22px;
+    background: var(--surface);
+  }
+  .titleblock h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 4.4vw, 40px);
+    letter-spacing: 0.01em;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .titleblock p {
+    margin: 0;
+    color: var(--ink-muted-solid);
+    max-width: 62ch;
+  }
+  .stamp {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-muted-solid);
+    line-height: 1.7;
+    white-space: nowrap;
+  }
+  .stamp .k { opacity: 0.7; margin-right: 0.6em; }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.01em;
+    margin: 48px 0 4px;
+  }
+  .section-note {
+    margin: 0 0 20px;
+    color: var(--ink-muted-solid);
+    max-width: 72ch;
+    font-size: 14.5px;
+  }
+
+  /* ---- Diagram figure ---- */
+  figure.diagram {
+    margin: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      var(--surface);
+    background-size: 28px 28px, 28px 28px, auto;
+    padding: 6px;
+    overflow-x: auto;
+  }
+  figure.diagram svg { display: block; width: 100%; height: auto; min-width: 760px; }
+  figcaption {
+    padding: 12px 6px 2px;
+    font-size: 13.5px;
+    color: var(--ink-muted-solid);
+  }
+
+  .node-label { font-family: var(--font-mono); font-size: 12.5px; fill: currentColor; }
+  .node-label.small { font-size: 11px; }
+  .band-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    fill: var(--ink-muted-solid);
+  }
+  .edge-label {
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    fill: var(--ink-muted-solid);
+  }
+  .callout-text {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    fill: var(--ink-muted-solid);
+  }
+
+  /* ---- Legend ---- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 14px 2px 0;
+    font-size: 13px;
+    color: var(--ink-muted-solid);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .swatch { width: 13px; height: 13px; border-radius: 3px; flex: none; }
+
+  /* ---- Reference table ---- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; min-width: 640px; }
+  caption { caption-side: top; text-align: left; padding: 14px 18px 0; font-size: 13px; color: var(--ink-muted-solid); }
+  thead th {
+    text-align: left;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted-solid);
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  tbody td {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .src {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+  .src .path { color: var(--ink); }
+  .src .role { display: block; font-family: var(--font-body); color: var(--ink-muted-solid); font-size: 12px; margin-top: 3px; font-weight: 400; }
+  .targets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    white-space: nowrap;
+  }
+  .chip.warn { background: var(--warn-soft); border-color: var(--warn-soft-line); color: var(--warn); }
+
+  footer.page {
+    margin-top: 44px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink-muted-solid);
+  }
+  footer.page code { font-family: var(--font-mono); background: var(--mono-tint); padding: 0.1em 0.4em; border-radius: 3px; }
+
+  @media (max-width: 640px) {
+    .titleblock { grid-template-columns: 1fr; }
+    .stamp { text-align: left; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div>
+      <h1>Module map</h1>
+      <p>What imports what inside <code style="font-family:var(--font-mono)">dpp/lib/</code> — drawn directly from the source, not from memory. Every arrow and table row below comes from scanning each file's own <code style="font-family:var(--font-mono)">import</code> statements.</p>
+    </div>
+    <div class="stamp">
+      <div><span class="k">project</span>dpp (Digital Product Passport)</div>
+      <div><span class="k">scope</span>lib/ import graph</div>
+      <div><span class="k">companion</span>ARCHITECTURE.md</div>
+    </div>
+  </div>
+
+  <h2>The shape of it</h2>
+  <p class="section-note">Five layers, top to bottom: the app boots, GetX decides which of 3 top-level screens to show, that screen is one of 8 feature modules, modules read from 3 services, services are built from 4 plain data models. The one thing this shape doesn't tell you on its own — flagged directly on the diagram — is that <strong>footprint</strong> isn't purely "above" home and scanner: it depends on both of them right back.</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 1280 900" role="img" aria-label="Layered diagram: main.dart calls routes, which shows one of three top-level screens (onboarding, auth, or the footprint home shell). The footprint shell hosts eight modules including itself; footprint and home import each other, and footprint and scanner import each other, both flagged as circular. All modules read from three services (catalog, basyx, hive), which are built from four data models (product, material, history, api). config and l10n are imported by nearly every module directly.">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+        </marker>
+        <marker id="arrowWarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--warn)"></path>
+        </marker>
+      </defs>
+
+      <g style="color: var(--ink-muted-solid)">
+        <!-- main -->
+        <rect x="540" y="24" width="200" height="56" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+        <text x="640" y="47" text-anchor="middle" class="node-label" style="fill:var(--ink); font-weight:600">main.dart</text>
+        <text x="640" y="64" text-anchor="middle" class="node-label small">app entry point</text>
+
+        <!-- main -> routes -->
+        <line x1="640" y1="80" x2="640" y2="126" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
+        <text x="656" y="106" class="edge-label">GetMaterialApp</text>
+
+        <!-- routes -->
+        <rect x="500" y="128" width="280" height="56" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+        <text x="640" y="151" text-anchor="middle" class="node-label" style="fill:var(--ink); font-weight:600">routes/</text>
+        <text x="640" y="168" text-anchor="middle" class="node-label small">onboarding · sign-in · home shell</text>
+
+        <!-- routes -> modules band -->
+        <line x1="640" y1="184" x2="640" y2="230" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
+        <text x="656" y="210" class="edge-label">3 top-level destinations</text>
+
+        <!-- modules band -->
+        <rect x="40" y="232" width="1200" height="172" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
+        <text x="56" y="252" class="band-label">MODULES/</text>
+
+        <!-- module chips -->
+        <g>
+          <rect x="64" y="268" width="112" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="120" y="298" text-anchor="middle" class="node-label" style="fill:var(--ink)">onboarding</text>
+          <text x="120" y="316" text-anchor="middle" class="node-label small">first-run carousel</text>
+        </g>
+        <g>
+          <rect x="190" y="268" width="112" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="246" y="298" text-anchor="middle" class="node-label" style="fill:var(--ink)">auth</text>
+          <text x="246" y="316" text-anchor="middle" class="node-label small">sign-in / session</text>
+        </g>
+        <g>
+          <rect x="316" y="268" width="122" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="377" y="298" text-anchor="middle" class="node-label" style="fill:var(--ink)">home</text>
+          <text x="377" y="316" text-anchor="middle" class="node-label small">Home-tab content</text>
+        </g>
+
+        <!-- footprint hub -->
+        <rect x="452" y="260" width="234" height="106" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"></rect>
+        <text x="569" y="290" text-anchor="middle" class="node-label" style="fill:var(--ink); font-weight:600">footprint</text>
+        <text x="569" y="308" text-anchor="middle" class="node-label small">home shell + most detail screens</text>
+        <text x="569" y="324" text-anchor="middle" class="node-label small" style="fill:var(--ink-muted-solid)">(product · material · history ·</text>
+        <text x="569" y="339" text-anchor="middle" class="node-label small" style="fill:var(--ink-muted-solid)">profile · more views)</text>
+
+        <g>
+          <rect x="700" y="268" width="112" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="756" y="298" text-anchor="middle" class="node-label" style="fill:var(--ink)">scanner</text>
+          <text x="756" y="316" text-anchor="middle" class="node-label small">QR scan screen</text>
+        </g>
+        <g>
+          <rect x="826" y="268" width="112" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="882" y="298" text-anchor="middle" class="node-label" style="fill:var(--ink)">history</text>
+          <text x="882" y="316" text-anchor="middle" class="node-label small">favorites controller</text>
+        </g>
+        <g>
+          <rect x="952" y="268" width="112" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="1008" y="298" text-anchor="middle" class="node-label" style="fill:var(--ink)">settings</text>
+          <text x="1008" y="316" text-anchor="middle" class="node-label small">theme / locale</text>
+        </g>
+        <g>
+          <rect x="1078" y="268" width="140" height="90" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="1148" y="298" text-anchor="middle" class="node-label" style="fill:var(--ink)">navigation</text>
+          <text x="1148" y="316" text-anchor="middle" class="node-label small">help / feedback / invite</text>
+        </g>
+
+        <!-- circular: home <-> footprint -->
+        <line x1="440" y1="313" x2="450" y2="313" stroke="var(--warn)" stroke-width="1.75" marker-start="url(#arrowWarn)" marker-end="url(#arrowWarn)"></line>
+        <text x="445" y="300" text-anchor="middle" class="edge-label" style="fill:var(--warn)">circular</text>
+
+        <!-- circular: footprint <-> scanner -->
+        <line x1="688" y1="313" x2="698" y2="313" stroke="var(--warn)" stroke-width="1.75" marker-start="url(#arrowWarn)" marker-end="url(#arrowWarn)"></line>
+        <text x="693" y="300" text-anchor="middle" class="edge-label" style="fill:var(--warn)">circular</text>
+
+        <!-- note under band -->
+        <text x="56" y="390" class="callout-text">footprint/ also imports auth, history, settings and navigation directly (tab content + the More screen's links) — full list in the table below.</text>
+
+        <!-- modules -> services -->
+        <line x1="640" y1="404" x2="640" y2="450" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
+        <text x="656" y="430" class="edge-label">screens read the catalog, trigger sync</text>
+
+        <!-- services band -->
+        <rect x="340" y="452" width="600" height="128" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
+        <text x="356" y="472" class="band-label">SERVICES/</text>
+
+        <g>
+          <rect x="380" y="488" width="160" height="66" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="460" y="514" text-anchor="middle" class="node-label" style="fill:var(--ink)">catalog</text>
+          <text x="460" y="530" text-anchor="middle" class="node-label small">Product + Material store</text>
+        </g>
+        <g>
+          <rect x="560" y="488" width="160" height="66" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="640" y="514" text-anchor="middle" class="node-label" style="fill:var(--ink)">basyx</text>
+          <text x="640" y="530" text-anchor="middle" class="node-label small">server sync, online/offline</text>
+        </g>
+        <g>
+          <rect x="740" y="488" width="160" height="66" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="820" y="514" text-anchor="middle" class="node-label" style="fill:var(--ink)">hive</text>
+          <text x="820" y="530" text-anchor="middle" class="node-label small">local database</text>
+        </g>
+
+        <!-- services -> data_model -->
+        <line x1="640" y1="580" x2="640" y2="634" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
+        <text x="656" y="612" class="edge-label">parsed into / built from</text>
+
+        <!-- data_model band -->
+        <rect x="300" y="636" width="680" height="128" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
+        <text x="316" y="656" class="band-label">DATA_MODEL/</text>
+
+        <g>
+          <rect x="340" y="672" width="150" height="66" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="415" y="698" text-anchor="middle" class="node-label" style="fill:var(--ink)">product</text>
+          <text x="415" y="714" text-anchor="middle" class="node-label small">a manufactured part</text>
+        </g>
+        <g>
+          <rect x="500" y="672" width="150" height="66" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="575" y="698" text-anchor="middle" class="node-label" style="fill:var(--ink)">material</text>
+          <text x="575" y="714" text-anchor="middle" class="node-label small">what it's made from</text>
+        </g>
+        <g>
+          <rect x="660" y="672" width="150" height="66" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="735" y="698" text-anchor="middle" class="node-label" style="fill:var(--ink)">history</text>
+          <text x="735" y="714" text-anchor="middle" class="node-label small">one scan/view record</text>
+        </g>
+        <g>
+          <rect x="820" y="672" width="140" height="66" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="890" y="698" text-anchor="middle" class="node-label" style="fill:var(--ink)">api</text>
+          <text x="890" y="714" text-anchor="middle" class="node-label small">generic AAS/submodel JSON</text>
+        </g>
+
+        <!-- config/l10n satellite -->
+        <rect x="980" y="452" width="200" height="92" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
+        <text x="996" y="472" class="node-label small" style="fill:var(--ink)">config/ &amp; l10n/</text>
+        <text x="996" y="490" class="callout-text">theme, breakpoints,</text>
+        <text x="996" y="504" class="callout-text">animation curves,</text>
+        <text x="996" y="518" class="callout-text">EN/DE translations —</text>
+        <text x="996" y="532" class="callout-text">imported by nearly</text>
+        <text x="996" y="546" class="callout-text">every module directly</text>
+        <path d="M980,470 C 900,470 900,404 856,404" fill="none" stroke="var(--line-strong)" stroke-width="1.25" stroke-dasharray="2 4" marker-end="url(#arrow)"></path>
+      </g>
+    </svg>
+    <figcaption>Layered view of <code style="font-family:var(--font-mono)">lib/</code>: entry point → routing → modules → services → data models. <span style="color:var(--warn)">footprint</span> is the hub of the modules layer and is the only pair of folders that import each other in both directions (with <strong>home</strong> and with <strong>scanner</strong>) — everything else in this diagram only points downward.</figcaption>
+  </figure>
+
+  <div class="legend">
+    <span><span class="swatch" style="background:var(--accent-soft); border:1.5px solid var(--accent)"></span>hub module (footprint)</span>
+    <span><span class="swatch" style="background:var(--surface-2); border:1px solid var(--line-strong)"></span>module / service / model</span>
+    <span><span class="swatch" style="background:transparent; border:1.5px dashed var(--line-strong)"></span>layer boundary</span>
+    <span style="color:var(--warn)"><span class="swatch" style="background:var(--warn-soft); border:1.5px solid var(--warn)"></span>circular import (both directions)</span>
+  </div>
+
+  <h2>Every import, precisely</h2>
+  <p class="section-note">The diagram groups things for readability; this table is the unabridged version — one row per <code style="font-family:var(--font-mono)">lib/</code> folder, listing every other folder it imports from. Extracted by scanning each file's <code style="font-family:var(--font-mono)">import 'package:dpp/…'</code> statements, not written by hand.</p>
+
+  <div class="table-wrap">
+    <table>
+      <caption>36 folder-to-folder import edges across 19 folders</caption>
+      <thead>
+        <tr><th style="width:26%">This folder…</th><th>…imports from</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="src"><span class="path">main.dart</span><span class="role">app entry point</span></td>
+          <td class="targets"><span class="chip">config</span><span class="chip">l10n</span><span class="chip">routes</span><span class="chip">modules/auth</span><span class="chip">modules/history</span><span class="chip">modules/settings</span><span class="chip">services/catalog</span><span class="chip">services/basyx</span><span class="chip">services/hive</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">routes</span><span class="role">the 3 GetX destinations</span></td>
+          <td class="targets"><span class="chip">modules/onboarding</span><span class="chip">modules/auth</span><span class="chip">modules/footprint</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/onboarding</span></td>
+          <td class="targets"><span class="chip">l10n</span><span class="chip">routes</span><span class="chip">modules/auth</span><span class="chip">services/hive</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/auth</span></td>
+          <td class="targets"><span class="chip">l10n</span><span class="chip">routes</span><span class="chip">services/hive</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/footprint</span><span class="role">home shell + most detail screens</span></td>
+          <td class="targets"><span class="chip">config</span><span class="chip">l10n</span><span class="chip">routes</span><span class="chip">data_model/product</span><span class="chip">data_model/material</span><span class="chip">data_model/history</span><span class="chip">services/catalog</span><span class="chip">services/basyx</span><span class="chip">modules/auth</span><span class="chip">modules/history</span><span class="chip">modules/settings</span><span class="chip">modules/navigation</span><span class="chip warn">modules/home ↔</span><span class="chip warn">modules/scanner ↔</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/home</span><span class="role">Home-tab content</span></td>
+          <td class="targets"><span class="chip">l10n</span><span class="chip">routes</span><span class="chip">data_model/history</span><span class="chip">services/catalog</span><span class="chip">modules/auth</span><span class="chip">modules/history</span><span class="chip">modules/scanner</span><span class="chip warn">modules/footprint ↔</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/scanner</span></td>
+          <td class="targets"><span class="chip">l10n</span><span class="chip">services/catalog</span><span class="chip warn">modules/footprint ↔</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/history</span><span class="role">controller only — view lives under footprint/</span></td>
+          <td class="targets"><span class="chip">data_model/history</span><span class="chip">services/hive</span><span class="chip">modules/auth</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/settings</span></td>
+          <td class="targets"><span class="chip">services/hive</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">modules/navigation</span><span class="role">help / feedback / invite screens</span></td>
+          <td class="targets"><span class="chip">l10n</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">services/catalog</span><span class="role">Product + Material in-memory store</span></td>
+          <td class="targets"><span class="chip">data_model/api</span><span class="chip">data_model/product</span><span class="chip">data_model/material</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">services/basyx</span><span class="role">server sync, online/offline fallback</span></td>
+          <td class="targets"><span class="chip">data_model/api</span><span class="chip">data_model/product</span><span class="chip">data_model/material</span><span class="chip">services/catalog</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">services/hive</span><span class="role">local database</span></td>
+          <td class="targets"><span class="chip">data_model/api</span></td>
+        </tr>
+        <tr>
+          <td class="src"><span class="path">data_model/product</span></td>
+          <td class="targets"><span class="chip">data_model/api</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="page">
+    Regenerate this table any time with a one-off script that scans <code>lib/**/*.dart</code> for <code>import 'package:dpp/…'</code> lines and groups the targets by source folder — that's exactly how this page's data was produced. See <code>ARCHITECTURE.md</code> for the prose walkthrough of what each folder is for and how the app starts up.
+  </footer>
+
+</div>

@@ -6,6 +6,7 @@ import 'package:dpp/app/modules/navigation/drawer_links/help/help_screen.dart';
 import 'package:dpp/app/modules/navigation/drawer_links/feedback/feedback_screen.dart';
 import 'package:dpp/app/modules/navigation/drawer_links/invite_friend/invite_friend_screen.dart';
 import 'package:dpp/app/routes/app_pages.dart';
+import 'package:dpp/app/services/basyx/basyx_sync_service.dart';
 import 'package:dpp/l10n/generated/app_localizations.dart';
 import 'package:dpp/config/utils/motion.dart';
 
@@ -46,7 +47,16 @@ class MoreScreen extends StatelessWidget {
                       subtitle: l10n.appSubtitle,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
+                  Obx(
+                    () => _ConnectionStatusBadge(
+                      colors: colors,
+                      theme: theme,
+                      isOnline: BasyxSyncService.isOnline.value,
+                      l10n: l10n,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   _MoreTile(
                     icon: Icons.help_outline,
                     label: l10n.drawerHelp,
@@ -194,6 +204,53 @@ class _UserCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// "Connected to server" / "offline, showing bundled data" — reflects
+/// [BasyxSyncService.isOnline], set by the most recent sync attempt.
+/// Renders nothing while that's still null (no sync has completed yet,
+/// essentially never visible in practice since sync runs before the first
+/// frame), so there's no flash of a wrong status on screen.
+class _ConnectionStatusBadge extends StatelessWidget {
+  const _ConnectionStatusBadge({
+    required this.colors,
+    required this.theme,
+    required this.isOnline,
+    required this.l10n,
+  });
+
+  final ColorScheme colors;
+  final ThemeData theme;
+  final bool? isOnline;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isOnline == null) return const SizedBox.shrink();
+
+    final dotColor = isOnline! ? Colors.green : colors.onSurfaceVariant;
+    final label = isOnline! ? l10n.basyxStatusOnline : l10n.basyxStatusOffline;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

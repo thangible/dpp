@@ -1,11 +1,12 @@
 import 'dart:typed_data';
 
+import 'package:get/get.dart';
 import 'package:dpp/app/data_model/api/base_aas_model.dart';
 import 'package:dpp/app/data_model/api/generic_submodel.dart';
 import 'package:dpp/app/data_model/material/material.dart' as model;
-import 'package:dpp/app/data_model/test/product.dart';
-import 'package:dpp/app/services/test/material_service.dart';
-import 'package:dpp/app/services/test/product_service.dart';
+import 'package:dpp/app/data_model/product/product.dart';
+import 'package:dpp/app/services/catalog/material_service.dart';
+import 'package:dpp/app/services/catalog/product_service.dart';
 import 'basyx_config.dart';
 import 'basyx_local_cache.dart';
 import 'basyx_log.dart';
@@ -25,32 +26,33 @@ import 'basyx_repository.dart';
 /// last time (see [BasyxLocalCache]) instead of showing nothing.
 class BasyxSyncService {
   BasyxSyncService({BasyxRepository? repository, BasyxLocalCache? cache})
-    : _repository = repository ?? _defaultRepository(),
+    : _repository = repository,
       _cache = cache ?? BasyxLocalCache();
 
-  static BasyxRepository _defaultRepository() =>
-      BasyxConfig.useMockData ? BasyxMockRepository() : BasyxRemoteRepository();
-
-  final BasyxRepository _repository;
+  /// Only set in tests, to pin a specific repository. Normal use leaves
+  /// this null so [syncOnAppStart] auto-detects instead of trusting a
+  /// hardcoded on/off switch.
+  final BasyxRepository? _repository;
   final BasyxLocalCache _cache;
+
+  /// Whether the last sync actually reached the real BaSyx server: null
+  /// before the first sync completes, then true (server) or false (server
+  /// unreachable, fell back to the bundled mock data). The More screen
+  /// watches this to show a "connected" / "offline" status.
+  static final Rx<bool?> isOnline = Rx<bool?>(null);
 
   /// Runs at startup so it can't throw — worst case we just don't get
   /// anything new this launch, same as before this whole thing existed.
   Future<void> syncOnAppStart() async {
-    basyxLog(
-      BasyxConfig.useMockData
-          ? 'starting sync (mock mode)'
-          : 'starting sync (real server: ${BasyxConfig.baseUrl})',
-    );
     try {
-      final shells = await _repository.fetchShellList();
+      final (repository, shells) = await _connect();
       await _cache.saveShellList(shells);
       var okCount = 0;
       for (final shell in shells) {
         // One bad shell (bad data, a request that fails partway through)
         // shouldn't take the rest of the batch down with it.
         try {
-          await _syncShell(shell);
+          await _syncShell(shell, repository);
           okCount++;
         } catch (e) {
           basyxLog('FAILED to sync shell ${shell.idShort}: $e');
@@ -70,7 +72,32 @@ class BasyxSyncService {
     }
   }
 
-  Future<void> _syncShell(ShellDescriptor shell) async {
+  /// Picks a repository and fetches its shell list in one step. A
+  /// repository injected via the constructor (tests) is used as-is;
+  /// otherwise this tries the real server first and only falls back to the
+  /// bundled mock data if it's not reachable, updating [isOnline] either
+  /// way so the More screen reflects what actually happened.
+  Future<(BasyxRepository, List<ShellDescriptor>)> _connect() async {
+    final injected = _repository;
+    if (injected != null) {
+      return (injected, await injected.fetchShellList());
+    }
+
+    final remote = BasyxRemoteRepository();
+    try {
+      basyxLog('checking server: ${BasyxConfig.baseUrl}');
+      final shells = await remote.fetchShellList();
+      isOnline.value = true;
+      return (remote, shells);
+    } catch (e) {
+      basyxLog('server not reachable ($e), using offline mock data instead');
+      isOnline.value = false;
+      final mock = BasyxMockRepository();
+      return (mock, await mock.fetchShellList());
+    }
+  }
+
+  Future<void> _syncShell(ShellDescriptor shell, BasyxRepository repository) async {
     final downloadedAt = await _cache.packageDownloadedAt(shell.id);
     final isFresh =
         downloadedAt != null &&
@@ -85,11 +112,11 @@ class BasyxSyncService {
       packageJson = (await _cache.loadPackage(shell.id))!;
     } else {
       basyxLog('${shell.idShort}: downloading fresh copy');
-      final package = await _repository.fetchShellPackage(shell);
+      final package = await repository.fetchShellPackage(shell);
       packageJson = package.toJson();
       await _cache.savePackage(shell.id, packageJson);
 
-      final thumbnailBytes = await _repository.fetchThumbnail(shell);
+      final thumbnailBytes = await repository.fetchThumbnail(shell);
       if (thumbnailBytes != null) {
         imagePath = await _cache.saveThumbnail(shell.id, thumbnailBytes);
         // No filesystem to save to (Flutter Web) — saveThumbnail comes back

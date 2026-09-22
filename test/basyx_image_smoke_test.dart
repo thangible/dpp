@@ -11,7 +11,7 @@ import 'package:dpp/app/data_model/api/generic_submodel.dart';
 import 'package:dpp/app/services/basyx/basyx_models.dart';
 import 'package:dpp/app/services/basyx/basyx_repository.dart';
 import 'package:dpp/app/services/basyx/basyx_sync_service.dart';
-import 'package:dpp/app/services/test/product_service.dart';
+import 'package:dpp/app/services/catalog/product_service.dart';
 
 class _FakeRepository implements BasyxRepository {
   final Uint8List thumbnail = Uint8List.fromList(List.filled(16, 7));
@@ -39,7 +39,6 @@ void main() {
 
   test('synced product keeps thumbnail bytes when there is no filesystem cache', () async {
     ProductService.responses = [];
-    ProductService.manifestMap = {};
     ProductService.products = [];
     ProductService.productMap = {};
 

@@ -27,6 +27,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tabMore => 'Mehr';
 
   @override
+  String get basyxStatusOnline => 'Mit Server verbunden';
+
+  @override
+  String get basyxStatusOffline =>
+      'Nicht mit Server verbunden — Offline-Daten werden angezeigt';
+
+  @override
   String get drawerHelp => 'Hilfe';
 
   @override
@@ -81,25 +88,29 @@ class AppLocalizationsDe extends AppLocalizations {
   String get onboardingSlide1Title => 'Jeden Code scannen';
 
   @override
-  String get onboardingSlide1Body => 'Richten Sie Ihre Kamera auf ein Produkt- oder Materialetikett, um sofort den digitalen Pass aufzurufen.';
+  String get onboardingSlide1Body =>
+      'Richten Sie Ihre Kamera auf ein Produkt- oder Materialetikett, um sofort den digitalen Pass aufzurufen.';
 
   @override
   String get onboardingSlide2Title => 'Den Fußabdruck sehen';
 
   @override
-  String get onboardingSlide2Body => 'Energieverbrauch, CO2-Emissionen und Rezyklatanteil auf einen Blick, genau dort, wo Sie sie brauchen.';
+  String get onboardingSlide2Body =>
+      'Energieverbrauch, CO2-Emissionen und Rezyklatanteil auf einen Blick, genau dort, wo Sie sie brauchen.';
 
   @override
   String get onboardingSlide3Title => 'Das Material verfolgen';
 
   @override
-  String get onboardingSlide3Body => 'Jedes Produkt verweist auf sein Material — vollständige Zusammensetzung, Herkunft und Nachhaltigkeitsdaten.';
+  String get onboardingSlide3Body =>
+      'Jedes Produkt verweist auf sein Material — vollständige Zusammensetzung, Herkunft und Nachhaltigkeitsdaten.';
 
   @override
   String get onboardingSlide4Title => 'Anmelden oder einfach stöbern';
 
   @override
-  String get onboardingSlide4Body => 'Erstellen Sie ein Konto, um Ihren Verlauf zu speichern, oder steigen Sie direkt als Gast ein.';
+  String get onboardingSlide4Body =>
+      'Erstellen Sie ein Konto, um Ihren Verlauf zu speichern, oder steigen Sie direkt als Gast ein.';
 
   @override
   String get homeModeProduct => 'Produkt';
@@ -133,7 +144,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get homeEmptyMaterialsTitle => 'Noch keine Materialien gesucht';
 
   @override
-  String get homeEmptyHint => 'Geben Sie oben eine ID ein oder nutzen Sie den Scanner, um einen Eintrag hinzuzufügen.';
+  String get homeEmptyHint =>
+      'Geben Sie oben eine ID ein oder nutzen Sie den Scanner, um einen Eintrag hinzuzufügen.';
 
   @override
   String get homeScanButton => 'Code scannen';
@@ -142,7 +154,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get homeGuestCardTitle => 'Für mehr Funktionen anmelden';
 
   @override
-  String get homeGuestCardBody => 'Bewahren Sie Ihren Verlauf sitzungsübergreifend auf und richten Sie ein Profil ein.';
+  String get homeGuestCardBody =>
+      'Bewahren Sie Ihren Verlauf sitzungsübergreifend auf und richten Sie ein Profil ein.';
 
   @override
   String get historyTitle => 'Verlauf & Favoriten';
@@ -154,10 +167,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get historyRecentSection => 'Zuletzt angesehen';
 
   @override
-  String get historyFavoritesEmpty => 'Noch nichts favorisiert. Tippen Sie auf den Stern eines Eintrags, um ihn hier zu speichern.';
+  String get historyFavoritesEmpty =>
+      'Noch nichts favorisiert. Tippen Sie auf den Stern eines Eintrags, um ihn hier zu speichern.';
 
   @override
-  String get historyRecentEmpty => 'Noch kein Verlauf. Suchen oder scannen Sie ein Produkt/Material, um es hier zu sehen.';
+  String get historyRecentEmpty =>
+      'Noch kein Verlauf. Suchen oder scannen Sie ein Produkt/Material, um es hier zu sehen.';
 
   @override
   String historySeeAll(Object count) {
@@ -180,7 +195,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get profileGuestTitle => 'Zum Einrichten eines Profils anmelden';
 
   @override
-  String get profileGuestBody => 'Gäste können stöbern und den Verlauf für diese Sitzung behalten, aber ein Profil erfordert ein Konto.';
+  String get profileGuestBody =>
+      'Gäste können stöbern und den Verlauf für diese Sitzung behalten, aber ein Profil erfordert ein Konto.';
 
   @override
   String get profileSignIn => 'Anmelden';
@@ -232,7 +248,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get scannerPermissionTitle => 'Kamerazugriff erforderlich';
 
   @override
-  String get scannerPermissionBody => 'Aktivieren Sie den Kamerazugriff in den Einstellungen, um einen QR-Code zu scannen.';
+  String get scannerPermissionBody =>
+      'Aktivieren Sie den Kamerazugriff in den Einstellungen, um einen QR-Code zu scannen.';
 
   @override
   String get scannerOpenSettings => 'Einstellungen öffnen';
@@ -289,7 +306,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get productCo2Total => 'Gesamt (indikativ)';
 
   @override
-  String get productCo2TotalNote => 'Prozess (kg) + Material-PCF (kg CO2e/kg) — eine vereinfachte Schätzung, keine einheitennormierte Ökobilanz.';
+  String get productCo2TotalNote =>
+      'Prozess (kg) + Material-PCF (kg CO2e/kg) — eine vereinfachte Schätzung, keine einheitennormierte Ökobilanz.';
 
   @override
   String get productEnvironmentalImpact => 'Umweltauswirkungen';
@@ -310,7 +328,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get productEcoFriendly => 'Umweltfreundlich: hoher Rezyklatanteil';
 
   @override
-  String get productConsiderRecycled => 'Erwägen Sie einen höheren Rezyklatanteil';
+  String get productConsiderRecycled =>
+      'Erwägen Sie einen höheren Rezyklatanteil';
 
   @override
   String get productTechnicalDetails => 'Technische Details';

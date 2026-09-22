@@ -10,8 +10,8 @@ import 'basyx_models.dart';
 import 'basyx_repository.dart';
 
 /// Real HTTP calls to a BaSyx server, following the standard IDTA REST API.
-/// Haven't been able to test this against an actual live server yet
-/// (useMockData is still true) — the endpoints below are the spec-standard
+/// [BasyxSyncService] tries this first on every sync and only falls back to
+/// mock data if it's unreachable — the endpoints below are the spec-standard
 /// ones, so if the real deployment does something slightly different, this
 /// is the one file that needs fixing.
 class BasyxRemoteRepository implements BasyxRepository {

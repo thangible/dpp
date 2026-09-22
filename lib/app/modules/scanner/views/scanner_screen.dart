@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:dpp/app/services/test/product_service.dart';
-import 'package:dpp/app/services/test/material_service.dart';
+import 'package:dpp/app/services/catalog/product_service.dart';
+import 'package:dpp/app/services/catalog/material_service.dart';
 import 'package:dpp/app/modules/footprint/views/product/product_detail.dart';
 import 'package:dpp/app/modules/footprint/views/material/material_detail.dart';
 import 'package:dpp/l10n/generated/app_localizations.dart';

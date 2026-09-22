@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:dpp/app/data_model/test/product.dart';
+import 'package:dpp/app/data_model/product/product.dart';
 import 'package:dpp/app/data_model/api/generic_submodel.dart';
-
-// import 'package:dpp/app/data_model/test/machine.dart';
 
 class ProductService {
   static late final List<AasResponse>? responses;

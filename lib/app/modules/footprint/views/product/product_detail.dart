@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dpp/app/data_model/test/product.dart';
+import 'package:dpp/app/data_model/product/product.dart';
 import 'package:dpp/app/data_model/material/material.dart' as model;
 import 'package:dpp/app/data_model/history/history_entry.dart';
 import 'package:dpp/app/modules/history/controllers/history_controller.dart';
-import 'package:dpp/app/services/test/product_service.dart';
-import 'package:dpp/app/services/test/material_service.dart';
+import 'package:dpp/app/services/catalog/product_service.dart';
+import 'package:dpp/app/services/catalog/material_service.dart';
 import 'package:dpp/l10n/generated/app_localizations.dart';
 import 'package:dpp/config/utils/motion.dart';
 import 'widgets/product_overview_card.dart';

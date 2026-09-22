@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:dpp/app/data_model/material/material.dart' as model;
 import 'package:dpp/app/data_model/history/history_entry.dart';
 import 'package:dpp/app/modules/history/controllers/history_controller.dart';
-import 'package:dpp/app/services/test/material_service.dart';
+import 'package:dpp/app/services/catalog/material_service.dart';
 import 'package:dpp/l10n/generated/app_localizations.dart';
 import 'widgets/material_overview_card.dart';
 import 'widgets/material_highlights.dart';

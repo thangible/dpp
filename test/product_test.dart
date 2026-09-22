@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dpp/app/data_model/test/product.dart';
-import 'package:dpp/app/services/test/product_service.dart';
+import 'package:dpp/app/data_model/product/product.dart';
+import 'package:dpp/app/services/catalog/product_service.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
