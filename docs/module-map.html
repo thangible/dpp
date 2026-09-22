@@ -241,7 +241,7 @@
   <div class="titleblock">
     <div>
       <h1>Module map</h1>
-      <p>What imports what inside <code style="font-family:var(--font-mono)">dpp/lib/</code> — drawn directly from the source, not from memory. Every arrow and table row below comes from scanning each file's own <code style="font-family:var(--font-mono)">import</code> statements.</p>
+      <p>What imports what inside <code style="font-family:var(--font-mono)">dpp/lib/</code>, and — below that — what actually calls what at runtime. Both drawn directly from the source, not from memory: every arrow and table row comes from scanning real <code style="font-family:var(--font-mono)">import</code> statements and navigation calls.</p>
     </div>
     <div class="stamp">
       <div><span class="k">project</span>dpp (Digital Product Passport)</div>
@@ -281,7 +281,15 @@
 
         <!-- routes -> modules band -->
         <line x1="640" y1="184" x2="640" y2="230" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
-        <text x="656" y="210" class="edge-label">3 top-level destinations</text>
+        <text x="656" y="210" class="edge-label">initialRoute picks one ›</text>
+
+        <!-- initialRoute precedence, spelled out beside the arrow -->
+        <rect x="850" y="118" width="330" height="96" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
+        <text x="866" y="138" class="node-label small" style="fill:var(--ink)">initialRoute precedence</text>
+        <text x="866" y="158" class="callout-text">1. never seen onboarding → Onboarding</text>
+        <text x="866" y="176" class="callout-text">2. else, no saved session → Sign-in</text>
+        <text x="866" y="194" class="callout-text">3. else (signed in) → the home shell</text>
+        <path d="M780,156 L846,156" fill="none" stroke="var(--line-strong)" stroke-width="1.25" stroke-dasharray="2 4" marker-end="url(#arrow)"></path>
 
         <!-- modules band -->
         <rect x="40" y="232" width="1200" height="172" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
@@ -334,18 +342,23 @@
 
         <!-- circular: home <-> footprint -->
         <line x1="440" y1="313" x2="450" y2="313" stroke="var(--warn)" stroke-width="1.75" marker-start="url(#arrowWarn)" marker-end="url(#arrowWarn)"></line>
-        <text x="445" y="300" text-anchor="middle" class="edge-label" style="fill:var(--warn)">circular</text>
+        <text x="391" y="237" text-anchor="middle" class="edge-label" style="fill:var(--warn)">home is footprint's</text>
+        <text x="391" y="249" text-anchor="middle" class="edge-label" style="fill:var(--warn)">tab 0 — footprint embeds</text>
+        <text x="391" y="261" text-anchor="middle" class="edge-label" style="fill:var(--warn)">it, it navigates back in</text>
 
         <!-- circular: footprint <-> scanner -->
         <line x1="688" y1="313" x2="698" y2="313" stroke="var(--warn)" stroke-width="1.75" marker-start="url(#arrowWarn)" marker-end="url(#arrowWarn)"></line>
-        <text x="693" y="300" text-anchor="middle" class="edge-label" style="fill:var(--warn)">circular</text>
+        <text x="756" y="237" text-anchor="middle" class="edge-label" style="fill:var(--warn)">footprint's FAB</text>
+        <text x="756" y="249" text-anchor="middle" class="edge-label" style="fill:var(--warn)">Get.to()-pushes scanner,</text>
+        <text x="756" y="261" text-anchor="middle" class="edge-label" style="fill:var(--warn)">which pushes back in on a hit</text>
 
         <!-- note under band -->
         <text x="56" y="390" class="callout-text">footprint/ also imports auth, history, settings and navigation directly (tab content + the More screen's links) — full list in the table below.</text>
 
         <!-- modules -> services -->
         <line x1="640" y1="404" x2="640" y2="450" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
-        <text x="656" y="430" class="edge-label">screens read the catalog, trigger sync</text>
+        <text x="656" y="424" class="edge-label">all modules only <tspan style="fill:var(--ink)">read</tspan> catalog —</text>
+        <text x="656" y="438" class="edge-label">only basyx ever <tspan style="fill:var(--ink)">writes</tspan> to it</text>
 
         <!-- services band -->
         <rect x="340" y="452" width="600" height="128" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
@@ -415,6 +428,105 @@
     <span><span class="swatch" style="background:var(--surface-2); border:1px solid var(--line-strong)"></span>module / service / model</span>
     <span><span class="swatch" style="background:transparent; border:1.5px dashed var(--line-strong)"></span>layer boundary</span>
     <span style="color:var(--warn)"><span class="swatch" style="background:var(--warn-soft); border:1.5px solid var(--warn)"></span>circular import (both directions)</span>
+  </div>
+
+  <h2>What actually calls what, at runtime</h2>
+  <p class="section-note">The diagram above is <em>imports</em> — it says who can reach whom, not who does. Three different screens can each land you on the same Product or Material, and they don't do it by calling each other: all three go through the exact same two lookups, then push a detail screen that logs itself.</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 1160 600" role="img" aria-label="Home search, Scanner detection, and History taps all call ProductService.getProductById or MaterialService.getMaterialById with an id, then navigate to ProductDetailScreen or MaterialDetailScreen. ProductDetailScreen can link onward to MaterialDetailScreen. Both detail screens log themselves to HistoryController on init, which persists to Hive for signed-in users only.">
+      <defs>
+        <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+        </marker>
+      </defs>
+      <g style="color: var(--ink-muted-solid)">
+        <!-- entry points -->
+        <g>
+          <rect x="125" y="30" width="220" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="235" y="56" text-anchor="middle" class="node-label" style="fill:var(--ink)">home/</text>
+          <text x="235" y="72" text-anchor="middle" class="node-label small">search field · suggestion tap</text>
+        </g>
+        <g>
+          <rect x="470" y="30" width="220" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="580" y="56" text-anchor="middle" class="node-label" style="fill:var(--ink)">scanner/</text>
+          <text x="580" y="72" text-anchor="middle" class="node-label small">camera onDetect(code)</text>
+        </g>
+        <g>
+          <rect x="815" y="30" width="220" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="925" y="56" text-anchor="middle" class="node-label" style="fill:var(--ink)">footprint/history/</text>
+          <text x="925" y="72" text-anchor="middle" class="node-label small">tap a recent/favorite row</text>
+        </g>
+
+        <!-- stubs down to bus -->
+        <line x1="235" y1="90" x2="235" y2="140" stroke="currentColor" stroke-width="1.5"></line>
+        <line x1="580" y1="90" x2="580" y2="140" stroke="currentColor" stroke-width="1.5"></line>
+        <line x1="925" y1="90" x2="925" y2="140" stroke="currentColor" stroke-width="1.5"></line>
+        <text x="235" y="118" text-anchor="middle" class="edge-label">Navigator.push</text>
+        <text x="580" y="118" text-anchor="middle" class="edge-label">pushReplacement</text>
+        <text x="925" y="118" text-anchor="middle" class="edge-label">Navigator.push</text>
+
+        <!-- bus -->
+        <line x1="235" y1="140" x2="925" y2="140" stroke="currentColor" stroke-width="1.5"></line>
+        <text x="580" y="163" text-anchor="middle" class="edge-label" style="fill:var(--ink)">ProductService.getProductById(id) / MaterialService.getMaterialById(id)</text>
+        <text x="580" y="179" text-anchor="middle" class="callout-text">same two calls, every entry point — nothing here talks to another entry point directly</text>
+
+        <line x1="390" y1="140" x2="390" y2="230" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow2)"></line>
+        <line x1="770" y1="140" x2="770" y2="230" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow2)"></line>
+
+        <!-- detail screens -->
+        <g>
+          <rect x="250" y="230" width="280" height="70" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"></rect>
+          <text x="390" y="257" text-anchor="middle" class="node-label" style="fill:var(--ink); font-weight:600">ProductDetailScreen</text>
+          <text x="390" y="274" text-anchor="middle" class="node-label small">footprint/views/product/</text>
+          <text x="390" y="289" text-anchor="middle" class="node-label small">Navigator.push(materialId ≠ null)</text>
+        </g>
+        <g>
+          <rect x="630" y="230" width="280" height="70" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"></rect>
+          <text x="770" y="257" text-anchor="middle" class="node-label" style="fill:var(--ink); font-weight:600">MaterialDetailScreen</text>
+          <text x="770" y="274" text-anchor="middle" class="node-label small">footprint/views/material/</text>
+        </g>
+        <path d="M530,258 L626,258" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrow2)"></path>
+        <text x="580" y="248" text-anchor="middle" class="edge-label" style="fill:var(--accent)">MaterialLinkCard</text>
+
+        <!-- both -> HistoryController -->
+        <path d="M390,300 L390,345 L480,378" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow2)"></path>
+        <path d="M770,300 L770,345 L680,378" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow2)"></path>
+        <text x="580" y="345" text-anchor="middle" class="edge-label">both call _logHistory() from initState — the</text>
+        <text x="580" y="359" text-anchor="middle" class="edge-label">screen logs itself, no entry point does it for them</text>
+
+        <g>
+          <rect x="390" y="380" width="380" height="60" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="580" y="406" text-anchor="middle" class="node-label" style="fill:var(--ink)">HistoryController.addEntry(id, type)</text>
+          <text x="580" y="422" text-anchor="middle" class="node-label small">modules/history — Rx list, read by History tab &amp; Home's "last searched"</text>
+        </g>
+
+        <line x1="580" y1="440" x2="580" y2="480" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow2)"></line>
+        <text x="596" y="464" class="edge-label">signed in</text>
+
+        <g>
+          <rect x="480" y="482" width="200" height="56" rx="4" fill="var(--surface-2)" stroke="var(--line-strong)"></rect>
+          <text x="580" y="507" text-anchor="middle" class="node-label" style="fill:var(--ink)">services/hive</text>
+          <text x="580" y="523" text-anchor="middle" class="node-label small">survives app restart</text>
+        </g>
+
+        <rect x="720" y="482" width="300" height="56" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="3 4"></rect>
+        <text x="736" y="502" class="callout-text">guest session: entries stay in</text>
+        <text x="736" y="516" class="callout-text">the Rx list only — never reach Hive,</text>
+        <text x="736" y="530" class="callout-text">gone on sign-out or restart</text>
+        <path d="M700,510 L716,510" fill="none" stroke="var(--line-strong)" stroke-width="1.25" stroke-dasharray="2 4" marker-end="url(#arrow2)"></path>
+      </g>
+    </svg>
+    <figcaption>Every path from a search box, a camera frame, or a history row to a passport screen funnels through the same two lookups and the same self-logging step — the entry points never know <code style="font-family:var(--font-mono)">HistoryController</code> exists.</figcaption>
+  </figure>
+
+  <div class="callout" style="border:1px solid var(--line-strong); border-left:3px solid var(--accent); border-radius:4px; padding:16px 18px; background:var(--surface); margin:0 0 8px;">
+    <p style="margin:0 0 10px; font-family:var(--font-display); font-weight:700; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent)">Worth knowing before reading either diagram as a strict hierarchy</p>
+    <ul style="margin:0; padding-left:18px; display:flex; flex-direction:column; gap:8px; font-size:14px; line-height:1.55; color:var(--ink-muted-solid)">
+      <li>The <strong style="color:var(--ink)">footprint ↔ home</strong> and <strong style="color:var(--ink)">footprint ↔ scanner</strong> cycles are intentional, not accidental — <code style="font-family:var(--font-mono); background:var(--mono-tint); padding:0.1em 0.4em; border-radius:3px">home</code> is embedded as footprint's own tab 0, and the scan button is a real screen push, not a tab.</li>
+      <li><strong style="color:var(--ink)">services/catalog is read by everyone, written by one thing.</strong> Every screen module reads <code style="font-family:var(--font-mono); background:var(--mono-tint); padding:0.1em 0.4em; border-radius:3px">ProductService</code>/<code style="font-family:var(--font-mono); background:var(--mono-tint); padding:0.1em 0.4em; border-radius:3px">MaterialService</code> directly, but only <code style="font-family:var(--font-mono); background:var(--mono-tint); padding:0.1em 0.4em; border-radius:3px">services/basyx</code> ever calls <code style="font-family:var(--font-mono); background:var(--mono-tint); padding:0.1em 0.4em; border-radius:3px">registerProduct</code>/<code style="font-family:var(--font-mono); background:var(--mono-tint); padding:0.1em 0.4em; border-radius:3px">registerMaterial</code> — once at startup, during the online/offline sync.</li>
+      <li><strong style="color:var(--ink)">History logging is self-contained, on purpose.</strong> It would be easy to log a view at each of the three entry points instead — Home, Scanner, History — but that's three places to keep in sync instead of one. Putting <code style="font-family:var(--font-mono); background:var(--mono-tint); padding:0.1em 0.4em; border-radius:3px">_logHistory()</code> on the destination screen means a fourth entry point later gets logging for free.</li>
+    </ul>
   </div>
 
   <h2>Every import, precisely</h2>
